@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Week 01: Orientation &amp; Course Overview | English Grammar Course</title>
+
+  <!-- Reveal.js Core CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reset.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+
+  <!-- Custom Course Theme & Quiz Styles -->
+  <link rel="stylesheet" href="../../assets/css/theme.css">
+  <link rel="stylesheet" href="../../assets/css/quiz.css">
+
+  <style>
+    /* Week 01 Orientation - Additional Styles */
+    .back-link {
+      position: absolute;
+      top: 18px;
+      left: 24px;
+      font-size: 0.45em;
+      color: var(--text-muted);
+      text-decoration: none;
+      z-index: 50;
+      font-family: var(--font-en);
+      transition: color 0.3s;
+    }
+    .back-link:hover {
+      color: var(--primary);
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-top: 24px;
+    }
+    .info-card {
+      background: var(--bg-secondary);
+      border-radius: 12px;
+      padding: 24px;
+      border-left: 4px solid var(--primary);
+    }
+    .info-card h4 {
+      font-size: 0.8em;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 8px;
+    }
+    .info-card .value {
+      font-size: 1.05em;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    .info-card .ko {
+      margin-top: 4px;
+    }
+
+    /* Schedule Table */
+    .schedule-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0 6px;
+      margin-top: 16px;
+      font-size: 0.72em;
+    }
+    .schedule-table th {
+      text-align: left;
+      padding: 10px 14px;
+      color: var(--text-muted);
+      font-weight: 600;
+      text-transform: uppercase;
+      font-size: 0.85em;
+      letter-spacing: 0.04em;
+    }
+    .schedule-table td {
+      padding: 12px 14px;
+      background: white;
+      vertical-align: middle;
+    }
+    .schedule-table tr td:first-child {
+      border-radius: 8px 0 0 8px;
+      font-weight: 600;
+      color: var(--primary);
+      white-space: nowrap;
+    }
+    .schedule-table tr td:last-child {
+      border-radius: 0 8px 8px 0;
+    }
+    .schedule-table .phase-header td {
+      background: var(--phase1-bg);
+      font-weight: 700;
+      color: var(--phase1-color);
+      border-radius: 8px;
+      font-size: 1.05em;
+      padding: 14px;
+    }
+    .schedule-table .phase-header.phase2 td {
+      background: var(--phase2-bg);
+      color: var(--phase2-color);
+    }
+
+    /* Exam Cards */
+    .exam-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+      margin-top: 30px;
+    }
+    .exam-card {
+      background: white;
+      border-radius: 16px;
+      padding: 32px;
+      box-shadow: var(--shadow);
+      text-align: center;
+      border-top: 5px solid var(--primary);
+      transition: transform 0.3s;
+    }
+    .exam-card:hover {
+      transform: translateY(-4px);
+    }
+    .exam-card.final {
+      border-top-color: var(--color-complement);
+    }
+    .exam-card .exam-label {
+      font-size: 0.7em;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+    .exam-card .exam-name {
+      font-size: 1.4em;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 12px;
+    }
+    .exam-card .exam-detail {
+      font-size: 0.85em;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+    .exam-card .exam-week {
+      display: inline-block;
+      margin-top: 16px;
+      padding: 6px 18px;
+      border-radius: 50px;
+      font-size: 0.75em;
+      font-weight: 600;
+    }
+    .exam-card .exam-week.mid {
+      background: var(--phase1-bg);
+      color: var(--phase1-color);
+    }
+    .exam-card .exam-week.fin {
+      background: var(--phase2-bg);
+      color: var(--phase2-color);
+    }
+
+    /* Evaluation Donut Chart Area */
+    .eval-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-top: 24px;
+    }
+    .eval-item {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: var(--shadow);
+    }
+    .eval-percent {
+      font-size: 1.6em;
+      font-weight: 700;
+      min-width: 70px;
+      text-align: center;
+    }
+    .eval-percent.blue { color: var(--primary); }
+    .eval-percent.purple { color: var(--color-complement); }
+    .eval-percent.green { color: var(--color-subject); }
+    .eval-percent.orange { color: var(--color-object); }
+    .eval-item .eval-label {
+      font-weight: 600;
+      font-size: 0.9em;
+    }
+
+    /* Step Cards for AI Project */
+    .steps-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      margin-top: 24px;
+    }
+    .step-card {
+      background: white;
+      border-radius: 12px;
+      padding: 22px;
+      box-shadow: var(--shadow);
+      border-left: 4px solid var(--primary);
+      position: relative;
+    }
+    .step-card .step-num {
+      position: absolute;
+      top: -10px;
+      left: -10px;
+      width: 32px;
+      height: 32px;
+      background: var(--primary);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.75em;
+    }
+    .step-card h4 {
+      margin-bottom: 6px;
+      font-size: 0.9em;
+    }
+    .step-card p {
+      font-size: 0.78em;
+      color: var(--text-secondary);
+      margin: 0;
+    }
+
+    /* Tool Tags */
+    .tool-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 20px;
+    }
+    .tool-tag {
+      padding: 10px 20px;
+      border-radius: 50px;
+      font-size: 0.8em;
+      font-weight: 600;
+      background: var(--bg-secondary);
+      color: var(--text-primary);
+      border: 2px solid var(--border);
+      transition: all 0.3s;
+    }
+    .tool-tag:hover {
+      border-color: var(--primary);
+      background: var(--phase1-bg);
+    }
+
+    .format-list {
+      display: flex;
+      gap: 12px;
+      margin-top: 16px;
+      flex-wrap: wrap;
+    }
+    .format-badge {
+      padding: 6px 16px;
+      border-radius: 8px;
+      font-size: 0.75em;
+      font-weight: 600;
+      background: var(--phase2-bg);
+      color: var(--phase2-color);
+    }
+
+    .warning-box {
+      background: #fef3c7;
+      border: 2px solid #f59e0b;
+      border-radius: 12px;
+      padding: 18px 24px;
+      margin-top: 24px;
+      font-size: 0.82em;
+      line-height: 1.7;
+    }
+    .warning-box strong {
+      color: #92400e;
+    }
+
+    /* Requirements numbered list */
+    .req-list {
+      list-style: none;
+      padding: 0;
+      margin-top: 20px;
+    }
+    .req-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      padding: 16px 20px;
+      margin-bottom: 10px;
+      background: white;
+      border-radius: 10px;
+      box-shadow: var(--shadow);
+      font-size: 0.85em;
+    }
+    .req-num {
+      flex-shrink: 0;
+      width: 30px;
+      height: 30px;
+      background: var(--primary);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.8em;
+    }
+    .req-content strong {
+      display: block;
+      margin-bottom: 3px;
+    }
+
+    /* Textbook Layout */
+    .textbook-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-top: 24px;
+    }
+    .textbook-page {
+      background: white;
+      border-radius: 12px;
+      padding: 28px;
+      box-shadow: var(--shadow);
+      border-top: 4px solid var(--border);
+    }
+    .textbook-page.left-page {
+      border-top-color: var(--primary);
+    }
+    .textbook-page.right-page {
+      border-top-color: var(--color-subject);
+    }
+    .textbook-page h4 {
+      font-size: 0.95em;
+      margin-bottom: 14px;
+    }
+    .textbook-page ul {
+      padding-left: 20px;
+      font-size: 0.82em;
+    }
+    .textbook-page ul li {
+      margin-bottom: 8px;
+      line-height: 1.6;
+    }
+
+    /* Study Tips */
+    .tips-list {
+      list-style: none;
+      padding: 0;
+      margin-top: 20px;
+    }
+    .tips-list li {
+      padding: 14px 20px;
+      margin-bottom: 8px;
+      background: var(--bg-secondary);
+      border-radius: 8px;
+      font-size: 0.85em;
+      line-height: 1.6;
+    }
+    .tips-list li .tip-icon {
+      margin-right: 8px;
+    }
+
+    /* Summary Next Week */
+    .next-week-box {
+      background: linear-gradient(135deg, var(--phase1-bg), white);
+      border: 2px solid var(--primary-light);
+      border-radius: 16px;
+      padding: 28px;
+      margin-top: 24px;
+      text-align: center;
+    }
+    .next-week-box h3 {
+      color: var(--primary);
+      margin-bottom: 8px;
+    }
+
+    .question-prompt {
+      margin-top: 40px;
+      text-align: center;
+      font-size: 1.3em;
+      font-family: var(--font-ko);
+      color: var(--primary);
+      font-weight: 700;
+    }
+  </style>
+</head>
+<body>
+<a href="../../index.html" class="home-btn" title="Back to Dashboard">&#127968;</a>
+<a class="pdf-btn" href="?print-pdf" target="_blank" title="PDF로 저장">&#128229;</a>
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- ==========================================
+           SLIDE 1: Title Slide
+           ========================================== -->
+      <section class="slide-title">
+        <div class="week-badge">WEEK 01</div>
+        <h1>Orientation &amp; Course Overview</h1>
+        <p class="subtitle ko">&#xC624;&#xB9AC;&#xC5D4;&#xD14C;&#xC774;&#xC158; &#xBC0F; &#xAC15;&#xC758; &#xC18C;&#xAC1C;</p>
+        <div class="unit-range">Intermediate English Grammar</div>
+
+        <aside class="notes">
+          Welcome students to the Intermediate English Grammar course.
+          Introduce yourself, establish rapport. This session covers the full
+          course overview, evaluation criteria, and the AI project that makes
+          this course unique. Encourage students to ask questions throughout.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 2: Course Overview
+           ========================================== -->
+      <section>
+        <h2>Course Overview</h2>
+        <p class="ko">&#xAC15;&#xC758; &#xAC1C;&#xC694;</p>
+
+        <div class="info-grid">
+          <div class="info-card">
+            <h4>Course Title</h4>
+            <div class="value">Intermediate English Grammar</div>
+            <div class="ko">&#xC911;&#xAE09; &#xC601;&#xBB38;&#xBC95;</div>
+          </div>
+          <div class="info-card">
+            <h4>Textbook</h4>
+            <div class="value">Grammar in Use Intermediate<br>4th Edition</div>
+            <div class="ko">&#xAD50;&#xC7AC;: Grammar in Use &#xC911;&#xAE09; 4&#xD310;</div>
+          </div>
+          <div class="info-card">
+            <h4>Units Covered</h4>
+            <div class="value">Units 1 &ndash; 66</div>
+            <div class="ko">&#xD559;&#xC2B5; &#xBC94;&#xC704;: 1&#xACFC; ~ 66&#xACFC;</div>
+          </div>
+          <div class="info-card">
+            <h4>Duration</h4>
+            <div class="value">15 Weeks &middot; 3 hours/week</div>
+            <div class="ko">15&#xC8FC; &#xACFC;&#xC815; (&#xC8FC; 3&#xC2DC;&#xAC04;)</div>
+          </div>
+        </div>
+
+        <aside class="notes">
+          Explain that Grammar in Use is one of the most widely used grammar
+          textbooks worldwide. We will cover 66 units systematically over
+          15 weeks, building from tenses to more complex structures.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 3: Course Schedule - Phase 1
+           ========================================== -->
+      <section>
+        <h2>Course Schedule</h2>
+        <p class="ko">&#xAC15;&#xC758; &#xC77C;&#xC815;</p>
+
+        <table class="schedule-table">
+          <thead>
+            <tr>
+              <th>Week</th>
+              <th>Topic</th>
+              <th>Units</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="phase-header">
+              <td colspan="3">Phase 1: Tenses &amp; Modals &nbsp; <span class="ko">&#xC2DC;&#xC81C;&#xC640; &#xC870;&#xB3D9;&#xC0AC;</span></td>
+            </tr>
+            <tr>
+              <td>Week 2</td>
+              <td>Present &amp; Past <span class="ko">&#xD604;&#xC7AC;&#xC2DC;&#xC81C; &amp; &#xACFC;&#xAC70;&#xC2DC;&#xC81C;</span></td>
+              <td>1 &ndash; 6</td>
+            </tr>
+            <tr>
+              <td>Week 3</td>
+              <td>Present Perfect 1 <span class="ko">&#xD604;&#xC7AC;&#xC644;&#xB8CC; 1</span></td>
+              <td>7 &ndash; 12</td>
+            </tr>
+            <tr>
+              <td>Week 4</td>
+              <td>Present Perfect 2 &amp; Past Perfect <span class="ko">&#xD604;&#xC7AC;&#xC644;&#xB8CC; 2 &amp; &#xACFC;&#xAC70;&#xC644;&#xB8CC;</span></td>
+              <td>13 &ndash; 17</td>
+            </tr>
+            <tr>
+              <td>Week 5</td>
+              <td>Future <span class="ko">&#xBBF8;&#xB798;&#xC2DC;&#xC81C;</span></td>
+              <td>18 &ndash; 22</td>
+            </tr>
+            <tr>
+              <td>Week 6</td>
+              <td>Future Continuous &amp; Modals 1 <span class="ko">&#xBBF8;&#xB798;&#xC9C4;&#xD589; &amp; &#xC870;&#xB3D9;&#xC0AC; 1</span></td>
+              <td>23 &ndash; 29</td>
+            </tr>
+            <tr>
+              <td>Week 7</td>
+              <td>Modals 2 <span class="ko">&#xC870;&#xB3D9;&#xC0AC; 2</span></td>
+              <td>30 &ndash; 35</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <aside class="notes">
+          Phase 1 focuses on the tense system and modal verbs. This is the
+          foundational grammar that everything else builds upon. Emphasize
+          that understanding tenses deeply is crucial for all later topics.
+          Week 8 is the midterm exam covering all Phase 1 material.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 4: Course Schedule - Phase 2
+           ========================================== -->
+      <section>
+        <h2>Course Schedule</h2>
+        <p class="ko">&#xAC15;&#xC758; &#xC77C;&#xC815; (&#xACC4;&#xC18D;)</p>
+
+        <table class="schedule-table">
+          <thead>
+            <tr>
+              <th>Week</th>
+              <th>Topic</th>
+              <th>Units</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="phase-header phase2">
+              <td colspan="3">Phase 2: Conditionals, Passive, &amp; Verbal Complements &nbsp; <span class="ko">&#xC870;&#xAC74;&#xBB38;, &#xC218;&#xB3D9;&#xD0DC;, &#xB3D9;&#xC0AC; &#xBCF4;&#xCDA9;&#xC5B4;</span></td>
+            </tr>
+            <tr>
+              <td>Week 9</td>
+              <td>Conditionals &amp; Wish <span class="ko">&#xC870;&#xAC74;&#xBB38; &amp; Wish &#xAD6C;&#xBB38;</span></td>
+              <td>36 &ndash; 39</td>
+            </tr>
+            <tr>
+              <td>Week 10</td>
+              <td>Passive Voice <span class="ko">&#xC218;&#xB3D9;&#xD0DC;</span></td>
+              <td>40 &ndash; 44</td>
+            </tr>
+            <tr>
+              <td>Week 11</td>
+              <td>Reported Speech &amp; Questions <span class="ko">&#xAC04;&#xC811;&#xD654;&#xBC95; &amp; &#xC758;&#xBB38;&#xBB38;</span></td>
+              <td>45 &ndash; 50</td>
+            </tr>
+            <tr>
+              <td>Week 12</td>
+              <td>-ing and to... Part 1 <span class="ko">&#xB3D9;&#xBA85;&#xC0AC;&#xC640; to&#xBD80;&#xC815;&#xC0AC; 1</span></td>
+              <td>51 &ndash; 56</td>
+            </tr>
+            <tr>
+              <td>Week 13</td>
+              <td>-ing and to... Part 2 <span class="ko">&#xB3D9;&#xBA85;&#xC0AC;&#xC640; to&#xBD80;&#xC815;&#xC0AC; 2</span></td>
+              <td>57 &ndash; 61</td>
+            </tr>
+            <tr>
+              <td>Week 14</td>
+              <td>-ing and to... Part 3 <span class="ko">&#xB3D9;&#xBA85;&#xC0AC;&#xC640; to&#xBD80;&#xC815;&#xC0AC; 3</span></td>
+              <td>62 &ndash; 66</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <aside class="notes">
+          Phase 2 moves into more complex structures. The verbal complements
+          section (-ing and to...) spans three full weeks because it is one
+          of the most challenging areas for Korean speakers. Week 15 is the
+          final exam covering all Phase 2 material.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 5: Exams
+           ========================================== -->
+      <section>
+        <h2>Exams</h2>
+        <p class="ko">&#xC2DC;&#xD5D8; &#xC548;&#xB0B4;</p>
+
+        <div class="exam-grid">
+          <div class="exam-card">
+            <div class="exam-label">Midterm Examination</div>
+            <div class="exam-name">&#xC911;&#xAC04;&#xC2DC;&#xD5D8;</div>
+            <div class="exam-detail">
+              <strong>Units 1 &ndash; 35</strong><br>
+              Tenses &amp; Modal Verbs<br>
+              <span class="ko">&#xC2DC;&#xC81C; &#xBC0F; &#xC870;&#xB3D9;&#xC0AC; &#xC804; &#xBC94;&#xC704;</span>
+            </div>
+            <span class="exam-week mid">Week 8</span>
+          </div>
+          <div class="exam-card final">
+            <div class="exam-label">Final Examination</div>
+            <div class="exam-name">&#xAE30;&#xB9D0;&#xC2DC;&#xD5D8;</div>
+            <div class="exam-detail">
+              <strong>Units 36 &ndash; 66</strong><br>
+              Conditionals, Passive &amp; Verbal Complements<br>
+              <span class="ko">&#xC870;&#xAC74;&#xBB38;, &#xC218;&#xB3D9;&#xD0DC;, &#xB3D9;&#xC0AC; &#xBCF4;&#xCDA9;&#xC5B4;</span>
+            </div>
+            <span class="exam-week fin">Week 15</span>
+          </div>
+        </div>
+
+        <aside class="notes">
+          Both exams are equally weighted at 30% each. The midterm tests
+          Phase 1 material (Units 1-35) and the final tests Phase 2 material
+          (Units 36-66). Exam format will include multiple choice, fill-in-the-blank,
+          error correction, and short writing sections.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 6: Evaluation Criteria
+           ========================================== -->
+      <section>
+        <h2>Evaluation Criteria</h2>
+        <p class="ko">&#xD3C9;&#xAC00; &#xAE30;&#xC900;</p>
+
+        <div class="eval-grid">
+          <div class="eval-item">
+            <div class="eval-percent blue">10%</div>
+            <div>
+              <div class="eval-label">Attendance &amp; Participation</div>
+              <div class="ko">&#xCD9C;&#xC11D; &#xBC0F; &#xC218;&#xC5C5; &#xCC38;&#xC5EC;</div>
+            </div>
+          </div>
+          <div class="eval-item">
+            <div class="eval-percent purple">30%</div>
+            <div>
+              <div class="eval-label">AI Project &amp; Presentation</div>
+              <div class="ko">AI &#xD504;&#xB85C;&#xC81D;&#xD2B8; &amp; &#xBC1C;&#xD45C;</div>
+            </div>
+          </div>
+          <div class="eval-item">
+            <div class="eval-percent green">30%</div>
+            <div>
+              <div class="eval-label">Midterm Exam</div>
+              <div class="ko">&#xC911;&#xAC04;&#xC2DC;&#xD5D8;</div>
+            </div>
+          </div>
+          <div class="eval-item">
+            <div class="eval-percent orange">30%</div>
+            <div>
+              <div class="eval-label">Final Exam</div>
+              <div class="ko">&#xAE30;&#xB9D0;&#xC2DC;&#xD5D8;</div>
+            </div>
+          </div>
+        </div>
+
+        <aside class="notes">
+          Attendance is 10% - more than 4 unexcused absences may result in
+          an automatic F grade per university policy. The AI Project is worth
+          30%, making it a significant portion. Emphasize that the project
+          is designed to help students learn more effectively, not just to
+          produce a deliverable.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 7: AI Project Overview
+           ========================================== -->
+      <section class="slide-rule">
+        <h2>AI Tool-Based Creative Learning Project</h2>
+        <p class="ko">AI &#xB3C4;&#xAD6C; &#xD65C;&#xC6A9; &#xCC3D;&#xC758;&#xC801; &#xD559;&#xC2B5; &#xD504;&#xB85C;&#xC81D;&#xD2B8;</p>
+
+        <div class="steps-grid">
+          <div class="step-card fragment">
+            <div class="step-num">1</div>
+            <h4>&#xAD50;&#xC7AC; &#xB0B4;&#xC6A9; &#xC219;&#xC9C0;</h4>
+            <p>Master textbook content</p>
+            <p class="ko">&#xBC30;&#xC815;&#xB41C; Unit&#xC758; &#xBB38;&#xBC95; &#xAC1C;&#xB150;&#xC744; &#xCCA0;&#xC800;&#xD788; &#xC774;&#xD574;&#xD569;&#xB2C8;&#xB2E4;</p>
+          </div>
+          <div class="step-card fragment">
+            <div class="step-num">2</div>
+            <h4>&#xD504;&#xB85C;&#xC81D;&#xD2B8; &#xAE30;&#xD68D; 5W1H</h4>
+            <p>Project planning</p>
+            <p class="ko">Who, What, When, Where, Why, How&#xB97C; &#xAE30;&#xBC18;&#xC73C;&#xB85C; &#xAE30;&#xD68D;&#xD569;&#xB2C8;&#xB2E4;</p>
+          </div>
+          <div class="step-card fragment">
+            <div class="step-num">3</div>
+            <h4>AI Tool &#xAE30;&#xBC18; &#xAC1C;&#xBC1C;</h4>
+            <p>AI-based development</p>
+            <p class="ko">AI &#xB3C4;&#xAD6C;&#xB97C; &#xD65C;&#xC6A9;&#xD558;&#xC5EC; &#xCC3D;&#xC758;&#xC801;&#xC778; &#xD559;&#xC2B5; &#xC790;&#xB8CC;&#xB97C; &#xAC1C;&#xBC1C;&#xD569;&#xB2C8;&#xB2E4;</p>
+          </div>
+          <div class="step-card fragment">
+            <div class="step-num">4</div>
+            <h4>&#xBE44;&#xD310;&#xC801; &#xAC80;&#xC99D;</h4>
+            <p>Critical verification &mdash; Hallucination check</p>
+            <p class="ko">AI &#xC0DD;&#xC131; &#xACB0;&#xACFC;&#xBB3C;&#xC758; &#xC815;&#xD655;&#xC131;&#xC744; &#xBE44;&#xD310;&#xC801;&#xC73C;&#xB85C; &#xAC80;&#xC99D;&#xD569;&#xB2C8;&#xB2E4;</p>
+          </div>
+        </div>
+
+        <aside class="notes">
+          Walk through each step. Emphasize Step 4 especially: AI tools can
+          produce incorrect grammar explanations (hallucinations). Students
+          must verify everything against the textbook and reliable sources.
+          This critical thinking process is a core learning objective.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 8: AI Tools
+           ========================================== -->
+      <section>
+        <h2>Recommended AI Tools</h2>
+        <p class="ko">&#xCD94;&#xCC9C; AI &#xB3C4;&#xAD6C;</p>
+
+        <div class="tool-tags">
+          <span class="tool-tag">ChatGPT</span>
+          <span class="tool-tag">Claude</span>
+          <span class="tool-tag">Gemini</span>
+          <span class="tool-tag">AI Studio</span>
+          <span class="tool-tag">Cursor</span>
+          <span class="tool-tag">Claude Code</span>
+          <span class="tool-tag">Canva</span>
+        </div>
+
+        <h4 style="margin-top: 32px;">Submission Formats <span class="ko">&#xC81C;&#xCD9C; &#xD615;&#xC2DD;</span></h4>
+        <div class="format-list">
+          <span class="format-badge">PPT</span>
+          <span class="format-badge">HTML</span>
+          <span class="format-badge">Google Slides</span>
+          <span class="format-badge">ZIP</span>
+        </div>
+
+        <div class="warning-box">
+          <strong>&#xC8FC;&#xC758;&#xC0AC;&#xD56D; (Important Warning):</strong><br>
+          AI &#xCD9C;&#xB825;&#xBB3C;&#xC744; &#xADF8;&#xB300;&#xB85C; &#xBCF5;&#xC0AC;-&#xBD99;&#xC5EC;&#xB123;&#xAE30; &#xD558;&#xC9C0; &#xB9C8;&#xC138;&#xC694;.
+          &#xBC18;&#xB4DC;&#xC2DC; &#xB0B4;&#xC6A9;&#xC744; &#xC774;&#xD574;&#xD558;&#xACE0;, &#xAC80;&#xC99D;&#xD55C; &#xD6C4;, &#xC790;&#xC2E0;&#xC758; &#xC5B8;&#xC5B4;&#xB85C; &#xC7AC;&#xAD6C;&#xC131;&#xD558;&#xC138;&#xC694;.<br>
+          <em>Do not copy-paste AI output directly. You must understand, verify, and restructure the content in your own words.</em>
+        </div>
+
+        <aside class="notes">
+          Students can use any AI tool they prefer. Demonstrate briefly how
+          ChatGPT or Claude can help explain grammar concepts. Strongly
+          emphasize that simply copying AI output will be considered academic
+          dishonesty. The goal is to USE AI as a learning tool, not to let
+          AI do the work for you.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 9: Presentation Requirements
+           ========================================== -->
+      <section>
+        <h2>Presentation Requirements</h2>
+        <p class="ko">&#xBC1C;&#xD45C; &#xC694;&#xAD6C;&#xC0AC;&#xD56D;</p>
+
+        <ul class="req-list">
+          <li>
+            <span class="req-num">1</span>
+            <div class="req-content">
+              <strong>&#xAD50;&#xC7AC; &#xB0B4;&#xC6A9; &#xC694;&#xC57D; (Grammar Theory Summary)</strong>
+              <span class="ko">&#xBC30;&#xC815; Unit&#xC758; &#xD575;&#xC2EC; &#xBB38;&#xBC95; &#xAC1C;&#xB150;&#xC744; &#xC815;&#xB9AC;&#xD558;&#xC5EC; &#xBC1C;&#xD45C;&#xD569;&#xB2C8;&#xB2E4;</span>
+            </div>
+          </li>
+          <li class="fragment">
+            <span class="req-num">2</span>
+            <div class="req-content">
+              <strong>&#xD655;&#xC7A5; &#xBC0F; &#xBCC0;&#xD615; &#xB0B4;&#xC6A9; (Extended / Creative Content)</strong>
+              <span class="ko">&#xAD50;&#xC7AC; &#xBC94;&#xC704;&#xB97C; &#xB118;&#xC5B4;&#xC11C;&#xB294; &#xCC3D;&#xC758;&#xC801; &#xD655;&#xC7A5; &#xD559;&#xC2B5; &#xC790;&#xB8CC;&#xB97C; &#xC81C;&#xC791;&#xD569;&#xB2C8;&#xB2E4;</span>
+            </div>
+          </li>
+          <li class="fragment">
+            <span class="req-num">3</span>
+            <div class="req-content">
+              <strong>&#xAC1C;&#xBC1C; &#xD504;&#xB85C;&#xC138;&#xC2A4; &#xAE30;&#xB85D; (Development Process Log)</strong>
+              <span class="ko">AI &#xD504;&#xB86C;&#xD504;&#xD2B8; &#xBC0F; &#xAC1C;&#xBC1C; &#xACFC;&#xC815;&#xC744; &#xC2A4;&#xD06C;&#xB9B0;&#xC0F7;&#xACFC; &#xD568;&#xAED8; &#xAE30;&#xB85D;&#xD569;&#xB2C8;&#xB2E4;</span>
+            </div>
+          </li>
+          <li class="fragment">
+            <span class="req-num">4</span>
+            <div class="req-content">
+              <strong>&#xC2DC;&#xD5D8; &#xBB38;&#xC81C; &#xCD9C;&#xC81C; 2&ndash;3&#xAC1C; (Create 2&ndash;3 Exam Questions)</strong>
+              <span class="ko">&#xD559;&#xC2B5;&#xD55C; &#xBB38;&#xBC95; &#xB0B4;&#xC6A9;&#xC744; &#xBC14;&#xD0D5;&#xC73C;&#xB85C; &#xC2DC;&#xD5D8; &#xBB38;&#xC81C;&#xB97C; &#xCD9C;&#xC81C;&#xD569;&#xB2C8;&#xB2E4;</span>
+            </div>
+          </li>
+        </ul>
+
+        <aside class="notes">
+          Explain each requirement in detail. The development process log
+          (requirement 3) is especially important - students should capture
+          their AI prompts, the AI responses, and their own edits and
+          corrections. The exam questions (requirement 4) will help them
+          think critically and could potentially be used in actual exams.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 10: How to Use the Textbook
+           ========================================== -->
+      <section>
+        <h2>How to Use the Textbook</h2>
+        <p class="ko">&#xAD50;&#xC7AC; &#xD65C;&#xC6A9;&#xBC95;</p>
+
+        <div class="textbook-layout">
+          <div class="textbook-page left-page">
+            <h4 style="color: var(--primary);">Left Page &mdash; Grammar Explanations</h4>
+            <p class="ko" style="margin-bottom: 12px;">&#xC67C;&#xCABD; &#xD398;&#xC774;&#xC9C0;: &#xBB38;&#xBC95; &#xC124;&#xBA85;</p>
+            <ul>
+              <li>Clear grammar rules with visual context</li>
+              <li>Example sentences showing real usage</li>
+              <li>Diagrams &amp; timelines for tenses</li>
+              <li>Comparison with similar structures</li>
+            </ul>
+          </div>
+          <div class="textbook-page right-page">
+            <h4 style="color: var(--color-subject);">Right Page &mdash; Exercises</h4>
+            <p class="ko" style="margin-bottom: 12px;">&#xC624;&#xB978;&#xCABD; &#xD398;&#xC774;&#xC9C0;: &#xC5F0;&#xC2B5; &#xBB38;&#xC81C;</p>
+            <ul>
+              <li>Practice exercises for each grammar point</li>
+              <li>Fill-in-the-blank &amp; sentence completion</li>
+              <li>Error correction tasks</li>
+              <li>Check answers at the back of the book</li>
+            </ul>
+          </div>
+        </div>
+
+        <ul class="tips-list" style="margin-top: 28px;">
+          <li class="fragment"><span class="tip-icon">1.</span> <strong>&#xC67C;&#xCABD; &#xD398;&#xC774;&#xC9C0;&#xBD80;&#xD130; &#xC77D;&#xC73C;&#xC138;&#xC694;</strong> &mdash; Read the left page explanation first before doing exercises.</li>
+          <li class="fragment"><span class="tip-icon">2.</span> <strong>&#xC608;&#xBB38;&#xC744; &#xC18C;&#xB9AC; &#xB0B4;&#xC5B4; &#xC77D;&#xC73C;&#xC138;&#xC694;</strong> &mdash; Read example sentences aloud for better retention.</li>
+          <li class="fragment"><span class="tip-icon">3.</span> <strong>&#xC5F0;&#xC2B5; &#xBB38;&#xC81C;&#xB97C; &#xBC18;&#xB4DC;&#xC2DC; &#xD480;&#xC5B4;&#xBCF4;&#xC138;&#xC694;</strong> &mdash; Always complete the right-page exercises; do not skip them.</li>
+          <li class="fragment"><span class="tip-icon">4.</span> <strong>&#xD2C0;&#xB9B0; &#xBB38;&#xC81C;&#xB294; &#xD45C;&#xC2DC;&#xD574; &#xB450;&#xC138;&#xC694;</strong> &mdash; Mark difficult questions and review them before exams.</li>
+        </ul>
+
+        <aside class="notes">
+          Show the textbook to students if possible. Explain the consistent
+          left-page/right-page layout. Encourage students to always complete
+          exercises in class or at home. The study tips here are based on
+          effective language learning research.
+        </aside>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 11: Summary & Next Week Preview
+           ========================================== -->
+      <section class="slide-summary">
+        <h2>Summary &amp; Next Week</h2>
+        <p class="ko">&#xC694;&#xC57D; &#xBC0F; &#xB2E4;&#xC74C; &#xC8FC; &#xC548;&#xB0B4;</p>
+
+        <ul class="key-points">
+          <li data-num="1">Course covers <strong>Units 1&ndash;66</strong> of Grammar in Use Intermediate over 15 weeks. <span class="ko">15&#xC8FC;&#xAC04; &#xC911;&#xAE09; &#xBB38;&#xBC95; 66&#xAC1C; Unit &#xD559;&#xC2B5;</span></li>
+          <li data-num="2">Two exams (Midterm + Final) each worth <strong>30%</strong>. <span class="ko">&#xC911;&#xAC04; &amp; &#xAE30;&#xB9D0;&#xC2DC;&#xD5D8; &#xAC01; 30%</span></li>
+          <li data-num="3">AI Project &amp; Presentation accounts for <strong>30%</strong> of your grade. <span class="ko">AI &#xD504;&#xB85C;&#xC81D;&#xD2B8; &amp; &#xBC1C;&#xD45C; 30%</span></li>
+          <li data-num="4">Always <strong>verify AI output</strong> &mdash; critical thinking is key. <span class="ko">AI &#xACB0;&#xACFC;&#xBB3C; &#xAC80;&#xC99D; &#xD544;&#xC218;</span></li>
+        </ul>
+
+        <div class="next-week-box">
+          <h3>Next Week (Week 2)</h3>
+          <p style="font-size: 1.1em; font-weight: 600;">Present &amp; Past Tenses</p>
+          <p class="ko">&#xD604;&#xC7AC;&#xC2DC;&#xC81C; &amp; &#xACFC;&#xAC70;&#xC2DC;&#xC81C;</p>
+          <p style="font-size: 0.8em; color: var(--text-muted); margin-top: 8px;">Grammar in Use &mdash; Units 1&ndash;6</p>
+        </div>
+
+        <div class="question-prompt">
+          &#xC9C8;&#xBB38; &#xC788;&#xC73C;&#xC2E0;&#xAC00;&#xC694;?<br>
+          <span style="font-size: 0.7em; color: var(--text-secondary); font-family: var(--font-en); font-weight: 400;">Any questions?</span>
+        </div>
+
+        <aside class="notes">
+          Wrap up by reviewing the key points. Remind students to purchase
+          or acquire the textbook before next week. Encourage them to read
+          Units 1-6 in advance. Answer any remaining questions about the
+          course structure, evaluation, or the AI project.
+        </aside>
+      </section>
+
+    </div><!-- /.slides -->
+  </div><!-- /.reveal -->
+
+  <!-- Korean Toggle Button -->
+  <button class="ko-toggle" onclick="document.body.classList.toggle('hide-korean')">한국어 ON/OFF</button>
+
+  <!-- Reveal.js Core -->
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+  <!-- Reveal.js Notes Plugin -->
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/notes/notes.js"></script>
+
+  <!-- Course Scripts -->
+  <script src="../../assets/js/print-helper.js"></script>
+  <script src="../../assets/js/quiz-engine.js"></script>
+  <script src="../../assets/js/progress-tracker.js"></script>
+
+  <script>
+    Reveal.initialize({
+      hash: true,
+      slideNumber: 'c/t',
+      transition: 'slide',
+      progress: true,
+      center: false,
+      width: 1200,
+      height: 700,
+      margin: 0.04,
+      plugins: [RevealNotes]
+    });
+  </script>
+</body>
+</html>

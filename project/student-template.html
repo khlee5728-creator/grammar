@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Presentation Template | English Grammar Course</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reset.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+  <link rel="stylesheet" href="../assets/css/theme.css">
+  <link rel="stylesheet" href="../assets/css/quiz.css">
+  <style>
+    /* Student Template Additional Styles */
+    .placeholder {
+      background: #f8fafc;
+      border: 2px dashed #94a3b8;
+      border-radius: 12px;
+      padding: 24px;
+      margin: 16px 0;
+      color: #64748b;
+      font-size: 0.85em;
+      line-height: 1.7;
+    }
+
+    .placeholder .instruction-ko {
+      font-family: var(--font-ko);
+      color: #7c3aed;
+      font-weight: 500;
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    .placeholder .instruction-en {
+      color: #94a3b8;
+      font-style: italic;
+    }
+
+    .template-info {
+      font-size: 0.75em;
+      color: var(--text-muted);
+      background: var(--bg-tertiary);
+      padding: 8px 14px;
+      border-radius: 6px;
+      margin-top: 12px;
+    }
+
+    .editable-field {
+      display: inline-block;
+      min-width: 200px;
+      border-bottom: 2px solid #7c3aed;
+      color: #7c3aed;
+      font-weight: 600;
+      padding: 2px 8px;
+    }
+
+    .team-info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 20px;
+      text-align: left;
+    }
+
+    .team-info-item {
+      background: var(--bg-secondary);
+      padding: 14px 18px;
+      border-radius: 10px;
+      border-left: 4px solid #7c3aed;
+    }
+
+    .team-info-label {
+      font-size: 0.7em;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    .team-info-value {
+      font-size: 0.9em;
+      color: #7c3aed;
+      font-weight: 600;
+    }
+
+    .comparison-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 16px;
+      font-size: 0.8em;
+    }
+
+    .comparison-table th {
+      background: #7c3aed;
+      color: white;
+      padding: 12px 16px;
+      text-align: left;
+      font-weight: 600;
+    }
+
+    .comparison-table td {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+
+    .comparison-table tr:nth-child(even) td {
+      background: var(--bg-secondary);
+    }
+
+    .comparison-table .before-col {
+      color: var(--color-incorrect);
+    }
+
+    .comparison-table .after-col {
+      color: var(--color-correct);
+    }
+
+    .qa-slide {
+      text-align: center !important;
+    }
+
+    .qa-slide h1 {
+      font-size: 2.5em;
+      margin-bottom: 0.3em;
+    }
+
+    .slide-divider {
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.8em;
+      padding: 10px 0;
+    }
+
+    .section-badge {
+      display: inline-block;
+      background: #f5f3ff;
+      color: #7c3aed;
+      padding: 6px 16px;
+      border-radius: 50px;
+      font-size: 0.7em;
+      font-weight: 600;
+      margin-bottom: 12px;
+      border: 1px solid #ddd6fe;
+    }
+  </style>
+</head>
+<body>
+<a href="../index.html" class="home-btn" title="Back to Dashboard">🏠</a>
+<a class="pdf-btn" href="?print-pdf" target="_blank" title="PDF로 저장">&#128229;</a>
+
+<div class="reveal">
+  <div class="slides">
+
+    <!-- ==================================================
+         SECTION 1: TITLE SLIDE
+         ================================================== -->
+    <section class="slide-title">
+      <span class="week-badge" style="background: #7c3aed;">Student Presentation</span>
+      <h1 class="editable-field">[발표 주제 / Topic]</h1>
+      <p class="subtitle ko" style="font-size:1.1em;"><span class="editable-field">[팀명 / Team Name]</span></p>
+
+      <div class="team-info-grid">
+        <div class="team-info-item">
+          <div class="team-info-label">Assigned Units / 해당 Units</div>
+          <div class="team-info-value">[Units __ &ndash; __]</div>
+        </div>
+        <div class="team-info-item">
+          <div class="team-info-label">Presentation Date / 발표 날짜</div>
+          <div class="team-info-value">[YYYY-MM-DD]</div>
+        </div>
+        <div class="team-info-item" style="grid-column: span 2;">
+          <div class="team-info-label">Team Members / 팀원</div>
+          <div class="team-info-value">[이름1, 이름2, 이름3, ...]</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================================================
+         SECTION 2: GRAMMAR THEORY SUMMARY (3 slides)
+         ================================================== -->
+
+    <!-- Slide 2-1: Grammar Rules Summary -->
+    <section>
+      <span class="section-badge">Part 1 &mdash; Grammar Theory</span>
+      <h2>Grammar Rules Summary</h2>
+      <p class="ko">문법 규칙 요약</p>
+
+      <div class="placeholder">
+        <span class="instruction-ko">&#9997; 이 슬라이드에 해당 Unit의 핵심 문법 규칙을 정리하세요.</span>
+        <span class="instruction-en">Summarize the key grammar rules from your assigned units here. Use rule-box and rule-formula classes for consistent formatting.</span>
+      </div>
+
+      <div class="rule-box" style="opacity:0.5;">
+        <h4>[Grammar Rule Title / 문법 규칙 제목]</h4>
+        <div class="rule-formula">
+          [Subject] + [Verb Form] + [Complement]
+        </div>
+        <p style="margin-top:12px; font-size:0.85em; color:var(--text-secondary);">[Explanation in English]</p>
+        <p class="ko">[한국어 설명]</p>
+      </div>
+
+      <div class="template-info">
+        Tip: Add more rule-box sections as needed. Use color coding: <span class="subject">subject</span>, <span class="verb">verb</span>, <span class="object">object</span>, <span class="complement">complement</span>
+      </div>
+    </section>
+
+    <!-- Slide 2-2: Key Example Analysis -->
+    <section>
+      <span class="section-badge">Part 1 &mdash; Grammar Theory</span>
+      <h2>Key Example Analysis</h2>
+      <p class="ko">주요 예문 분석</p>
+
+      <div class="placeholder">
+        <span class="instruction-ko">&#9997; 교재의 주요 예문을 분석하고 설명하세요.</span>
+        <span class="instruction-en">Analyze key examples from the textbook. Explain why each example is correct or incorrect.</span>
+      </div>
+
+      <div class="example-card example-correct" style="opacity:0.5;">
+        <span class="example-sentence">"[Correct example sentence here]"</span>
+        <div class="example-explanation">[Explanation] <span class="ko">[한국어 설명]</span></div>
+      </div>
+
+      <div class="example-card example-incorrect" style="opacity:0.5;">
+        <span class="example-sentence"><span class="mistake">"[Common mistake example]"</span></span>
+        <div class="example-explanation">[Why this is wrong] <span class="ko">[왜 틀린지 설명]</span></div>
+      </div>
+
+      <div class="template-info">
+        Tip: Include at least 3&ndash;4 example pairs (correct/incorrect) from your assigned units.
+      </div>
+    </section>
+
+    <!-- Slide 2-3: Exercise Solutions -->
+    <section>
+      <span class="section-badge">Part 1 &mdash; Grammar Theory</span>
+      <h2>Exercise Solutions</h2>
+      <p class="ko">연습문제 풀이</p>
+
+      <div class="placeholder">
+        <span class="instruction-ko">&#9997; 교재 연습문제의 풀이 과정을 보여주세요.</span>
+        <span class="instruction-en">Show the solution process for textbook exercises. Explain your reasoning step by step.</span>
+      </div>
+
+      <div class="rule-box" style="opacity:0.5;">
+        <h4>[Exercise Number / 연습문제 번호]</h4>
+        <p style="font-size:0.85em;">[Problem statement]</p>
+        <p style="font-size:0.85em; margin-top:10px;"><strong>Answer:</strong> [Your answer with explanation]</p>
+        <p class="ko">[풀이 과정 한국어 설명]</p>
+      </div>
+
+      <div class="template-info">
+        Tip: Select the most challenging or representative exercises. Explain WHY the answer is correct.
+      </div>
+    </section>
+
+    <!-- ==================================================
+         SECTION 3: CREATIVE EXTENSION (2 slides)
+         ================================================== -->
+
+    <!-- Slide 3-1: Creative Extension Overview -->
+    <section>
+      <span class="section-badge">Part 2 &mdash; Creative Extension</span>
+      <h2>Creative Extension</h2>
+      <p class="ko">확장 및 변형</p>
+
+      <div class="placeholder">
+        <span class="instruction-ko">&#9997; AI를 활용해 만든 학습 도구나 콘텐츠를 보여주세요.</span>
+        <span class="instruction-en">Present your creative project here. Show screenshots, demos, or embed your creation.</span>
+      </div>
+
+      <div class="placeholder" style="border-color:#7c3aed;">
+        <span class="instruction-ko">&#128161; 포함할 내용:</span>
+        <ul style="font-size:0.9em; margin-top:8px; color:var(--text-secondary);">
+          <li>프로젝트 개요 및 목적 (Overview and purpose)</li>
+          <li>AI 도구를 활용한 방법 (How you used AI tools)</li>
+          <li>스크린샷 또는 라이브 데모 (Screenshots or live demo)</li>
+          <li>학습 효과 설명 (Explain its educational value)</li>
+        </ul>
+      </div>
+
+      <div class="template-info">
+        Tip: You can embed images, videos, or link to a live demo. Use the Reveal.js <code>data-background-iframe</code> attribute to embed webpages.
+      </div>
+    </section>
+
+    <!-- Slide 3-2: Creative Extension Details -->
+    <section>
+      <span class="section-badge">Part 2 &mdash; Creative Extension</span>
+      <h2>How It Works</h2>
+      <p class="ko">작동 방식 설명</p>
+
+      <div class="placeholder">
+        <span class="instruction-ko">&#9997; 프로젝트의 주요 기능과 작동 방식을 상세히 설명하세요.</span>
+        <span class="instruction-en">Explain the key features of your project. Walk through how users interact with it.</span>
+      </div>
+
+      <div class="placeholder" style="border-color:#7c3aed;">
+        <span class="instruction-ko">&#128161; 시연 포인트:</span>
+        <ul style="font-size:0.9em; margin-top:8px; color:var(--text-secondary);">
+          <li>핵심 기능 데모 (Core feature demonstration)</li>
+          <li>사용자 인터랙션 예시 (User interaction example)</li>
+          <li>문법 학습에 도움되는 이유 (Why it helps grammar learning)</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ==================================================
+         SECTION 4: DEVELOPMENT PROCESS (2 slides)
+         ================================================== -->
+
+    <!-- Slide 4-1: AI Tool Usage Process -->
+    <section>
+      <span class="section-badge">Part 3 &mdash; Development Process</span>
+      <h2>AI Tool Usage Process</h2>
+      <p class="ko">AI 도구 활용 과정</p>
+
+      <div class="placeholder">
+        <span class="instruction-ko">&#9997; 사용한 AI 도구와 주요 프롬프트를 기록하세요.</span>
+        <span class="instruction-en">Document which AI tools you used and share your key prompts. Show how you iterated.</span>
+      </div>
+
+      <div class="placeholder" style="border-color:#7c3aed;">
+        <span class="instruction-ko">&#128161; 기록할 내용:</span>
+        <ul style="font-size:0.9em; margin-top:8px; color:var(--text-secondary);">
+          <li>사용한 AI 도구 이름 (Which AI tools you used)</li>
+          <li>주요 프롬프트 예시 (Key prompt examples)</li>
+          <li>프롬프트 개선 과정 (How you refined your prompts)</li>
+          <li>AI가 잘 수행한 점 / 부족했던 점 (What AI did well / poorly)</li>
+        </ul>
+      </div>
+
+      <div class="template-info">
+        Tip: Include actual screenshots of your AI conversations. Show the progression from first attempt to final result.
+      </div>
+    </section>
+
+    <!-- Slide 4-2: Hallucination Check / Verification Log -->
+    <section>
+      <span class="section-badge">Part 3 &mdash; Development Process</span>
+      <h2>Hallucination Check</h2>
+      <p class="ko">Hallucination 체크 / 검증 기록</p>
+
+      <div class="placeholder">
+        <span class="instruction-ko">&#9997; AI의 잘못된 설명을 수정한 전/후 비교를 기록하세요.</span>
+        <span class="instruction-en">Document instances where the AI made errors and how you corrected them.</span>
+      </div>
+
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th style="width:8%;">#</th>
+            <th style="width:38%;">Before (AI Output) / AI 원본 출력</th>
+            <th style="width:38%;">After (Corrected) / 수정 후</th>
+            <th style="width:16%;">Issue / 문제</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1</td>
+            <td class="before-col">[AI가 생성한 잘못된 내용]</td>
+            <td class="after-col">[교재 기반으로 수정한 내용]</td>
+            <td>[문제 유형]</td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td class="before-col">[AI가 생성한 잘못된 내용]</td>
+            <td class="after-col">[교재 기반으로 수정한 내용]</td>
+            <td>[문제 유형]</td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td class="before-col">[AI가 생성한 잘못된 내용]</td>
+            <td class="after-col">[교재 기반으로 수정한 내용]</td>
+            <td>[문제 유형]</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="template-info">
+        Tip: Finding and correcting AI errors demonstrates critical thinking. This section is important for your evaluation!
+      </div>
+    </section>
+
+    <!-- ==================================================
+         SECTION 5: EXAM QUESTIONS (2 slides)
+         ================================================== -->
+
+    <!-- Slide 5-1: Exam Questions -->
+    <section>
+      <span class="section-badge">Part 4 &mdash; Exam Questions</span>
+      <h2>Exam Questions</h2>
+      <p class="ko">시험 문제 출제</p>
+
+      <div class="placeholder">
+        <span class="instruction-ko">&#9997; 핵심 문법 개념을 확인하는 문제 2-3개를 만드세요.</span>
+        <span class="instruction-en">Create 2&ndash;3 original exam questions that test the core grammar concepts from your units.</span>
+      </div>
+
+      <div class="rule-box" style="opacity:0.5;">
+        <h4>Question 1</h4>
+        <p style="font-size:0.9em;">[Write your exam question here]</p>
+        <p style="font-size:0.85em; margin-top:8px;">
+          (a) [Option A] &nbsp;&nbsp; (b) [Option B] &nbsp;&nbsp; (c) [Option C] &nbsp;&nbsp; (d) [Option D]
+        </p>
+      </div>
+
+      <div class="rule-box" style="opacity:0.5; margin-top:12px;">
+        <h4>Question 2</h4>
+        <p style="font-size:0.9em;">[Write your exam question here]</p>
+        <p style="font-size:0.85em; margin-top:8px;">
+          Fill in the blank: "____________________________________________"
+        </p>
+      </div>
+
+      <div class="rule-box" style="opacity:0.5; margin-top:12px;">
+        <h4>Question 3</h4>
+        <p style="font-size:0.9em;">[Write your exam question here]</p>
+      </div>
+    </section>
+
+    <!-- Slide 5-2: Answers & Explanations -->
+    <section>
+      <span class="section-badge">Part 4 &mdash; Exam Questions</span>
+      <h2>Answers &amp; Explanations</h2>
+      <p class="ko">정답 및 해설</p>
+
+      <div class="rule-box" style="opacity:0.5;">
+        <h4>Question 1 &mdash; Answer</h4>
+        <p style="font-size:0.9em;" class="fragment"><strong>Answer:</strong> [Correct answer]</p>
+        <p style="font-size:0.85em; margin-top:8px;" class="fragment"><strong>Explanation:</strong> [Why this is the correct answer]</p>
+        <p class="ko fragment">[한국어 해설]</p>
+      </div>
+
+      <div class="rule-box" style="opacity:0.5; margin-top:12px;">
+        <h4>Question 2 &mdash; Answer</h4>
+        <p style="font-size:0.9em;" class="fragment"><strong>Answer:</strong> [Correct answer]</p>
+        <p style="font-size:0.85em; margin-top:8px;" class="fragment"><strong>Explanation:</strong> [Why this is the correct answer]</p>
+        <p class="ko fragment">[한국어 해설]</p>
+      </div>
+
+      <div class="rule-box" style="opacity:0.5; margin-top:12px;">
+        <h4>Question 3 &mdash; Answer</h4>
+        <p style="font-size:0.9em;" class="fragment"><strong>Answer:</strong> [Correct answer]</p>
+        <p style="font-size:0.85em; margin-top:8px;" class="fragment"><strong>Explanation:</strong> [Why this is the correct answer]</p>
+        <p class="ko fragment">[한국어 해설]</p>
+      </div>
+
+      <div class="template-info">
+        Tip: Use the "fragment" class on elements to reveal answers one by one during the presentation.
+      </div>
+    </section>
+
+    <!-- ==================================================
+         SECTION 6: Q&A SLIDE
+         ================================================== -->
+    <section class="slide-title qa-slide">
+      <h1>Q &amp; A</h1>
+      <p class="subtitle" style="font-size:1.2em;">질문 있으신가요?</p>
+      <p class="subtitle" style="margin-top:8px;">Any Questions?</p>
+
+      <div style="margin-top:40px; font-size:0.85em; color:var(--text-secondary);">
+        <p>Thank you for listening!</p>
+        <p class="ko" style="font-size:1.1em;">경청해 주셔서 감사합니다!</p>
+      </div>
+
+      <div style="margin-top:30px;">
+        <div class="team-info-item" style="display:inline-block; border-left-color:#7c3aed;">
+          <div class="team-info-label">Team</div>
+          <div class="team-info-value">[팀명 / Team Name]</div>
+        </div>
+      </div>
+    </section>
+
+  </div><!-- end slides -->
+</div><!-- end reveal -->
+
+<!-- Korean Toggle Button -->
+<button class="ko-toggle" onclick="document.body.classList.toggle('hide-korean')">
+  한국어 ON/OFF
+</button>
+
+<!-- Reveal.js -->
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/notes/notes.js"></script>
+
+<!-- Course Scripts -->
+<script src="../assets/js/print-helper.js"></script>
+<script src="../assets/js/quiz-engine.js"></script>
+
+<script>
+  // Initialize Reveal.js
+  Reveal.initialize({
+    hash: true,
+    slideNumber: 'c/t',
+    transition: 'slide',
+    progress: true,
+    center: false,
+    width: 1200,
+    height: 700,
+    margin: 0.04,
+    plugins: [RevealNotes]
+  });
+</script>
+
+</body>
+</html>

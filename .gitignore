@@ -1,0 +1,10 @@
+# Claude Code 작업 디렉토리
+.claude/
+
+# OS 생성 파일
+Thumbs.db
+.DS_Store
+
+# 에디터
+*.swp
+*.swo

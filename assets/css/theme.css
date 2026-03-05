@@ -1,0 +1,594 @@
+/* ============================================
+   English Grammar Course - Reveal.js Custom Theme
+   ============================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Inter:wght@300;400;500;600;700&family=Noto+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+:root {
+  /* Primary Colors */
+  --primary: #2563eb;
+  --primary-light: #3b82f6;
+  --primary-dark: #1d4ed8;
+
+  /* Grammar Color System */
+  --color-subject: #059669;
+  --color-verb: #2563eb;
+  --color-object: #ea580c;
+  --color-complement: #7c3aed;
+  --color-time: #0891b2;
+  --color-correct: #16a34a;
+  --color-incorrect: #dc2626;
+
+  /* UI Colors */
+  --bg-primary: #ffffff;
+  --bg-secondary: #f8fafc;
+  --bg-tertiary: #f1f5f9;
+  --bg-dark: #1e293b;
+  --text-primary: #1e293b;
+  --text-secondary: #475569;
+  --text-muted: #94a3b8;
+  --border: #e2e8f0;
+  --shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -2px rgba(0,0,0,0.1);
+
+  /* Phase Colors */
+  --phase1-color: #2563eb;
+  --phase1-bg: #eff6ff;
+  --phase2-color: #7c3aed;
+  --phase2-bg: #f5f3ff;
+
+  /* Fonts */
+  --font-ko: 'Noto Sans KR', sans-serif;
+  --font-en: 'Inter', sans-serif;
+  --font-example: 'Noto Serif', Georgia, serif;
+}
+
+/* ============================================
+   Reveal.js Theme Overrides
+   ============================================ */
+
+/* Box-sizing fix — padding이 width 안에 포함되도록 */
+.reveal .slides section,
+.reveal .slides section * {
+  box-sizing: border-box;
+}
+
+.reveal {
+  font-family: var(--font-en);
+  font-size: 26px;
+  color: var(--text-primary);
+}
+
+.reveal .slides {
+  text-align: left;
+}
+
+.reveal .slides section {
+  padding: 24px 40px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+/* Quiz slides: flex layout so nav stays pinned at bottom */
+.reveal .slides section.quiz-slide {
+  display: flex;
+  flex-direction: column;
+  padding: 16px 40px;
+  overflow: hidden;
+}
+
+.reveal h1, .reveal h2, .reveal h3, .reveal h4 {
+  font-family: var(--font-en);
+  font-weight: 700;
+  color: var(--text-primary);
+  text-transform: none;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.45em;
+}
+
+.reveal h1 { font-size: 1.8em; }
+.reveal h2 { font-size: 1.35em; }
+.reveal h3 { font-size: 1.15em; }
+.reveal h4 { font-size: 1.05em; }
+
+.reveal p, .reveal li {
+  line-height: 1.55;
+  margin-bottom: 0.35em;
+}
+
+/* Korean Text */
+.ko {
+  font-family: var(--font-ko);
+  color: var(--text-secondary);
+  font-size: 0.85em;
+  margin-top: 0.3em;
+  word-break: keep-all;
+}
+
+body.hide-korean .ko {
+  display: none;
+}
+
+/* ============================================
+   Slide Types
+   ============================================ */
+
+/* Title Slide */
+.slide-title {
+  text-align: center !important;
+  display: flex !important;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.slide-title .week-badge {
+  display: inline-block;
+  background: var(--primary);
+  color: white;
+  padding: 8px 24px;
+  border-radius: 50px;
+  font-size: 0.7em;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+.slide-title h1 {
+  font-size: 2em;
+  margin-bottom: 0.2em;
+}
+
+.slide-title .subtitle {
+  font-size: 1em;
+  color: var(--text-secondary);
+}
+
+.slide-title .unit-range {
+  font-size: 0.8em;
+  color: var(--text-muted);
+  margin-top: 10px;
+  padding: 6px 16px;
+  border: 2px solid var(--border);
+  border-radius: 8px;
+}
+
+/* Objectives Slide */
+.slide-objectives .objectives-list {
+  list-style: none;
+  padding: 0;
+}
+
+.slide-objectives .objectives-list li {
+  padding: 8px 16px;
+  margin-bottom: 6px;
+  background: var(--bg-secondary);
+  border-left: 4px solid var(--primary);
+  border-radius: 0 8px 8px 0;
+  font-size: 0.88em;
+}
+
+.slide-objectives .objectives-list li::before {
+  content: '🎯 ';
+}
+
+/* Grammar Rule Slide */
+.slide-rule .rule-box {
+  background: var(--bg-secondary);
+  border: 2px solid var(--primary-light);
+  border-radius: 12px;
+  padding: 20px;
+  margin: 14px 0;
+}
+
+.slide-rule .rule-formula {
+  font-family: var(--font-example);
+  font-size: 1.2em;
+  color: var(--primary-dark);
+  text-align: center;
+  padding: 15px;
+  background: white;
+  border-radius: 8px;
+  margin-top: 15px;
+  border: 1px dashed var(--primary-light);
+}
+
+/* Example Slide */
+.example-card {
+  background: white;
+  border-radius: 12px;
+  padding: 16px;
+  margin: 8px 0;
+  box-shadow: var(--shadow);
+}
+
+.example-correct {
+  border-left: 5px solid var(--color-correct);
+}
+
+.example-incorrect {
+  border-left: 5px solid var(--color-incorrect);
+}
+
+.example-correct::before {
+  content: '✓';
+  display: inline-block;
+  width: 28px;
+  height: 28px;
+  line-height: 28px;
+  text-align: center;
+  background: var(--color-correct);
+  color: white;
+  border-radius: 50%;
+  font-weight: bold;
+  margin-right: 12px;
+  font-size: 0.7em;
+}
+
+.example-incorrect::before {
+  content: '✗';
+  display: inline-block;
+  width: 28px;
+  height: 28px;
+  line-height: 28px;
+  text-align: center;
+  background: var(--color-incorrect);
+  color: white;
+  border-radius: 50%;
+  font-weight: bold;
+  margin-right: 12px;
+  font-size: 0.7em;
+}
+
+.example-sentence {
+  font-family: var(--font-example);
+  font-size: 1.1em;
+  display: inline;
+}
+
+.example-explanation {
+  font-size: 0.8em;
+  color: var(--text-secondary);
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid var(--border);
+}
+
+/* Comparison Slide */
+.comparison-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 14px;
+}
+
+.comparison-column {
+  background: white;
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: var(--shadow);
+}
+
+.comparison-column h4 {
+  text-align: center;
+  padding-bottom: 12px;
+  border-bottom: 2px solid var(--border);
+  margin-bottom: 16px;
+}
+
+.comparison-column.col-a h4 {
+  color: var(--primary);
+  border-color: var(--primary);
+}
+
+.comparison-column.col-b h4 {
+  color: var(--color-complement);
+  border-color: var(--color-complement);
+}
+
+/* L1 Interference Slide */
+.l1-warning {
+  background: #fef3c7;
+  border: 2px solid #f59e0b;
+  border-radius: 12px;
+  padding: 18px;
+  margin: 10px 0;
+}
+
+.l1-warning .warning-title {
+  color: #92400e;
+  font-weight: 700;
+  font-size: 0.9em;
+  margin-bottom: 10px;
+}
+
+.l1-warning .mistake {
+  color: var(--color-incorrect);
+  text-decoration: line-through;
+  font-family: var(--font-example);
+}
+
+.l1-warning .correction {
+  color: var(--color-correct);
+  font-family: var(--font-example);
+  font-weight: 600;
+}
+
+/* ============================================
+   Grammar Color Coding
+   ============================================ */
+
+.subject { color: var(--color-subject); font-weight: 600; }
+.verb { color: var(--color-verb); font-weight: 600; }
+.object { color: var(--color-object); font-weight: 600; }
+.complement { color: var(--color-complement); font-weight: 600; }
+.time-marker { color: var(--color-time); font-weight: 600; }
+.correct { color: var(--color-correct); }
+.incorrect { color: var(--color-incorrect); text-decoration: line-through; }
+
+.grammar-label {
+  font-size: 0.6em;
+  display: block;
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-top: 2px;
+}
+
+/* ============================================
+   Summary Slide
+   ============================================ */
+
+.slide-summary .key-points {
+  list-style: none;
+  padding: 0;
+}
+
+.slide-summary .key-points li {
+  padding: 10px 16px;
+  margin-bottom: 6px;
+  background: var(--bg-secondary);
+  border-radius: 8px;
+  font-size: 0.9em;
+  position: relative;
+  padding-left: 40px;
+}
+
+.slide-summary .key-points li::before {
+  content: attr(data-num);
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 24px;
+  height: 24px;
+  background: var(--primary);
+  color: white;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 24px;
+  font-size: 0.7em;
+  font-weight: 700;
+}
+
+/* ============================================
+   Korean Language Toggle Button
+   ============================================ */
+
+.ko-toggle {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  z-index: 100;
+  background: var(--bg-dark);
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 14px;
+  font-family: var(--font-ko);
+  opacity: 0.7;
+  transition: opacity 0.3s;
+}
+
+.ko-toggle:hover {
+  opacity: 1;
+}
+
+/* ============================================
+   Home Button (Fixed - visible on all slides)
+   ============================================ */
+
+.home-btn {
+  position: fixed;
+  top: 18px;
+  left: 18px;
+  z-index: 100;
+  background: var(--bg-dark);
+  color: white;
+  border: none;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  opacity: 0.45;
+  transition: opacity 0.3s, transform 0.2s;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+.home-btn:hover {
+  opacity: 1;
+  transform: scale(1.1);
+  color: white;
+  text-decoration: none;
+}
+
+/* ============================================
+   PDF Save Button (Fixed - visible on all slides)
+   ============================================ */
+
+.pdf-btn {
+  position: fixed;
+  top: 18px;
+  right: 18px;
+  z-index: 100;
+  background: var(--bg-dark);
+  color: white;
+  border: none;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  opacity: 0.45;
+  transition: opacity 0.3s, transform 0.2s;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+.pdf-btn:hover {
+  opacity: 1;
+  transform: scale(1.1);
+}
+
+/* ============================================
+   Navigation & Progress
+   ============================================ */
+
+.reveal .controls {
+  color: var(--primary);
+}
+
+.reveal .progress {
+  color: var(--primary);
+  height: 4px;
+}
+
+.reveal .slide-number {
+  font-family: var(--font-en);
+  font-size: 14px;
+  color: var(--text-muted);
+  background: transparent;
+}
+
+/* ============================================
+   Tense Timeline Visualization
+   ============================================ */
+
+.tense-timeline {
+  position: relative;
+  padding: 40px 0;
+  margin: 30px 0;
+}
+
+.tense-timeline .timeline-axis {
+  width: 100%;
+  height: 4px;
+  background: var(--border);
+  position: relative;
+}
+
+.tense-timeline .timeline-now {
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 28px;
+  height: 28px;
+  background: var(--color-incorrect);
+  border-radius: 50%;
+  border: 4px solid white;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+.tense-timeline .timeline-now::after {
+  content: 'NOW';
+  position: absolute;
+  top: -24px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.5em;
+  font-weight: 700;
+  color: var(--color-incorrect);
+}
+
+.tense-timeline .timeline-label {
+  position: absolute;
+  top: 20px;
+  font-size: 0.6em;
+  color: var(--text-muted);
+}
+
+.tense-timeline .timeline-label.past { left: 5%; }
+.tense-timeline .timeline-label.future { right: 5%; }
+
+.tense-timeline .tense-marker {
+  position: absolute;
+  top: -40px;
+  padding: 6px 14px;
+  border-radius: 6px;
+  font-size: 0.65em;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.tense-timeline .tense-range {
+  position: absolute;
+  top: -4px;
+  height: 12px;
+  border-radius: 6px;
+  opacity: 0.3;
+}
+
+/* ============================================
+   Responsive
+   ============================================ */
+
+@media (max-width: 768px) {
+  .reveal { font-size: 22px; }
+  .reveal .slides section { padding: 20px 30px; }
+  .comparison-grid { grid-template-columns: 1fr; }
+}
+
+/* ============================================
+   Print Styles
+   ============================================ */
+
+@media print {
+  /* Hide interactive UI elements */
+  .home-btn,
+  .ko-toggle,
+  .pdf-btn,
+  .reveal .controls,
+  .reveal .progress,
+  .reveal .slide-number {
+    display: none !important;
+  }
+
+  /* Show Korean translations in print */
+  body.hide-korean .ko {
+    display: block !important;
+    opacity: 0.85;
+  }
+
+  /* Clean slide layout */
+  .reveal .slides section {
+    page-break-after: always;
+    page-break-inside: avoid;
+  }
+
+  /* Hide quiz interactive elements in print */
+  .quiz-nav,
+  .quiz-progress,
+  .check-btn,
+  .hint-btn {
+    display: none !important;
+  }
+}

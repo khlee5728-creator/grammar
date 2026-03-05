@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI 도구 활용 창의적 학습 프로젝트 가이드 | English Grammar Course</title>
+  <link rel="stylesheet" href="../assets/css/dashboard.css">
+  <style>
+    /* ============================================
+       Project Guide - Additional Styles
+       ============================================ */
+
+    .guide-header {
+      background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 40%, #4f46e5 100%);
+      color: white;
+      padding: 60px 40px;
+      text-align: center;
+    }
+
+    .guide-header h1 {
+      font-size: 2.2em;
+      font-weight: 700;
+      margin-bottom: 6px;
+      letter-spacing: -0.02em;
+    }
+
+    .guide-header .subtitle {
+      font-family: var(--font-en);
+      font-size: 1.05em;
+      opacity: 0.9;
+      font-weight: 300;
+    }
+
+    .guide-header .header-badges {
+      margin-top: 24px;
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .guide-header .header-badge {
+      background: rgba(255,255,255,0.15);
+      padding: 6px 18px;
+      border-radius: 20px;
+      font-size: 0.85em;
+      backdrop-filter: blur(10px);
+    }
+
+    /* Section Styles */
+    .guide-section {
+      margin-bottom: 48px;
+    }
+
+    .section-title {
+      font-size: 1.5em;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+    }
+
+    .section-subtitle {
+      font-family: var(--font-ko);
+      font-size: 0.9em;
+      color: var(--text-secondary);
+      margin-bottom: 24px;
+    }
+
+    /* Timeline Steps */
+    .steps-timeline {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0;
+      position: relative;
+      margin: 30px 0;
+    }
+
+    .step-card {
+      text-align: center;
+      padding: 24px 16px;
+      position: relative;
+    }
+
+    .step-card::after {
+      content: '';
+      position: absolute;
+      top: 42px;
+      right: -10%;
+      width: 20%;
+      height: 3px;
+      background: linear-gradient(90deg, #7c3aed, #4f46e5);
+      z-index: 1;
+    }
+
+    .step-card:last-child::after {
+      display: none;
+    }
+
+    .step-number {
+      width: 56px;
+      height: 56px;
+      background: linear-gradient(135deg, #7c3aed, #4f46e5);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4em;
+      font-weight: 700;
+      margin: 0 auto 16px;
+      box-shadow: 0 4px 12px rgba(124,58,237,0.3);
+      position: relative;
+      z-index: 2;
+    }
+
+    .step-title {
+      font-weight: 700;
+      font-size: 0.95em;
+      color: var(--text-primary);
+      margin-bottom: 6px;
+    }
+
+    .step-title-ko {
+      font-family: var(--font-ko);
+      font-size: 0.82em;
+      color: #7c3aed;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .step-desc {
+      font-size: 0.8em;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    /* Challenge Mission Cards */
+    .challenge-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    .challenge-card {
+      background: white;
+      border-radius: 16px;
+      padding: 28px;
+      box-shadow: var(--shadow);
+      border: 2px solid transparent;
+      transition: all 0.3s ease;
+      text-align: center;
+    }
+
+    .challenge-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-lg);
+      border-color: #7c3aed;
+    }
+
+    .challenge-icon {
+      width: 64px;
+      height: 64px;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8em;
+      margin: 0 auto 16px;
+    }
+
+    .challenge-card:nth-child(1) .challenge-icon {
+      background: #eff6ff;
+    }
+    .challenge-card:nth-child(2) .challenge-icon {
+      background: #f0fdf4;
+    }
+    .challenge-card:nth-child(3) .challenge-icon {
+      background: #fef3c7;
+    }
+
+    .challenge-title {
+      font-weight: 700;
+      font-size: 1em;
+      margin-bottom: 4px;
+    }
+
+    .challenge-title-ko {
+      font-family: var(--font-ko);
+      font-size: 0.85em;
+      color: #7c3aed;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+
+    .challenge-desc {
+      font-size: 0.82em;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    /* Checklist */
+    .checklist {
+      background: white;
+      border-radius: 16px;
+      padding: 28px;
+      box-shadow: var(--shadow);
+    }
+
+    .checklist-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .checklist-item:last-child {
+      border-bottom: none;
+    }
+
+    .check-icon {
+      width: 28px;
+      height: 28px;
+      min-width: 28px;
+      border-radius: 8px;
+      background: #f5f3ff;
+      border: 2px solid #7c3aed;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #7c3aed;
+      font-size: 0.8em;
+      font-weight: 700;
+      margin-top: 2px;
+    }
+
+    .checklist-text {
+      font-size: 0.9em;
+      line-height: 1.6;
+    }
+
+    .checklist-text strong {
+      display: block;
+      margin-bottom: 2px;
+    }
+
+    .checklist-text .ko-label {
+      font-family: var(--font-ko);
+      font-size: 0.9em;
+      color: var(--text-secondary);
+    }
+
+    /* AI Tools Grid */
+    .tools-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: center;
+    }
+
+    .tool-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      background: white;
+      border-radius: 50px;
+      box-shadow: var(--shadow);
+      font-size: 0.9em;
+      font-weight: 500;
+      transition: all 0.3s;
+      border: 2px solid transparent;
+    }
+
+    .tool-badge:hover {
+      border-color: #7c3aed;
+      transform: translateY(-2px);
+    }
+
+    .tool-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+
+    /* Evaluation Criteria */
+    .eval-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+
+    .eval-card {
+      background: white;
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: var(--shadow);
+    }
+
+    .eval-label {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .eval-name {
+      font-weight: 600;
+      font-size: 0.9em;
+    }
+
+    .eval-name-ko {
+      font-family: var(--font-ko);
+      font-size: 0.8em;
+      color: var(--text-secondary);
+      display: block;
+      margin-top: 2px;
+    }
+
+    .eval-pct {
+      font-weight: 700;
+      font-size: 1.3em;
+      color: #7c3aed;
+    }
+
+    .eval-bar-bg {
+      width: 100%;
+      height: 10px;
+      background: #f1f5f9;
+      border-radius: 5px;
+      overflow: hidden;
+    }
+
+    .eval-bar-fill {
+      height: 100%;
+      border-radius: 5px;
+      background: linear-gradient(90deg, #7c3aed, #4f46e5);
+      transition: width 1s ease;
+    }
+
+    /* Warning Box */
+    .warning-box {
+      background: #fef2f2;
+      border: 2px solid #fecaca;
+      border-radius: 12px;
+      padding: 24px;
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+    }
+
+    .warning-icon {
+      font-size: 1.8em;
+      flex-shrink: 0;
+    }
+
+    .warning-text {
+      font-size: 0.9em;
+      line-height: 1.6;
+    }
+
+    .warning-text strong {
+      color: #dc2626;
+    }
+
+    /* Back Link */
+    .back-link-section {
+      text-align: center;
+      padding: 40px 20px;
+    }
+
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 28px;
+      background: var(--primary);
+      color: white;
+      text-decoration: none;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 0.95em;
+      transition: all 0.3s;
+    }
+
+    .back-btn:hover {
+      background: var(--primary-dark);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .guide-header { padding: 40px 20px; }
+      .guide-header h1 { font-size: 1.6em; }
+      .steps-timeline { grid-template-columns: repeat(2, 1fr); }
+      .step-card::after { display: none; }
+      .challenge-grid { grid-template-columns: 1fr; }
+      .eval-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 480px) {
+      .steps-timeline { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ========== HEADER ========== -->
+  <header class="guide-header">
+    <h1>AI 도구 활용 창의적 학습 프로젝트 가이드</h1>
+    <p class="subtitle">AI Tool-Based Creative Grammar Learning Project Guide</p>
+    <div class="header-badges">
+      <span class="header-badge">English Grammar Course</span>
+      <span class="header-badge">Team Project</span>
+      <span class="header-badge">AI-Enhanced Learning</span>
+    </div>
+  </header>
+
+  <!-- ========== MAIN CONTENT ========== -->
+  <div class="container">
+
+    <!-- ===== STEP-BY-STEP PROCESS ===== -->
+    <section class="guide-section">
+      <h2 class="section-title">Project Process</h2>
+      <p class="section-subtitle">프로젝트 진행 절차 (4단계)</p>
+
+      <div class="steps-timeline">
+        <div class="step-card">
+          <div class="step-number">1</div>
+          <div class="step-title-ko">교재 내용 숙지 및 문제 해결</div>
+          <div class="step-title">Master Textbook Content</div>
+          <div class="step-desc">Read the assigned units thoroughly. Solve all textbook exercises. Identify key grammar rules and patterns.</div>
+        </div>
+        <div class="step-card">
+          <div class="step-number">2</div>
+          <div class="step-title-ko">프로젝트 기획 (5W1H 기반)</div>
+          <div class="step-title">Project Planning</div>
+          <div class="step-desc">Plan your project using the 5W1H framework: What, Why, Who, When, Where, How. Define your creative direction.</div>
+        </div>
+        <div class="step-card">
+          <div class="step-number">3</div>
+          <div class="step-title-ko">AI Tool 기반 개발</div>
+          <div class="step-title">AI-Based Development</div>
+          <div class="step-desc">Use AI tools to develop your creative content. Record all prompts and interactions. Iterate and refine your work.</div>
+        </div>
+        <div class="step-card">
+          <div class="step-number">4</div>
+          <div class="step-title-ko">비판적 검증 (Hallucination 체크)</div>
+          <div class="step-title">Critical Verification</div>
+          <div class="step-desc">Verify all AI-generated content against the textbook. Fix errors and hallucinations. Document before/after corrections.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== CHALLENGE MISSIONS ===== -->
+    <section class="guide-section">
+      <h2 class="section-title">Challenge Missions</h2>
+      <p class="section-subtitle">도전 과제 (택 1)</p>
+
+      <div class="challenge-grid">
+        <div class="challenge-card">
+          <div class="challenge-icon">&#128172;</div>
+          <div class="challenge-title">Error Correction Chatbot</div>
+          <div class="challenge-title-ko">오류 교정 챗봇</div>
+          <div class="challenge-desc">Build an AI-powered chatbot that identifies and corrects grammar errors. It should explain WHY the error is wrong and provide the correct form with Korean explanations.</div>
+        </div>
+        <div class="challenge-card">
+          <div class="challenge-icon">&#127912;</div>
+          <div class="challenge-title">Grammar Visualization</div>
+          <div class="challenge-title-ko">문법 시각화 웹페이지</div>
+          <div class="challenge-desc">Create an interactive webpage that visualizes grammar rules with diagrams, timelines, color-coded examples, and animations. Make abstract grammar concepts visible and intuitive.</div>
+        </div>
+        <div class="challenge-card">
+          <div class="challenge-icon">&#127918;</div>
+          <div class="challenge-title">Grammar Quiz Game</div>
+          <div class="challenge-title-ko">문법 퀴즈 게임</div>
+          <div class="challenge-desc">Design a fun and engaging quiz game that tests grammar knowledge. Include multiple question types, scoring, feedback, and progression through difficulty levels.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== PRESENTATION REQUIREMENTS ===== -->
+    <section class="guide-section">
+      <h2 class="section-title">Presentation Requirements</h2>
+      <p class="section-subtitle">발표 필수 포함 항목</p>
+
+      <div class="checklist">
+        <div class="checklist-item">
+          <div class="check-icon">1</div>
+          <div class="checklist-text">
+            <strong>Grammar Theory Summary <span class="ko-label">교재 내용 요약</span></strong>
+            Summarize the key grammar rules from your assigned units. Include clear examples and explain each rule in both English and Korean.
+          </div>
+        </div>
+        <div class="checklist-item">
+          <div class="check-icon">2</div>
+          <div class="checklist-text">
+            <strong>Creative Extension <span class="ko-label">확장 및 변형 내용</span></strong>
+            Present your creative project (chatbot, visualization, or quiz game). Demonstrate how it works and explain its educational value.
+          </div>
+        </div>
+        <div class="checklist-item">
+          <div class="check-icon">3</div>
+          <div class="checklist-text">
+            <strong>Development Process Log <span class="ko-label">개발 프로세스 기록 (프롬프트 포함)</span></strong>
+            Share the prompts you used with AI tools. Show the iterative process of how you developed and refined your project. Include screenshots or recordings.
+          </div>
+        </div>
+        <div class="checklist-item">
+          <div class="check-icon">4</div>
+          <div class="checklist-text">
+            <strong>Exam Questions (2&ndash;3) <span class="ko-label">시험 문제 출제 2-3개</span></strong>
+            Create 2&ndash;3 original exam questions that test the core grammar concepts from your assigned units. Provide answers and detailed explanations.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== AI TOOLS ===== -->
+    <section class="guide-section">
+      <h2 class="section-title">Recommended AI Tools</h2>
+      <p class="section-subtitle">추천 AI 도구</p>
+
+      <div class="tools-grid">
+        <div class="tool-badge"><span class="tool-dot" style="background:#10a37f;"></span> ChatGPT</div>
+        <div class="tool-badge"><span class="tool-dot" style="background:#4285f4;"></span> Gemini</div>
+        <div class="tool-badge"><span class="tool-dot" style="background:#d97706;"></span> Claude</div>
+        <div class="tool-badge"><span class="tool-dot" style="background:#ea4335;"></span> AI Studio</div>
+        <div class="tool-badge"><span class="tool-dot" style="background:#00d4aa;"></span> Cursor</div>
+        <div class="tool-badge"><span class="tool-dot" style="background:#6366f1;"></span> Antigravity</div>
+        <div class="tool-badge"><span class="tool-dot" style="background:#d97706;"></span> Claude Code</div>
+        <div class="tool-badge"><span class="tool-dot" style="background:#00c4cc;"></span> Canva</div>
+        <div class="tool-badge"><span class="tool-dot" style="background:#3b82f6;"></span> 젠스파크</div>
+      </div>
+    </section>
+
+    <!-- ===== EVALUATION CRITERIA ===== -->
+    <section class="guide-section">
+      <h2 class="section-title">Evaluation Criteria</h2>
+      <p class="section-subtitle">평가 기준</p>
+
+      <div class="eval-grid">
+        <div class="eval-card">
+          <div class="eval-label">
+            <div>
+              <span class="eval-name">Understanding</span>
+              <span class="eval-name-ko">이해력</span>
+            </div>
+            <span class="eval-pct">30%</span>
+          </div>
+          <div class="eval-bar-bg">
+            <div class="eval-bar-fill" style="width: 30%;"></div>
+          </div>
+        </div>
+        <div class="eval-card">
+          <div class="eval-label">
+            <div>
+              <span class="eval-name">Creative Extension</span>
+              <span class="eval-name-ko">창의적 확장</span>
+            </div>
+            <span class="eval-pct">30%</span>
+          </div>
+          <div class="eval-bar-bg">
+            <div class="eval-bar-fill" style="width: 30%;"></div>
+          </div>
+        </div>
+        <div class="eval-card">
+          <div class="eval-label">
+            <div>
+              <span class="eval-name">Process Transparency</span>
+              <span class="eval-name-ko">과정의 투명성</span>
+            </div>
+            <span class="eval-pct">20%</span>
+          </div>
+          <div class="eval-bar-bg">
+            <div class="eval-bar-fill" style="width: 20%;"></div>
+          </div>
+        </div>
+        <div class="eval-card">
+          <div class="eval-label">
+            <div>
+              <span class="eval-name">Completeness</span>
+              <span class="eval-name-ko">완성도</span>
+            </div>
+            <span class="eval-pct">20%</span>
+          </div>
+          <div class="eval-bar-bg">
+            <div class="eval-bar-fill" style="width: 20%;"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== WARNING ===== -->
+    <section class="guide-section">
+      <div class="warning-box">
+        <div class="warning-icon">&#9888;&#65039;</div>
+        <div class="warning-text">
+          <strong>Academic Integrity Warning / 학문적 진실성 경고</strong><br><br>
+          AI 생성물을 그대로 복사하여 제출하는 행위는 엄격히 금지됩니다.<br>
+          Copying AI-generated content without modification and submitting it as your own work is strictly prohibited.<br><br>
+          You must demonstrate your understanding by explaining, modifying, and critically evaluating all AI outputs. Your development process log should show how you guided the AI and corrected its mistakes.
+          <br><br>
+          AI 결과물을 설명하고, 수정하고, 비판적으로 평가하여 자신의 이해도를 보여주어야 합니다. 개발 프로세스 기록에는 AI를 어떻게 유도하고 실수를 교정했는지 보여야 합니다.
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== BACK LINK ===== -->
+    <div class="back-link-section">
+      <a href="../index.html" class="back-btn">&#8592; Back to Course Dashboard</a>
+    </div>
+
+  </div><!-- end container -->
+
+  <!-- ========== FOOTER ========== -->
+  <footer class="site-footer">
+    <p>English Grammar Course &mdash; AI Project Guide</p>
+  </footer>
+
+  <!-- Animate evaluation bars on scroll -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const bars = document.querySelectorAll('.eval-bar-fill');
+      const observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            entry.target.style.width = entry.target.style.width;
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.5 });
+      bars.forEach(function(bar) {
+        const targetWidth = bar.style.width;
+        bar.style.width = '0';
+        bar.dataset.target = targetWidth;
+        observer.observe(bar);
+      });
+
+      // Trigger animation
+      setTimeout(function() {
+        bars.forEach(function(bar) {
+          bar.style.width = bar.dataset.target;
+        });
+      }, 300);
+    });
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Week 08 - Midterm Exam Review | English Grammar Course</title>
+
+  <!-- Reveal.js CDN -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reset.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+
+  <!-- Course Theme & Quiz Styles -->
+  <link rel="stylesheet" href="../../assets/css/theme.css">
+  <link rel="stylesheet" href="../../assets/css/quiz.css">
+
+  <style>
+    /* Midterm Review specific styles */
+    .review-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 16px;
+    }
+    .review-card {
+      background: white;
+      border-radius: 10px;
+      padding: 18px;
+      box-shadow: var(--shadow);
+      font-size: 0.75em;
+    }
+    .review-card h4 {
+      margin-bottom: 8px;
+      font-size: 1.1em;
+    }
+    .review-card .formula {
+      font-family: var(--font-example);
+      color: var(--primary-dark);
+      background: var(--bg-tertiary);
+      padding: 6px 12px;
+      border-radius: 6px;
+      display: inline-block;
+      margin: 4px 0;
+    }
+    .exam-info-box {
+      background: linear-gradient(135deg, #eff6ff, #f5f3ff);
+      border: 2px solid var(--primary-light);
+      border-radius: 14px;
+      padding: 30px;
+      text-align: center;
+    }
+    .exam-info-box .exam-detail {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.85em;
+    }
+    .exam-info-box .exam-detail:last-child {
+      border-bottom: none;
+    }
+    .exam-info-box .detail-label {
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+    .exam-info-box .detail-value {
+      color: var(--primary-dark);
+      font-weight: 700;
+    }
+    .topic-badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.7em;
+      font-weight: 600;
+      margin: 3px;
+    }
+    .topic-badge.tense { background: #dbeafe; color: #1e40af; }
+    .topic-badge.perfect { background: #d1fae5; color: #065f46; }
+    .topic-badge.past-p { background: #fef3c7; color: #92400e; }
+    .topic-badge.future { background: #e0e7ff; color: #3730a3; }
+    .topic-badge.modal { background: #fce7f3; color: #9d174d; }
+
+    .mistakes-table {
+      width: 100%;
+      font-size: 0.7em;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+    .mistakes-table th {
+      background: var(--bg-dark);
+      color: white;
+      padding: 8px 12px;
+      text-align: left;
+      font-weight: 600;
+    }
+    .mistakes-table td {
+      padding: 7px 12px;
+      border-bottom: 1px solid var(--border);
+    }
+    .mistakes-table tr:nth-child(even) {
+      background: var(--bg-secondary);
+    }
+
+    .tips-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-top: 16px;
+    }
+    .tip-card {
+      background: white;
+      border-radius: 10px;
+      padding: 18px;
+      box-shadow: var(--shadow);
+      font-size: 0.78em;
+      border-top: 4px solid var(--primary);
+    }
+    .tip-card h4 {
+      margin-bottom: 6px;
+      color: var(--primary-dark);
+      font-size: 1em;
+    }
+    .good-luck-box {
+      text-align: center;
+      background: linear-gradient(135deg, #f0fdf4, #ecfdf5);
+      border: 2px solid #16a34a;
+      border-radius: 14px;
+      padding: 30px;
+      margin-top: 20px;
+    }
+    .good-luck-box h3 {
+      color: #16a34a;
+      margin-bottom: 8px;
+    }
+  </style>
+</head>
+<body>
+<a href="../../index.html" class="home-btn" title="Back to Dashboard">&#127968;</a>
+<a class="pdf-btn" href="?print-pdf" target="_blank" title="PDF로 저장">&#128229;</a>
+
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- ============================================
+           Slide 1: Title
+           ============================================ -->
+      <section class="slide-title">
+        <span class="week-badge">WEEK 08</span>
+        <h1>Midterm Exam Review</h1>
+        <p class="subtitle">
+          Units 1&ndash;35 Comprehensive Review
+          <span class="ko">중간고사 리뷰</span>
+        </p>
+        <div class="unit-range">Units 1&ndash;35 &bull; Weeks 2&ndash;7</div>
+        <aside class="notes">
+          Midterm review class. Cover all major grammar topics from Weeks 2-7.
+          Encourage students to take notes on areas they find difficult.
+          The practice exam at the end simulates the actual exam format.
+        </aside>
+      </section>
+
+
+      <!-- ============================================
+           Slide 2: Exam Information
+           ============================================ -->
+      <section>
+        <h2>Exam Information</h2>
+        <p class="ko">시험 안내</p>
+
+        <div class="exam-info-box">
+          <div class="exam-detail">
+            <span class="detail-label">Coverage / 시험 범위</span>
+            <span class="detail-value">Units 1&ndash;35</span>
+          </div>
+          <div class="exam-detail">
+            <span class="detail-label">Topics / 주요 주제</span>
+            <span class="detail-value">
+              <span class="topic-badge tense">Present & Past</span>
+              <span class="topic-badge perfect">Present Perfect</span>
+              <span class="topic-badge past-p">Past Perfect</span>
+              <span class="topic-badge future">Future</span>
+              <span class="topic-badge modal">Modals</span>
+            </span>
+          </div>
+          <div class="exam-detail">
+            <span class="detail-label">Format / 형식</span>
+            <span class="detail-value">Multiple Choice + Fill-in-the-Blank</span>
+          </div>
+          <div class="exam-detail">
+            <span class="detail-label">Weeks / 수업 범위</span>
+            <span class="detail-value">Week 2 &ndash; Week 7</span>
+          </div>
+        </div>
+
+        <p style="margin-top:16px; font-size:0.7em; color:var(--text-secondary); text-align:center;">
+          Focus on understanding the <strong>rules</strong> and recognizing <strong>common patterns</strong>.
+          <span class="ko">규칙을 이해하고 자주 나오는 패턴을 익히세요.</span>
+        </p>
+
+        <aside class="notes">
+          Go over the exam format. Explain how many questions to expect
+          and how much time they will have. Emphasize that understanding
+          patterns matters more than memorizing rules.
+        </aside>
+      </section>
+
+
+      <!-- ============================================
+           Slide 3: Quick Review - Present & Past (Units 1-6)
+           ============================================ -->
+      <section>
+        <h2>Quick Review: Present & Past</h2>
+        <h4 style="color:var(--text-secondary); font-weight:400;">Units 1&ndash;6 &bull; <span class="ko">현재 &amp; 과거 시제</span></h4>
+
+        <div class="review-grid">
+          <div class="review-card">
+            <h4 style="color:var(--color-verb);">Present Continuous</h4>
+            <div class="formula">am/is/are + V-ing</div>
+            <p>Happening <strong>now</strong> or <strong>around now</strong></p>
+            <div class="example-card example-correct" style="padding:10px; margin:6px 0;">
+              <span class="example-sentence" style="font-size:0.95em;">The water <span class="verb">is boiling</span>. Can you turn it off?</span>
+            </div>
+          </div>
+
+          <div class="review-card">
+            <h4 style="color:var(--color-complement);">Simple Present</h4>
+            <div class="formula">V / V-s (he/she/it)</div>
+            <p>Facts, habits, repeated actions</p>
+            <div class="example-card example-correct" style="padding:10px; margin:6px 0;">
+              <span class="example-sentence" style="font-size:0.95em;">Water <span class="verb">boils</span> at 100 degrees Celsius.</span>
+            </div>
+          </div>
+
+          <div class="review-card">
+            <h4 style="color:var(--color-subject);">State Verbs</h4>
+            <p>Not usually used in continuous form:</p>
+            <p style="font-family:var(--font-example); color:var(--color-incorrect);">
+              <span class="incorrect">I am knowing</span> &rarr; <span class="correct">I know</span>
+            </p>
+            <p style="font-size:0.85em; color:var(--text-muted);">know, like, want, need, prefer, believe, belong, mean...</p>
+          </div>
+
+          <div class="review-card">
+            <h4 style="color:var(--color-time);">Past Simple vs Past Continuous</h4>
+            <div class="formula">V-ed / was-were + V-ing</div>
+            <div class="example-card example-correct" style="padding:10px; margin:6px 0;">
+              <span class="example-sentence" style="font-size:0.9em;">I <span class="verb">was walking</span> home when it <span class="verb">started</span> to rain.</span>
+            </div>
+          </div>
+        </div>
+
+        <aside class="notes">
+          Briefly review each tense. Ask students to give their own examples.
+          Remind them about state verbs - this is a common mistake area.
+          Past continuous = background action; past simple = interrupting action.
+        </aside>
+      </section>
+
+
+      <!-- ============================================
+           Slide 4: Quick Review - Present Perfect (Units 7-12)
+           ============================================ -->
+      <section>
+        <h2>Quick Review: Present Perfect</h2>
+        <h4 style="color:var(--text-secondary); font-weight:400;">Units 7&ndash;12 &bull; <span class="ko">현재완료</span></h4>
+
+        <div class="review-grid">
+          <div class="review-card">
+            <h4 style="color:var(--color-verb);">Present Perfect Simple</h4>
+            <div class="formula">have/has + past participle (V3)</div>
+            <p>Past action with <strong>present result</strong> or <strong>relevance</strong></p>
+            <div class="example-card example-correct" style="padding:10px; margin:6px 0;">
+              <span class="example-sentence" style="font-size:0.95em;">I <span class="verb">have lost</span> my keys. (= I can't find them now)</span>
+            </div>
+          </div>
+
+          <div class="review-card">
+            <h4 style="color:var(--color-complement);">PP vs Simple Past</h4>
+            <p><strong>PP:</strong> No specific time / still relevant now</p>
+            <p><strong>Past:</strong> Specific time / finished</p>
+            <div class="example-card example-correct" style="padding:10px; margin:4px 0;">
+              <span class="example-sentence" style="font-size:0.9em;">I <span class="verb">'ve been</span> to Paris. (= experience)</span>
+            </div>
+            <div class="example-card example-correct" style="padding:10px; margin:4px 0;">
+              <span class="example-sentence" style="font-size:0.9em;">I <span class="verb">went</span> to Paris <span class="time-marker">last year</span>.</span>
+            </div>
+          </div>
+
+          <div class="review-card">
+            <h4 style="color:var(--color-time);">for vs since</h4>
+            <p><strong>for</strong> + period of time (for 3 years, for a long time)</p>
+            <p><strong>since</strong> + point in time (since 2020, since Monday)</p>
+            <div class="example-card example-correct" style="padding:10px; margin:6px 0;">
+              <span class="example-sentence" style="font-size:0.9em;">She has lived here <span class="time-marker">for</span> 5 years / <span class="time-marker">since</span> 2021.</span>
+            </div>
+          </div>
+
+          <div class="review-card">
+            <h4 style="color:var(--color-subject);">Present Perfect Continuous</h4>
+            <div class="formula">have/has been + V-ing</div>
+            <p>Emphasis on <strong>duration</strong> or <strong>activity itself</strong></p>
+            <div class="example-card example-correct" style="padding:10px; margin:6px 0;">
+              <span class="example-sentence" style="font-size:0.9em;">It <span class="verb">has been raining</span> all day.</span>
+            </div>
+          </div>
+        </div>
+
+        <aside class="notes">
+          Present perfect is the most challenging tense for Korean speakers because
+          Korean does not have a direct equivalent. Emphasize the connection to NOW.
+          The key question: "Does this matter NOW?" If yes, present perfect.
+        </aside>
+      </section>
+
+
+      <!-- ============================================
+           Slide 5: Quick Review - Past Perfect & Used to (Units 13-17)
+           ============================================ -->
+      <section>
+        <h2>Quick Review: Past Perfect & Used to</h2>
+        <h4 style="color:var(--text-secondary); font-weight:400;">Units 13&ndash;17 &bull; <span class="ko">과거완료 &amp; used to</span></h4>
+
+        <div class="review-grid">
+          <div class="review-card" style="grid-column: 1 / -1;">
+            <h4 style="color:var(--color-verb);">Past Perfect</h4>
+            <div class="formula">had + past participle (V3)</div>
+            <p>An action that happened <strong>before another past action</strong>
+              <span class="ko">과거의 과거: 과거의 한 시점보다 더 이전에 일어난 일</span>
+            </p>
+            <div style="display:flex; gap:16px; margin-top:10px;">
+              <div class="example-card example-correct" style="padding:10px; flex:1;">
+                <span class="example-sentence" style="font-size:0.9em;">When I arrived, the party <span class="verb">had already started</span>.</span>
+              </div>
+              <div class="example-card example-correct" style="padding:10px; flex:1;">
+                <span class="example-sentence" style="font-size:0.9em;">She wasn't hungry because she <span class="verb">had eaten</span> lunch.</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="review-card">
+            <h4 style="color:var(--color-complement);">used to + base form</h4>
+            <div class="formula">used to + V (base form)</div>
+            <p>Past states or habits that are <strong>no longer true</strong></p>
+            <div class="example-card example-correct" style="padding:10px; margin:6px 0;">
+              <span class="example-sentence" style="font-size:0.9em;">I <span class="verb">used to</span> live in Busan, but now I live in Seoul.</span>
+            </div>
+            <p class="ko">더 이상 사실이 아닌 과거의 상태나 습관</p>
+          </div>
+
+          <div class="review-card">
+            <h4 style="color:var(--color-incorrect);">Common Confusion</h4>
+            <p>Do not confuse:</p>
+            <p style="font-family:var(--font-example);">
+              <strong>used to</strong> (past habit) <br>
+              <strong>be used to</strong> + V-ing (= be accustomed to)
+            </p>
+            <div class="example-card example-correct" style="padding:10px; margin:6px 0;">
+              <span class="example-sentence" style="font-size:0.85em;">I <span class="verb">am used to</span> getting up early. (= It's normal for me)</span>
+            </div>
+          </div>
+        </div>
+
+        <aside class="notes">
+          Past perfect: draw a simple timeline on the board to illustrate.
+          "used to" vs "be used to" is a classic exam question.
+          Ask students: "What did you use to do when you were a child?"
+        </aside>
+      </section>
+
+
+      <!-- ============================================
+           Slide 6: Quick Review - Future (Units 18-22)
+           ============================================ -->
+      <section>
+        <h2>Quick Review: Future</h2>
+        <h4 style="color:var(--text-secondary); font-weight:400;">Units 18&ndash;22 &bull; <span class="ko">미래 시제</span></h4>
+
+        <div class="review-grid">
+          <div class="review-card">
+            <h4 style="color:var(--color-verb);">will</h4>
+            <div class="formula">will + V (base form)</div>
+            <p>Decisions at the moment, predictions, promises, offers</p>
+            <div class="example-card example-correct" style="padding:10px; margin:6px 0;">
+              <span class="example-sentence" style="font-size:0.9em;">"I'm cold." &mdash; "I<span class="verb">'ll close</span> the window."</span>
+            </div>
+            <p class="ko">순간 결정 / 예측 / 약속 / 제안</p>
+          </div>
+
+          <div class="review-card">
+            <h4 style="color:var(--color-complement);">going to</h4>
+            <div class="formula">am/is/are going to + V</div>
+            <p>Plans already decided, predictions with evidence</p>
+            <div class="example-card example-correct" style="padding:10px; margin:6px 0;">
+              <span class="example-sentence" style="font-size:0.9em;">Look at those clouds! It<span class="verb">'s going to</span> rain.</span>
+            </div>
+            <p class="ko">이미 결정된 계획 / 증거 기반 예측</p>
+          </div>
+
+          <div class="review-card">
+            <h4 style="color:var(--color-subject);">Present Continuous for Future</h4>
+            <div class="formula">am/is/are + V-ing (+ future time)</div>
+            <p>Fixed arrangements / appointments</p>
+            <div class="example-card example-correct" style="padding:10px; margin:6px 0;">
+              <span class="example-sentence" style="font-size:0.9em;">I <span class="verb">'m meeting</span> John at 3 o'clock tomorrow.</span>
+            </div>
+            <p class="ko">확정된 약속이나 일정</p>
+          </div>
+
+          <div class="review-card">
+            <h4 style="color:var(--color-time);">Future Continuous / Perfect</h4>
+            <div class="formula">will be + V-ing / will have + V3</div>
+            <p><strong>Continuous:</strong> action in progress at a future time</p>
+            <p><strong>Perfect:</strong> action completed before a future time</p>
+            <div class="example-card example-correct" style="padding:10px; margin:6px 0;">
+              <span class="example-sentence" style="font-size:0.85em;">This time tomorrow, I <span class="verb">will be flying</span> to Tokyo.</span>
+            </div>
+          </div>
+        </div>
+
+        <aside class="notes">
+          The will vs going to distinction is a favourite exam question.
+          Key: will = spontaneous decision; going to = already planned.
+          Present continuous for future = specific arrangement with another person/place.
+        </aside>
+      </section>
+
+
+      <!-- ============================================
+           Slide 7: Quick Review - Modals (Units 23-35)
+           ============================================ -->
+      <section>
+        <h2>Quick Review: Modals</h2>
+        <h4 style="color:var(--text-secondary); font-weight:400;">Units 23&ndash;35 &bull; <span class="ko">조동사</span></h4>
+
+        <div class="review-grid">
+          <div class="review-card">
+            <h4 style="color:var(--color-verb);">can / could / be able to</h4>
+            <p><strong>can</strong> = present ability</p>
+            <p><strong>could</strong> = past general ability</p>
+            <p><strong>was able to</strong> = specific past achievement</p>
+            <div class="example-card example-correct" style="padding:10px; margin:6px 0;">
+              <span class="example-sentence" style="font-size:0.85em;">I <span class="verb">could</span> swim when I was five.</span>
+            </div>
+          </div>
+
+          <div class="review-card">
+            <h4 style="color:var(--color-complement);">must / can't (deduction)</h4>
+            <p><strong>must</strong> = I'm sure it's true (positive)</p>
+            <p><strong>can't</strong> = I'm sure it's not true (negative)</p>
+            <div class="example-card example-correct" style="padding:10px; margin:6px 0;">
+              <span class="example-sentence" style="font-size:0.85em;">You've been working all day. You <span class="verb">must</span> be tired.</span>
+            </div>
+          </div>
+
+          <div class="review-card">
+            <h4 style="color:var(--color-subject);">may / might (possibility)</h4>
+            <p><strong>may / might</strong> = it's possible (maybe)</p>
+            <p>might = slightly less certain than may</p>
+            <div class="example-card example-correct" style="padding:10px; margin:6px 0;">
+              <span class="example-sentence" style="font-size:0.85em;">She <span class="verb">might</span> be at home, or she <span class="verb">might</span> be at work.</span>
+            </div>
+          </div>
+
+          <div class="review-card">
+            <h4 style="color:var(--color-time);">must vs have to / should</h4>
+            <p><strong>must</strong> = personal obligation or rule</p>
+            <p><strong>have to</strong> = external obligation</p>
+            <p><strong>don't have to</strong> = not necessary</p>
+            <p><strong>should / had better</strong> = advice</p>
+            <div class="example-card example-correct" style="padding:10px; margin:6px 0;">
+              <span class="example-sentence" style="font-size:0.85em;">You <span class="verb">should</span> see a doctor.</span>
+            </div>
+          </div>
+        </div>
+
+        <aside class="notes">
+          Modals cover a large range of units. Focus on the key distinctions:
+          1. must (deduction) vs must (obligation)
+          2. don't have to (no obligation) vs mustn't (prohibition)
+          3. should (advice) vs had better (stronger advice with warning)
+        </aside>
+      </section>
+
+
+      <!-- ============================================
+           Slide 8a: Common Mistakes Summary (1)
+           ============================================ -->
+      <section>
+        <h2>Common Mistakes (1)</h2>
+        <p class="ko">한국어 화자가 자주 하는 실수 (1&ndash;5)</p>
+
+        <div class="l1-warning" style="padding:16px;">
+          <div class="warning-title">Top 10 Mistakes Korean Speakers Make (Units 1&ndash;35)</div>
+          <table class="mistakes-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Incorrect</th>
+                <th>Correct</th>
+                <th>Rule</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1</td>
+                <td><span class="mistake">I am knowing the answer.</span></td>
+                <td><span class="correction">I know the answer.</span></td>
+                <td>State verbs: no continuous</td>
+              </tr>
+              <tr>
+                <td>2</td>
+                <td><span class="mistake">I have been to Paris last year.</span></td>
+                <td><span class="correction">I went to Paris last year.</span></td>
+                <td>Specific past time = simple past</td>
+              </tr>
+              <tr>
+                <td>3</td>
+                <td><span class="mistake">I live here since 2020.</span></td>
+                <td><span class="correction">I have lived here since 2020.</span></td>
+                <td>"since" requires present perfect</td>
+              </tr>
+              <tr>
+                <td>4</td>
+                <td><span class="mistake">When I arrived, the movie already started.</span></td>
+                <td><span class="correction">...the movie had already started.</span></td>
+                <td>Before another past = past perfect</td>
+              </tr>
+              <tr>
+                <td>5</td>
+                <td><span class="mistake">I will meet John tomorrow at 3. (arranged)</span></td>
+                <td><span class="correction">I am meeting John tomorrow at 3.</span></td>
+                <td>Fixed arrangement = present continuous</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <aside class="notes">
+          Go through each mistake. Ask students if they can explain WHY each
+          correction is correct. Mistakes 2 and 3 are the most common on exams.
+        </aside>
+      </section>
+
+
+      <!-- ============================================
+           Slide 8b: Common Mistakes Summary (2)
+           ============================================ -->
+      <section>
+        <h2>Common Mistakes (2)</h2>
+        <p class="ko">한국어 화자가 자주 하는 실수 (6&ndash;10)</p>
+
+        <div class="l1-warning" style="padding:16px;">
+          <div class="warning-title">Top 10 Mistakes Korean Speakers Make (Units 1&ndash;35)</div>
+          <table class="mistakes-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Incorrect</th>
+                <th>Correct</th>
+                <th>Rule</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>6</td>
+                <td><span class="mistake">"It's cold." "I'm going to close the window."</span></td>
+                <td><span class="correction">"It's cold." "I'll close the window."</span></td>
+                <td>Spontaneous decision = will</td>
+              </tr>
+              <tr>
+                <td>7</td>
+                <td><span class="mistake">You must not come if you don't want to.</span></td>
+                <td><span class="correction">You don't have to come...</span></td>
+                <td>mustn't = prohibited; don't have to = optional</td>
+              </tr>
+              <tr>
+                <td>8</td>
+                <td><span class="mistake">She can play piano when she was young.</span></td>
+                <td><span class="correction">She could play piano when...</span></td>
+                <td>Past ability = could (not can)</td>
+              </tr>
+              <tr>
+                <td>9</td>
+                <td><span class="mistake">I use to play soccer.</span></td>
+                <td><span class="correction">I used to play soccer.</span></td>
+                <td>"used to" (with -d), not "use to"</td>
+              </tr>
+              <tr>
+                <td>10</td>
+                <td><span class="mistake">I have gone to Japan three times.</span></td>
+                <td><span class="correction">I have been to Japan three times.</span></td>
+                <td>Experience = have been to (not gone to)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <aside class="notes">
+          Continue going through each mistake. Mistake 7 (mustn't vs don't have to)
+          is one of the most common on exams. Great opportunity for class discussion.
+        </aside>
+      </section>
+
+
+      <!-- ============================================
+           Slide 9: Practice Exam Quiz
+           ============================================ -->
+      <section data-state="exam-quiz">
+        <h2>Practice Exam</h2>
+        <p class="ko">모의 시험 &mdash; 15문제</p>
+        <p style="font-size:0.7em; color:var(--text-secondary);">
+          Answer all questions below. This covers all topics from Units 1&ndash;35.
+          <span class="ko">아래 모든 문제를 풀어보세요. Units 1-35의 전체 범위를 다룹니다.</span>
+        </p>
+
+        <div id="exam-quiz-container"></div>
+
+        <aside class="notes">
+          Give students 15-20 minutes to complete the practice exam independently.
+          Walk around to help with any questions about the format.
+          After time is up, go through answers together as a class.
+        </aside>
+      </section>
+
+
+      <!-- ============================================
+           Slide 10: Study Tips for the Exam
+           ============================================ -->
+      <section>
+        <h2>Study Tips for the Exam</h2>
+        <p class="ko">시험 대비 학습 팁</p>
+
+        <div class="tips-grid">
+          <div class="tip-card">
+            <h4>1. Review the Rules</h4>
+            <p>Go through each unit's key grammar rules. Make sure you understand <strong>when</strong> and <strong>why</strong> to use each form, not just the form itself.</p>
+            <p class="ko">각 단원의 핵심 문법 규칙을 복습하세요. 형태뿐 아니라 언제, 왜 쓰는지를 이해하세요.</p>
+          </div>
+
+          <div class="tip-card">
+            <h4>2. Focus on Differences</h4>
+            <p>Practice distinguishing between similar forms: <strong>will vs going to</strong>, <strong>present perfect vs past simple</strong>, <strong>must vs have to</strong>.</p>
+            <p class="ko">비슷한 형태의 차이점에 집중하세요: will/going to, 현재완료/과거, must/have to</p>
+          </div>
+
+          <div class="tip-card">
+            <h4>3. Read the Context</h4>
+            <p>Exam questions test your understanding of <strong>context</strong>. Look for time markers, signal words, and the meaning of the whole sentence.</p>
+            <p class="ko">시험 문제는 문맥 이해를 테스트합니다. 시간 표현, 신호 단어, 문장 전체 의미를 파악하세요.</p>
+          </div>
+
+          <div class="tip-card">
+            <h4>4. Practice with Exercises</h4>
+            <p>Do the exercises at the end of each unit in the textbook. Redo any exercises you got wrong before.</p>
+            <p class="ko">교재의 각 단원 연습 문제를 다시 풀어보세요. 틀렸던 문제를 다시 풀어보는 것이 효과적입니다.</p>
+          </div>
+        </div>
+
+        <div class="good-luck-box">
+          <h3>Good luck on the exam!</h3>
+          <p style="font-size:0.9em;">You've been working hard all semester. Stay confident and focused!</p>
+          <p class="ko" style="font-size:0.95em;">한 학기 동안 열심히 했으니 자신감을 갖고 시험 보세요! 행운을 빕니다!</p>
+        </div>
+
+        <aside class="notes">
+          End on a positive note. Remind students of office hours if they need
+          extra help. Suggest forming study groups to review together.
+          Remind them to get enough sleep before the exam.
+        </aside>
+      </section>
+
+    </div><!-- .slides -->
+  </div><!-- .reveal -->
+
+
+  <!-- Korean Toggle Button -->
+  <button class="ko-toggle" id="koToggle" title="Toggle Korean translations">
+    한국어 ON/OFF
+  </button>
+
+
+  <!-- Reveal.js -->
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/notes/notes.js"></script>
+
+  <!-- Course Scripts -->
+  <script src="../../assets/js/quiz-engine.js"></script>
+  <script src="../../assets/js/print-helper.js"></script>
+  <script src="../../assets/js/grammar-viz.js"></script>
+  <script src="../../assets/js/progress-tracker.js"></script>
+
+  <script>
+    // ============================================
+    // Reveal.js Initialization
+    // ============================================
+    Reveal.initialize({
+      hash: true,
+      slideNumber: 'c/t',
+      transition: 'slide',
+      progress: true,
+      center: false,
+      width: 1200,
+      height: 700,
+      margin: 0.04,
+      plugins: [RevealNotes]
+    });
+
+    // ============================================
+    // Korean Toggle
+    // ============================================
+    const koToggle = document.getElementById('koToggle');
+    koToggle.addEventListener('click', () => {
+      document.body.classList.toggle('hide-korean');
+      koToggle.textContent = document.body.classList.contains('hide-korean') ? '한국어 OFF' : '한국어 ON/OFF';
+    });
+
+    // ============================================
+    // Practice Exam Quiz - 15 Questions
+    // ============================================
+    const examQuestions = [
+      // --- Present & Past (Units 1-6) ---
+      {
+        type: 'multiple-choice',
+        question: '"Look! It ___." Choose the correct form.',
+        options: ['rains', 'is raining', 'rained', 'has rained'],
+        correct: 1,
+        explanation: 'Happening now → present continuous.',
+        explanationKo: '"Look!"은 지금 일어나는 일 → 현재진행형'
+      },
+      {
+        type: 'multiple-choice',
+        question: 'Water ___ at 100 degrees Celsius.',
+        options: ['is boiling', 'boils', 'has boiled', 'was boiling'],
+        correct: 1,
+        explanation: 'A scientific fact → simple present.',
+        explanationKo: '과학적 사실/일반적 진리 → 단순현재'
+      },
+      {
+        type: 'fill-blank',
+        sentence: 'I ___ (walk) home when it started to rain.',
+        answer: ['was walking'],
+        hint: 'Background action in the past = past continuous',
+        explanation: 'A longer background action interrupted by a shorter action → past continuous.',
+        explanationKo: '과거 진행 중인 동작이 다른 동작에 의해 중단 → 과거진행형'
+      },
+
+      // --- Present Perfect (Units 7-12) ---
+      {
+        type: 'fill-blank',
+        sentence: 'I ___ (know) her since we were children.',
+        answer: ['have known'],
+        hint: 'Since = present perfect',
+        explanation: '"since" indicates present perfect tense.',
+        explanationKo: '"since"는 현재완료와 함께 씁니다.'
+      },
+      {
+        type: 'fill-blank',
+        sentence: 'She ___ (live) in Seoul for 10 years. She still lives there.',
+        answer: ['has lived', 'has been living'],
+        hint: 'Still continuing → present perfect',
+        explanation: 'An action that started in the past and continues now = present perfect.',
+        explanationKo: '과거에 시작해 현재까지 계속되는 일은 현재완료를 씁니다.'
+      },
+      {
+        type: 'fill-blank',
+        sentence: 'We ___ (wait) here for over an hour! Where are they?',
+        answer: ["have been waiting", "'ve been waiting"],
+        hint: 'Ongoing action with visible result → present perfect continuous',
+        explanation: 'Ongoing action with current relevance → present perfect continuous.',
+        explanationKo: '현재까지 계속되는 동작 (불만/강조) → 현재완료진행형'
+      },
+      {
+        type: 'multiple-choice',
+        question: '"I ___ never ___ sushi before." Choose the correct pair.',
+        options: ["had / eaten", "have / eaten", "was / eating", "did / eat"],
+        correct: 1,
+        explanation: 'Life experience up to now → present perfect: have never eaten.',
+        explanationKo: '현재까지의 경험 → 현재완료: have never eaten'
+      },
+
+      // --- Past Perfect & Used to (Units 13-17) ---
+      {
+        type: 'multiple-choice',
+        question: 'When I arrived, the movie ___.',
+        options: ['already started', 'has already started', 'had already started', 'already starts'],
+        correct: 2,
+        explanation: 'Action before another past action = past perfect.',
+        explanationKo: '과거의 과거 = 과거완료'
+      },
+      {
+        type: 'fill-blank',
+        sentence: 'Tom ___ (work) in a bank for 15 years before he became a teacher.',
+        answer: ['had worked', 'had been working'],
+        hint: 'Before another past action → past perfect',
+        explanation: 'Action completed before another past event → past perfect.',
+        explanationKo: '과거의 또 다른 과거 이전의 행위 → 과거완료'
+      },
+      {
+        type: 'multiple-choice',
+        question: 'She ___ to be very shy, but now she\'s quite outgoing.',
+        options: ['used', 'is used', 'was used', 'uses'],
+        correct: 0,
+        explanation: '"used to" for past states that are no longer true.',
+        explanationKo: '더 이상 아닌 과거 상태 → used to'
+      },
+
+      // --- Future (Units 18-22) ---
+      {
+        type: 'multiple-choice',
+        question: '"I\'m hungry." "OK, I ___ make you a sandwich."',
+        options: ["will", "am going to", "am making", "make"],
+        correct: 0,
+        explanation: 'Decision made at the moment of speaking → will.',
+        explanationKo: '말하는 순간의 결정 → will'
+      },
+      {
+        type: 'fill-blank',
+        sentence: 'I ___ (meet) John at 3 o\'clock tomorrow. It\'s all arranged.',
+        answer: ["am meeting", "'m meeting"],
+        hint: 'Fixed arrangement = present continuous for future',
+        explanation: 'Fixed arrangements use present continuous for future.',
+        explanationKo: '확정된 약속/일정은 현재진행형으로 미래를 표현합니다.'
+      },
+      {
+        type: 'multiple-choice',
+        question: 'This time next week, I ___ on a beach in Hawaii.',
+        options: ['will lie', 'will be lying', 'am lying', 'lie'],
+        correct: 1,
+        explanation: 'Action in progress at a specific future time → future continuous.',
+        explanationKo: '미래 특정 시점에 진행 중인 행동 → 미래진행형'
+      },
+
+      // --- Modals (Units 23-35) ---
+      {
+        type: 'multiple-choice',
+        question: 'You ___ be tired. You\'ve been working all day.',
+        options: ['can', 'must', 'might', 'should'],
+        correct: 1,
+        explanation: '"must" for strong deduction based on evidence.',
+        explanationKo: '확실한 추측에는 must를 씁니다.'
+      },
+      {
+        type: 'fill-blank',
+        sentence: 'You ___ (not/have to) come if you don\'t want to.',
+        answer: ["don't have to", "do not have to"],
+        hint: 'No obligation = don\'t have to',
+        explanation: '"don\'t have to" means no obligation (it\'s not necessary).',
+        explanationKo: '"don\'t have to"는 의무가 없다는 뜻입니다 (해도 되고 안 해도 됨).'
+      },
+      {
+        type: 'multiple-choice',
+        question: 'I ___ play the piano when I was six.',
+        options: ['can', 'could', 'was able to', 'may'],
+        correct: 1,
+        explanation: '"could" for general past ability.',
+        explanationKo: '과거의 일반적 능력 → could'
+      },
+      {
+        type: 'multiple-choice',
+        question: 'You ___ see a doctor. That cough sounds terrible.',
+        options: ['would', 'must', 'should', 'could'],
+        correct: 2,
+        explanation: '"should" for advice/recommendation.',
+        explanationKo: '조언/권고 → should'
+      },
+      {
+        type: 'fill-blank',
+        sentence: 'I don\'t think you ___ (should/tell) him. It\'s not your secret.',
+        answer: ['should tell'],
+        hint: 'Advice → should + base form',
+        explanation: '"should" + base form for advice.',
+        explanationKo: '조언할 때 → should + 동사원형'
+      }
+    ];
+
+    // Initialize quiz when the exam slide becomes active
+    Reveal.on('slidechanged', event => {
+      if (event.currentSlide.dataset.state === 'exam-quiz') {
+        const container = document.getElementById('exam-quiz-container');
+        if (container && !container.dataset.initialized) {
+          new GrammarQuiz(container, examQuestions, {
+            showFeedback: true,
+            showScore: true,
+            shuffleQuestions: false,
+            shuffleOptions: false
+          });
+          container.dataset.initialized = 'true';
+        }
+      }
+    });
+
+    // Also initialize if the page loads directly on the quiz slide
+    if (document.querySelector('[data-state="exam-quiz"]') &&
+        Reveal.getCurrentSlide()?.dataset?.state === 'exam-quiz') {
+      const container = document.getElementById('exam-quiz-container');
+      if (container && !container.dataset.initialized) {
+        new GrammarQuiz(container, examQuestions, {
+          showFeedback: true,
+          showScore: true,
+          shuffleQuestions: false,
+          shuffleOptions: false
+        });
+        container.dataset.initialized = 'true';
+      }
+    }
+
+    // ============================================
+    // Progress Tracker Integration
+    // ============================================
+    try {
+      if (typeof GrammarProgress !== 'undefined') {
+        window.progressTracker = new GrammarProgress();
+      }
+    } catch(e) {
+      console.log('Progress tracker not available');
+    }
+  </script>
+
+</body>
+</html>
