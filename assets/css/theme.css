@@ -558,6 +558,18 @@ body.hide-korean .ko {
 }
 
 /* ============================================
+   Textbook Reference
+   ============================================ */
+
+.textbook-ref {
+  font-size: 0.65em;
+  color: var(--text-muted);
+  text-align: right;
+  margin-top: auto;
+  padding-top: 8px;
+}
+
+/* ============================================
    Print Styles
    ============================================ */
 
