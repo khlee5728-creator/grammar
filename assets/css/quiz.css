@@ -528,3 +528,130 @@
   .option-item { padding: 6px 10px; }
   .fill-blank-input { min-width: 120px; }
 }
+
+/* ============================================
+   Exercise Practice - Interactive Input
+   ============================================ */
+
+.exercise-card {
+  background: white;
+  border-radius: 8px;
+  padding: 8px;
+  border-left: 3px solid var(--accent-blue, #3b82f6);
+  position: relative;
+}
+
+.exercise-label {
+  color: #2563eb;
+  font-size: 0.7em;
+  font-weight: 700;
+}
+
+.exercise-prompt {
+  margin: 2px 0;
+  font-size: 0.82em;
+  line-height: 1.5;
+}
+
+.exercise-input {
+  display: inline-block;
+  min-width: 60px;
+  max-width: 100%;
+  border: none;
+  border-bottom: 2px dashed #2563eb;
+  font-family: inherit;
+  font-size: inherit;
+  padding: 1px 4px;
+  background: rgba(59, 130, 246, 0.05);
+  outline: none;
+  text-align: center;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.exercise-input:focus {
+  border-bottom-style: solid;
+  background: rgba(59, 130, 246, 0.1);
+}
+
+.exercise-input.correct {
+  border-bottom-color: #16a34a;
+  background: rgba(22, 163, 74, 0.1);
+  color: #16a34a;
+  font-weight: 600;
+}
+
+.exercise-input.incorrect {
+  border-bottom-color: #dc2626;
+  background: rgba(220, 38, 38, 0.08);
+  color: #dc2626;
+  text-decoration: line-through;
+}
+
+.exercise-check-btn {
+  display: inline-block;
+  font-size: 0.65em;
+  padding: 1px 8px;
+  margin-left: 4px;
+  background: #2563eb;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+  user-select: none;
+  vertical-align: middle;
+  transition: background 0.2s;
+}
+
+.exercise-check-btn:hover {
+  background: #1d4ed8;
+}
+
+.exercise-feedback {
+  min-height: 0;
+  font-size: 0.75em;
+  margin-top: 1px;
+}
+
+.exercise-correct-mark {
+  color: #16a34a;
+  font-weight: 700;
+}
+
+.exercise-correct-answer {
+  color: #16a34a;
+  font-weight: 600;
+}
+
+.exercise-actions {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 6px;
+}
+
+.exercise-actions button {
+  font-size: 0.7em;
+  padding: 4px 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.2s;
+}
+
+.exercise-check-all {
+  background: #2563eb;
+  color: white;
+}
+
+.exercise-check-all:hover {
+  background: #1d4ed8;
+}
+
+.exercise-reset {
+  background: #e5e7eb;
+  color: #374151;
+}
+
+.exercise-reset:hover {
+  background: #d1d5db;
+}
