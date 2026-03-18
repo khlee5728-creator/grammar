@@ -153,6 +153,35 @@ class ExercisePractice {
         }
       }
     }
+
+    // Add hint button if data-hint exists
+    this.addHintButton(card);
+  }
+
+  addHintButton(card) {
+    const hint = card.dataset.hint;
+    if (!hint) return;
+    const feedback = card.querySelector('.exercise-feedback');
+    if (!feedback) return;
+
+    const hintBtn = document.createElement('span');
+    hintBtn.className = 'exercise-hint-btn';
+    hintBtn.textContent = '💡';
+    hintBtn.title = '풀이 보기';
+    hintBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const existing = card.querySelector('.exercise-hint-popover');
+      if (existing) {
+        existing.remove();
+      } else {
+        const popover = document.createElement('div');
+        popover.className = 'exercise-hint-popover';
+        popover.textContent = hint;
+        card.appendChild(popover);
+      }
+    });
+    feedback.appendChild(hintBtn);
   }
 
   checkAll() {
@@ -175,6 +204,8 @@ class ExercisePractice {
         input.disabled = false;
         input.classList.remove('correct', 'incorrect');
       });
+      const popover = card.querySelector('.exercise-hint-popover');
+      if (popover) popover.remove();
       if (feedback) feedback.innerHTML = '';
       if (checkBtn) checkBtn.style.display = '';
     });

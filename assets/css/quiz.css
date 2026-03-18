@@ -655,3 +655,54 @@
 .exercise-reset:hover {
   background: #d1d5db;
 }
+
+.exercise-hint-btn {
+  display: inline-block;
+  margin-left: 6px;
+  cursor: pointer;
+  font-size: 0.85em;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+  vertical-align: middle;
+  user-select: none;
+}
+
+.exercise-hint-btn:hover {
+  opacity: 1;
+}
+
+.exercise-hint-popover {
+  position: absolute;
+  left: 8px;
+  right: 8px;
+  bottom: -2px;
+  transform: translateY(100%);
+  background: #fffbeb;
+  border: 1px solid #f59e0b;
+  border-radius: 6px;
+  padding: 5px 10px;
+  font-size: 0.72em;
+  line-height: 1.4;
+  color: #92400e;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+  z-index: 100;
+  animation: hintFadeIn 0.15s ease;
+}
+
+.exercise-hint-popover::before {
+  content: '';
+  position: absolute;
+  top: -6px;
+  left: 16px;
+  width: 10px;
+  height: 10px;
+  background: #fffbeb;
+  border-left: 1px solid #f59e0b;
+  border-top: 1px solid #f59e0b;
+  transform: rotate(45deg);
+}
+
+@keyframes hintFadeIn {
+  from { opacity: 0; transform: translateY(calc(100% + 4px)); }
+  to { opacity: 1; transform: translateY(100%); }
+}
