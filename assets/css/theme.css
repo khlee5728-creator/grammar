@@ -552,9 +552,26 @@ body.hide-korean .ko {
    ============================================ */
 
 @media (max-width: 768px) {
-  .reveal { font-size: 22px; }
-  .reveal .slides section { padding: 20px 30px; }
+  .reveal { font-size: 20px; }
+  .reveal .slides section { padding: 15px 20px; }
   .comparison-grid { grid-template-columns: 1fr; }
+  .rule-box { padding: 10px 12px; }
+  .example-card { padding: 8px 10px; margin: 3px 0; }
+  .schedule-table { font-size: 0.75em; }
+  .home-btn, .pdf-btn { font-size: 0.7em; padding: 4px 8px; }
+  .ko-toggle { font-size: 0.7em; padding: 4px 8px; }
+  table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  h2 { font-size: 1.2em !important; }
+  h3 { font-size: 1em !important; }
+  h4 { font-size: 0.9em !important; }
+}
+
+@media (max-width: 480px) {
+  .reveal { font-size: 18px; }
+  .reveal .slides section { padding: 10px 12px; }
+  .home-btn, .pdf-btn { font-size: 0.65em; padding: 3px 6px; }
+  .ko-toggle { font-size: 0.65em; padding: 3px 6px; }
+  h2 { font-size: 1.1em !important; }
 }
 
 /* ============================================

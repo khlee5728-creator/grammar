@@ -525,8 +525,17 @@
 @media (max-width: 768px) {
   .quiz-container { margin: 4px; }
   .question-card { padding: 12px 14px; }
-  .option-item { padding: 6px 10px; }
-  .fill-blank-input { min-width: 120px; }
+  .option-item { padding: 10px 12px; min-height: 44px; font-size: 0.9em; }
+  .fill-blank-input { min-width: 100px; max-width: 90%; }
+  .quiz-btn { min-height: 44px; padding: 10px 16px; }
+  .quiz-header h3 { font-size: 1em; }
+  .score-num { font-size: 1.2em; }
+}
+
+@media (max-width: 480px) {
+  .option-item { font-size: 0.85em; padding: 10px; }
+  .question-text { font-size: 0.9em; }
+  .fill-blank-input { min-width: 80px; font-size: 0.9em; }
 }
 
 /* ============================================
@@ -705,4 +714,22 @@
 @keyframes hintFadeIn {
   from { opacity: 0; transform: translateY(calc(100% + 4px)); }
   to { opacity: 1; transform: translateY(100%); }
+}
+
+/* Exercise Mobile Responsive */
+@media (max-width: 768px) {
+  .exercise-grid { grid-template-columns: 1fr; gap: 4px; }
+  .exercise-card { padding: 8px; }
+  .exercise-input { min-width: 80px; max-width: 90%; }
+  .exercise-check-btn { min-height: 32px; padding: 4px 10px; font-size: 0.7em; }
+  .exercise-actions button { min-height: 44px; padding: 8px 20px; font-size: 0.75em; }
+  .exercise-prompt { font-size: 0.8em; }
+  .exercise-hint-popover { font-size: 0.7em; }
+}
+
+@media (max-width: 480px) {
+  .exercise-input { min-width: 60px; font-size: 0.8em; }
+  .exercise-prompt { font-size: 0.75em; }
+  .exercise-label { font-size: 0.65em; }
+  .exercise-actions button { padding: 6px 14px; }
 }
