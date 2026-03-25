@@ -75,6 +75,34 @@ class ExercisePractice {
     }
   }
 
+  // Contraction ↔ expansion mapping: [contracted, [expanded forms]]
+  static CONTRACTIONS = [
+    // Negative
+    ["haven't", ["have not"]], ["hasn't", ["has not"]], ["hadn't", ["had not"]],
+    ["don't", ["do not"]], ["doesn't", ["does not"]], ["didn't", ["did not"]],
+    ["isn't", ["is not"]], ["aren't", ["are not"]],
+    ["wasn't", ["was not"]], ["weren't", ["were not"]],
+    ["won't", ["will not"]], ["can't", ["cannot", "can not"]],
+    ["couldn't", ["could not"]], ["wouldn't", ["would not"]], ["shouldn't", ["should not"]],
+    // Pronoun + have
+    ["i've", ["i have"]], ["you've", ["you have"]],
+    ["we've", ["we have"]], ["they've", ["they have"]],
+    // Pronoun + had / would
+    ["i'd", ["i had", "i would"]], ["you'd", ["you had", "you would"]],
+    ["he'd", ["he had", "he would"]], ["she'd", ["she had", "she would"]],
+    ["we'd", ["we had", "we would"]], ["they'd", ["they had", "they would"]],
+    // Pronoun + am / is / are
+    ["i'm", ["i am"]], ["you're", ["you are"]],
+    ["we're", ["we are"]], ["they're", ["they are"]],
+    // Pronoun + has / is (ambiguous)
+    ["he's", ["he has", "he is"]], ["she's", ["she has", "she is"]],
+    ["it's", ["it has", "it is"]],
+    // Pronoun + will
+    ["i'll", ["i will"]], ["you'll", ["you will"]], ["he'll", ["he will"]],
+    ["she'll", ["she will"]], ["we'll", ["we will"]], ["they'll", ["they will"]],
+    ["it'll", ["it will"]],
+  ];
+
   normalize(str) {
     return str
       .trim()
@@ -88,6 +116,35 @@ class ExercisePractice {
       // Strip trailing punctuation (. ! ?)
       .replace(/[.!?]+$/, '')
       .trim();
+  }
+
+  // Generate all contraction/expansion variants of a normalized string
+  expandVariants(normalized) {
+    const variants = new Set([normalized]);
+    for (const [contracted, expandedList] of ExercisePractice.CONTRACTIONS) {
+      if (normalized.includes(contracted)) {
+        for (const expanded of expandedList) {
+          variants.add(normalized.replace(contracted, expanded));
+        }
+      }
+      for (const expanded of expandedList) {
+        if (normalized.includes(expanded)) {
+          variants.add(normalized.replace(expanded, contracted));
+        }
+      }
+    }
+    return [...variants];
+  }
+
+  // Check if user input matches any accepted answer (with contraction variants)
+  matchWithContractions(normalizedUser, acceptedAnswers) {
+    const userVariants = this.expandVariants(normalizedUser);
+    for (const ans of acceptedAnswers) {
+      const normAns = this.normalize(ans);
+      const ansVariants = this.expandVariants(normAns);
+      if (userVariants.some(uv => ansVariants.includes(uv))) return true;
+    }
+    return false;
   }
 
   checkAnswer(card) {
@@ -105,7 +162,7 @@ class ExercisePractice {
         const alts = input.dataset.alt ? input.dataset.alt.split('|') : [];
         const allAccepted = [expected, ...alts];
         const normalizedUser = this.normalize(input.value);
-        const correct = allAccepted.some(ans => this.normalize(ans) === normalizedUser);
+        const correct = this.matchWithContractions(normalizedUser, allAccepted);
 
         input.disabled = true;
         if (correct) {
@@ -138,7 +195,7 @@ class ExercisePractice {
       const allAccepted = [expected, ...alts];
 
       const normalizedUser = this.normalize(userAnswer);
-      const isCorrect = allAccepted.some(ans => this.normalize(ans) === normalizedUser);
+      const isCorrect = this.matchWithContractions(normalizedUser, allAccepted);
 
       input.disabled = true;
       card.querySelector('.exercise-check-btn').style.display = 'none';

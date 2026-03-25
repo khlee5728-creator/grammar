@@ -350,6 +350,45 @@ class GrammarQuiz {
     }
   }
 
+  // Contraction ↔ expansion mapping (shared with ExercisePractice)
+  static CONTRACTIONS = [
+    ["haven't", ["have not"]], ["hasn't", ["has not"]], ["hadn't", ["had not"]],
+    ["don't", ["do not"]], ["doesn't", ["does not"]], ["didn't", ["did not"]],
+    ["isn't", ["is not"]], ["aren't", ["are not"]],
+    ["wasn't", ["was not"]], ["weren't", ["were not"]],
+    ["won't", ["will not"]], ["can't", ["cannot", "can not"]],
+    ["couldn't", ["could not"]], ["wouldn't", ["would not"]], ["shouldn't", ["should not"]],
+    ["i've", ["i have"]], ["you've", ["you have"]],
+    ["we've", ["we have"]], ["they've", ["they have"]],
+    ["i'd", ["i had", "i would"]], ["you'd", ["you had", "you would"]],
+    ["he'd", ["he had", "he would"]], ["she'd", ["she had", "she would"]],
+    ["we'd", ["we had", "we would"]], ["they'd", ["they had", "they would"]],
+    ["i'm", ["i am"]], ["you're", ["you are"]],
+    ["we're", ["we are"]], ["they're", ["they are"]],
+    ["he's", ["he has", "he is"]], ["she's", ["she has", "she is"]],
+    ["it's", ["it has", "it is"]],
+    ["i'll", ["i will"]], ["you'll", ["you will"]], ["he'll", ["he will"]],
+    ["she'll", ["she will"]], ["we'll", ["we will"]], ["they'll", ["they will"]],
+    ["it'll", ["it will"]],
+  ];
+
+  expandVariants(str) {
+    const variants = new Set([str]);
+    for (const [contracted, expandedList] of GrammarQuiz.CONTRACTIONS) {
+      if (str.includes(contracted)) {
+        for (const expanded of expandedList) {
+          variants.add(str.replace(contracted, expanded));
+        }
+      }
+      for (const expanded of expandedList) {
+        if (str.includes(expanded)) {
+          variants.add(str.replace(expanded, contracted));
+        }
+      }
+    }
+    return [...variants];
+  }
+
   handleFillBlank(qIndex, question) {
     const input = document.getElementById(`fill-input-${qIndex}`);
     const card = document.getElementById(`question-${qIndex}`);
@@ -357,7 +396,11 @@ class GrammarQuiz {
 
     const userAnswer = input.value.trim().toLowerCase();
     const correctAnswers = Array.isArray(question.answer) ? question.answer : [question.answer];
-    const isCorrect = correctAnswers.some(a => a.toLowerCase() === userAnswer);
+    const userVariants = this.expandVariants(userAnswer);
+    const isCorrect = correctAnswers.some(a => {
+      const ansVariants = this.expandVariants(a.toLowerCase());
+      return userVariants.some(uv => ansVariants.includes(uv));
+    });
 
     input.disabled = true;
     input.classList.add(isCorrect ? 'correct' : 'incorrect');
