@@ -233,9 +233,10 @@
       <p class="ko">타임라인으로 보는 미래 시제</p>
       <div id="timeline-future" style="margin: 20px 0;"></div>
       <div style="font-size:0.8em; margin-top:15px;">
-        <p><span style="color:#3b82f6; font-weight:600;">Future simple (will do):</span> a point in the future</p>
-        <p><span style="color:#22c55e; font-weight:600;">Future continuous (will be doing):</span> in progress at a future time</p>
-        <p><span style="color:#7c3aed; font-weight:600;">Future perfect (will have done):</span> completed before a future time</p>
+        <p><span style="color:#f59e0b; font-weight:600;">Present continuous (I'm doing):</span> fixed arrangements <span class="ko">확정된 약속</span></p>
+        <p><span style="color:#ef4444; font-weight:600;">Present simple (I do):</span> timetables &amp; schedules <span class="ko">시간표/일정</span></p>
+        <p><span style="color:#22c55e; font-weight:600;">going to:</span> intentions &amp; evidence-based predictions <span class="ko">의도/증거 기반 예측</span></p>
+        <p><span style="color:#3b82f6; font-weight:600;">will:</span> decisions, predictions, offers, promises <span class="ko">결정/예측/제안/약속</span></p>
       </div>
     </section>
 
@@ -418,9 +419,10 @@
   // Timeline Visualization
   document.addEventListener('DOMContentLoaded', function() {
     const tl = new TenseTimeline('#timeline-future');
-    tl.addTense('will be doing', 55, 75, '#22c55e', 0);
-    tl.addPoint('will do', 65, '#3b82f6');
-    tl.addTense('will have done', 50, 65, '#7c3aed', 1);
+    tl.addPoint("I'm doing", 55, '#f59e0b');
+    tl.addPoint('I do (schedule)', 80, '#ef4444');
+    tl.addTense('going to', 58, 78, '#22c55e', 1);
+    tl.addPoint('will', 68, '#3b82f6');
   });
 
   // Quiz Data
