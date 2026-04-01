@@ -64,6 +64,10 @@
       <div class="example-card example-correct" style="padding:6px 10px;">
         <span class="example-sentence">"Emily always leaves at 8:30. She won't be at home at 9:00 &mdash; she<span class="verb">'ll have gone</span> to work."</span>
       </div>
+      <div class="example-card example-correct" style="padding:6px 10px; margin-top:0;">
+        <span class="example-sentence">"<span class="time-marker">By next October</span>, I<span class="verb">'ll have been</span> here for three years."</span>
+        <div class="example-explanation">Completed duration before a future point. <span class="ko">미래 시점까지의 완료된 기간.</span></div>
+      </div>
     </section>
 
     <!-- ========== when I do / when I've done (Unit 24) (1) ========== -->
@@ -422,7 +426,7 @@
     <!-- ========== EXERCISE PRACTICE (1/2) ========== -->
     <section class="slide-rule exercise-slide">
       <h2>📝 Exercise Practice (1/2)</h2>
-      <p class="textbook-ref">📖 GIU Ex 23.1, 23.3, 24.1, 24.3, 25.1, 25.3</p>
+      <p class="textbook-ref">📖 GIU Ex 23.1–23.4, 24.1, 24.3, 25.1, 25.3</p>
       <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px; margin-top:6px;">
         <div class="exercise-card" data-answer="will be having" data-hint="미래진행: 미래 특정 시점에 진행 중. Unit 23" style="padding:6px 8px;">
           <strong class="exercise-label">Ex 23.1</strong>
@@ -436,7 +440,19 @@
           <span class="exercise-check-btn">Check</span>
           <div class="exercise-feedback"></div>
         </div>
-        <div class="exercise-card" data-answer="go out" data-hint="미래완료: 미래 시점까지 완료될 일. Unit 24" style="padding:6px 8px;">
+        <div class="exercise-card" data-answer="will have finished" data-alt="'ll have finished" data-hint="미래완료: 미래 시점 이전에 완료. Unit 23" style="padding:6px 8px;">
+          <strong class="exercise-label">Ex 23.2</strong>
+          <p class="exercise-prompt" style="margin:4px 0;">Ted started reading at 2:00. By 4:30 he <input type="text" class="exercise-input" placeholder="..."> the book. (finish)</p>
+          <span class="exercise-check-btn">Check</span>
+          <div class="exercise-feedback"></div>
+        </div>
+        <div class="exercise-card" data-answer="will have been" data-alt="'ll have been" data-hint="미래완료: 미래 시점까지의 기간. Unit 23" style="padding:6px 8px;">
+          <strong class="exercise-label">Ex 23.4</strong>
+          <p class="exercise-prompt" style="margin:4px 0;">Next year is our 25th anniversary. We <input type="text" class="exercise-input" placeholder="..."> married for 25 years.</p>
+          <span class="exercise-check-btn">Check</span>
+          <div class="exercise-feedback"></div>
+        </div>
+        <div class="exercise-card" data-answer="go out" data-hint="when절에서는 현재시제 사용. Unit 24" style="padding:6px 8px;">
           <strong class="exercise-label">Ex 24.1</strong>
           <p class="exercise-prompt" style="margin:4px 0;">Don't forget to lock the door when you <input type="text" class="exercise-input" placeholder="...">. (go out)</p>
           <span class="exercise-check-btn">Check</span>
@@ -547,7 +563,7 @@
     <!-- ========== QUIZ SECTION ========== -->
     <section>
       <h2>Quiz Time!</h2>
-      <p class="ko">퀴즈 — 8문제</p>
+      <p class="ko">퀴즈 — 9문제</p>
       <p style="font-size:0.85em; color:var(--text-secondary);">Test your understanding of modal verbs.</p>
       <div id="quiz-container"></div>
     </section>
@@ -615,6 +631,19 @@
 
   // Quiz Data — 8 conceptual questions (Units 23–29)
   const quizQuestions = [
+    {
+      type: 'multiple-choice',
+      question: '"Don\'t phone me at 8:00 tomorrow. I ___ dinner." Which is correct?',
+      options: [
+        '"I will have"',
+        '"I\'ll be having"',
+        '"I have"',
+        '"I\'m going to have"'
+      ],
+      correct: 1,
+      explanation: 'Use "will be doing" (future continuous) for an action that will be in progress at a specific future time.',
+      explanationKo: '미래의 특정 시점에 진행 중일 동작에는 미래진행형(will be doing)을 사용합니다.'
+    },
     {
       type: 'multiple-choice',
       question: 'Find the error: "I\'ll call you when I will arrive at the hotel."',
