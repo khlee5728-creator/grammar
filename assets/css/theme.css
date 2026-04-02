@@ -642,25 +642,27 @@ body.hide-korean .ko {
 
 /* ========== Part Badges (A, B, C, D) ========== */
 
+.reveal .slides .part-badge,
 .part-badge {
-  display: inline-block;
+  display: inline-block !important;
   font-size: 0.7em;
   font-weight: 700;
-  color: #fff;
-  background: #6b7280;
+  color: #fff !important;
+  background: #6b7280 !important;
   border-radius: 4px;
   padding: 1px 8px;
   margin-right: 6px;
   vertical-align: middle;
   line-height: 1.6;
 }
-.part-badge.a { background: #3b82f6; }
-.part-badge.b { background: #8b5cf6; }
-.part-badge.c { background: #f59e0b; }
-.part-badge.d { background: #ef4444; }
-.part-badge.e { background: #14b8a6; }
+.reveal .slides .part-badge.a, .part-badge.a { background: #3b82f6 !important; }
+.reveal .slides .part-badge.b, .part-badge.b { background: #8b5cf6 !important; }
+.reveal .slides .part-badge.c, .part-badge.c { background: #f59e0b !important; }
+.reveal .slides .part-badge.d, .part-badge.d { background: #ef4444 !important; }
+.reveal .slides .part-badge.e, .part-badge.e { background: #14b8a6 !important; }
 
 /* Part section within a slide */
+.reveal .slides .part-section,
 .part-section {
   border-left: 3px solid #e2e8f0;
   padding-left: 12px;
@@ -670,6 +672,7 @@ body.hide-korean .ko {
 .part-section.b { border-left-color: #8b5cf6; }
 .part-section.c { border-left-color: #f59e0b; }
 .part-section.d { border-left-color: #ef4444; }
+.part-section.e { border-left-color: #14b8a6; }
 
 .part-section h4 {
   margin: 0 0 2px 0;

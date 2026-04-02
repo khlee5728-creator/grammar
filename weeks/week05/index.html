@@ -263,17 +263,52 @@
       </div>
     </section>
 
-    <!-- ========== Timeline ========== -->
+    <!-- ========== Comparison Table ========== -->
     <section>
-      <h2>Future Tenses on the Timeline</h2>
-      <p class="ko">타임라인으로 보는 미래 시제</p>
-      <div id="timeline-future" style="margin: 20px 0;"></div>
-      <div style="font-size:0.8em; margin-top:15px;">
-        <p><span style="color:#f59e0b; font-weight:600;">Present continuous (I'm doing):</span> fixed arrangements <span class="ko">확정된 약속</span></p>
-        <p><span style="color:#ef4444; font-weight:600;">Present simple (I do):</span> timetables &amp; schedules <span class="ko">시간표/일정</span></p>
-        <p><span style="color:#22c55e; font-weight:600;">going to:</span> intentions &amp; evidence-based predictions <span class="ko">의도/증거 기반 예측</span></p>
-        <p><span style="color:#3b82f6; font-weight:600;">will:</span> decisions, predictions, offers, promises <span class="ko">결정/예측/제안/약속</span></p>
-      </div>
+      <h2 style="margin:0;">Choosing the Right Future Form</h2>
+      <p class="ko">상황별 미래 표현 비교</p>
+      <table style="width:100%; border-collapse:collapse; font-size:0.82em; margin-top:10px;">
+        <thead>
+          <tr style="background:#1e3a5f; color:#fff; text-align:left;">
+            <th style="padding:6px 10px; width:28%;">상황 Situation</th>
+            <th style="padding:6px 10px; width:25%;">표현 Form</th>
+            <th style="padding:6px 10px;">예문 Example</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="background:#eff6ff; border-bottom:1px solid #e2e8f0;">
+            <td style="padding:6px 10px; font-weight:600;">확정된 약속/배정<br><span style="font-weight:400; color:#64748b;">Fixed arrangement</span></td>
+            <td style="padding:6px 10px;"><span style="color:#f59e0b; font-weight:700;">I'm doing</span><br><span style="color:#64748b;">(present continuous)</span></td>
+            <td style="padding:6px 10px;">"I<span class="verb">'m meeting</span> Tom <strong>tomorrow</strong>."</td>
+          </tr>
+          <tr style="background:#fff; border-bottom:1px solid #e2e8f0;">
+            <td style="padding:6px 10px; font-weight:600;">시간표/일정<br><span style="font-weight:400; color:#64748b;">Timetable / schedule</span></td>
+            <td style="padding:6px 10px;"><span style="color:#ef4444; font-weight:700;">I do</span><br><span style="color:#64748b;">(present simple)</span></td>
+            <td style="padding:6px 10px;">"The train <span class="verb">leaves</span> at <strong>9:00</strong>."</td>
+          </tr>
+          <tr style="background:#eff6ff; border-bottom:1px solid #e2e8f0;">
+            <td style="padding:6px 10px; font-weight:600;">의도/결정한 계획<br><span style="font-weight:400; color:#64748b;">Intention / decided plan</span></td>
+            <td style="padding:6px 10px;"><span style="color:#22c55e; font-weight:700;">going to</span></td>
+            <td style="padding:6px 10px;">"I<span class="verb">'m going to buy</span> a new car."</td>
+          </tr>
+          <tr style="background:#fff; border-bottom:1px solid #e2e8f0;">
+            <td style="padding:6px 10px; font-weight:600;">증거 기반 예측<br><span style="font-weight:400; color:#64748b;">Prediction (evidence)</span></td>
+            <td style="padding:6px 10px;"><span style="color:#22c55e; font-weight:700;">going to</span></td>
+            <td style="padding:6px 10px;">"Look! It<span class="verb">'s going to rain</span>."</td>
+          </tr>
+          <tr style="background:#eff6ff; border-bottom:1px solid #e2e8f0;">
+            <td style="padding:6px 10px; font-weight:600;">즉석 결정<br><span style="font-weight:400; color:#64748b;">Instant decision</span></td>
+            <td style="padding:6px 10px;"><span style="color:#3b82f6; font-weight:700;">will</span></td>
+            <td style="padding:6px 10px;">"I<span class="verb">'ll help</span> you with that."</td>
+          </tr>
+          <tr style="background:#fff;">
+            <td style="padding:6px 10px; font-weight:600;">예측/제안/약속<br><span style="font-weight:400; color:#64748b;">Prediction / offer / promise</span></td>
+            <td style="padding:6px 10px;"><span style="color:#3b82f6; font-weight:700;">will</span></td>
+            <td style="padding:6px 10px;">"I'm sure she<span class="verb">'ll pass</span> the exam."</td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="textbook-ref" style="margin-top:8px;">&#128216; GIU Units 18-22</p>
     </section>
 
     <!-- ========== L1 INTERFERENCE ========== -->
@@ -450,15 +485,6 @@
       minScale: 0.2,
       maxScale: 1.5,
     plugins: [RevealNotes]
-  });
-
-  // Timeline Visualization
-  document.addEventListener('DOMContentLoaded', function() {
-    const tl = new TenseTimeline('#timeline-future');
-    tl.addPoint("I'm doing", 55, '#f59e0b');
-    tl.addPoint('I do (schedule)', 80, '#ef4444');
-    tl.addTense('going to', 58, 78, '#22c55e', 1);
-    tl.addPoint('will', 68, '#3b82f6');
   });
 
   // Quiz Data
