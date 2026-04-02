@@ -639,3 +639,42 @@ body.hide-korean .ko {
   padding-left: 10px;
   margin-top: 8px;
 }
+
+/* ========== Part Badges (A, B, C, D) ========== */
+
+.part-badge {
+  display: inline-block;
+  font-size: 0.7em;
+  font-weight: 700;
+  color: #fff;
+  background: #6b7280;
+  border-radius: 4px;
+  padding: 1px 8px;
+  margin-right: 6px;
+  vertical-align: middle;
+  line-height: 1.6;
+}
+.part-badge.a { background: #3b82f6; }
+.part-badge.b { background: #8b5cf6; }
+.part-badge.c { background: #f59e0b; }
+.part-badge.d { background: #ef4444; }
+.part-badge.e { background: #14b8a6; }
+
+/* Part section within a slide */
+.part-section {
+  border-left: 3px solid #e2e8f0;
+  padding-left: 12px;
+  margin-top: 6px;
+}
+.part-section.a { border-left-color: #3b82f6; }
+.part-section.b { border-left-color: #8b5cf6; }
+.part-section.c { border-left-color: #f59e0b; }
+.part-section.d { border-left-color: #ef4444; }
+
+.part-section h4 {
+  margin: 0 0 2px 0;
+  font-size: 0.9em;
+}
+.part-section h4 .part-badge {
+  font-size: 0.75em;
+}
