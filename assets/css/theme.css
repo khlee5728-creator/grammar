@@ -670,11 +670,11 @@ body.hide-korean .ko {
   border-radius: 6px;
   background: #f8f9fa;
 }
-.part-section.a { background: #eff6ff; }
-.part-section.b { background: #f5f3ff; }
-.part-section.c { background: #fffbeb; }
-.part-section.d { background: #fef2f2; }
-.part-section.e { background: #f0fdfa; }
+.reveal .slides .part-section.a, .part-section.a { background: #eff6ff; }
+.reveal .slides .part-section.b, .part-section.b { background: #f5f3ff; }
+.reveal .slides .part-section.c, .part-section.c { background: #fffbeb; }
+.reveal .slides .part-section.d, .part-section.d { background: #fef2f2; }
+.reveal .slides .part-section.e, .part-section.e { background: #f0fdfa; }
 
 .part-section h4 {
   margin: 0 0 2px 0;
