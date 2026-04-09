@@ -664,15 +664,17 @@ body.hide-korean .ko {
 /* Part section within a slide */
 .reveal .slides .part-section,
 .part-section {
-  border-left: 3px solid #e2e8f0;
-  padding-left: 12px;
+  border-left: none;
+  padding: 4px 8px;
   margin-top: 6px;
+  border-radius: 6px;
+  background: #f8f9fa;
 }
-.part-section.a { border-left-color: #3b82f6; }
-.part-section.b { border-left-color: #8b5cf6; }
-.part-section.c { border-left-color: #f59e0b; }
-.part-section.d { border-left-color: #ef4444; }
-.part-section.e { border-left-color: #14b8a6; }
+.part-section.a { background: #eff6ff; }
+.part-section.b { background: #f5f3ff; }
+.part-section.c { background: #fffbeb; }
+.part-section.d { background: #fef2f2; }
+.part-section.e { background: #f0fdfa; }
 
 .part-section h4 {
   margin: 0 0 2px 0;
@@ -680,4 +682,14 @@ body.hide-korean .ko {
 }
 .part-section h4 .part-badge {
   font-size: 0.75em;
+}
+.part-section .example-sentence {
+  font-size: 0.88em;
+}
+.part-section .example-explanation {
+  font-size: 0.82em;
+}
+.part-section .example-card {
+  padding: 4px 8px;
+  margin-top: 2px;
 }
