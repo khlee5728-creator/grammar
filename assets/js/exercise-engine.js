@@ -34,6 +34,7 @@ class ExercisePractice {
   bindEvents() {
     this.cards.forEach(card => {
       const inputs = card.querySelectorAll('.exercise-input');
+      const choiceButtons = card.querySelectorAll('.exercise-choice');
       const checkBtn = card.querySelector('.exercise-check-btn');
 
       if (inputs.length && checkBtn) {
@@ -53,6 +54,23 @@ class ExercisePractice {
             e.stopPropagation();
           });
         });
+      } else if (choiceButtons.length) {
+        choiceButtons.forEach(btn => {
+          btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            if (btn.disabled) return;
+            choiceButtons.forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+          });
+        });
+        if (checkBtn) {
+          checkBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            this.checkChoice(card);
+          });
+        }
       }
     });
 
@@ -215,6 +233,41 @@ class ExercisePractice {
     this.addHintButton(card);
   }
 
+  checkChoice(card) {
+    const choiceButtons = Array.from(card.querySelectorAll('.exercise-choice'));
+    const selected = card.querySelector('.exercise-choice.selected');
+    const feedback = card.querySelector('.exercise-feedback');
+    const checkBtn = card.querySelector('.exercise-check-btn');
+    if (!choiceButtons.length || !selected || selected.disabled) return;
+
+    const expected = card.dataset.answer || '';
+    const alts = card.dataset.alt ? card.dataset.alt.split('|') : [];
+    const allAccepted = [expected, ...alts].map(a => this.normalize(a));
+    const userValue = this.normalize(selected.dataset.value || selected.textContent);
+    const isCorrect = allAccepted.includes(userValue);
+
+    choiceButtons.forEach(b => { b.disabled = true; });
+    selected.classList.remove('selected');
+    if (checkBtn) checkBtn.style.display = 'none';
+
+    if (isCorrect) {
+      selected.classList.add('correct');
+      if (feedback) feedback.innerHTML = '<span class="exercise-correct-mark">✓</span>';
+    } else {
+      selected.classList.add('incorrect');
+      // Highlight the correct choice(s)
+      choiceButtons.forEach(b => {
+        const val = this.normalize(b.dataset.value || b.textContent);
+        if (allAccepted.includes(val)) b.classList.add('correct');
+      });
+      if (feedback) {
+        feedback.innerHTML = `<span class="exercise-correct-answer">→ ${expected}</span>`;
+      }
+    }
+
+    this.addHintButton(card);
+  }
+
   addHintButton(card) {
     const hint = card.dataset.hint;
     if (!hint) return;
@@ -244,8 +297,13 @@ class ExercisePractice {
   checkAll() {
     this.cards.forEach(card => {
       const inputs = card.querySelectorAll('.exercise-input');
+      const choiceButtons = card.querySelectorAll('.exercise-choice');
       if (inputs.length && !inputs[0].disabled) {
         this.checkAnswer(card);
+      } else if (choiceButtons.length && !choiceButtons[0].disabled) {
+        if (card.querySelector('.exercise-choice.selected')) {
+          this.checkChoice(card);
+        }
       }
     });
   }
@@ -253,6 +311,7 @@ class ExercisePractice {
   resetAll() {
     this.cards.forEach(card => {
       const inputs = card.querySelectorAll('.exercise-input');
+      const choiceButtons = card.querySelectorAll('.exercise-choice');
       const feedback = card.querySelector('.exercise-feedback');
       const checkBtn = card.querySelector('.exercise-check-btn');
 
@@ -260,6 +319,10 @@ class ExercisePractice {
         input.value = '';
         input.disabled = false;
         input.classList.remove('correct', 'incorrect');
+      });
+      choiceButtons.forEach(btn => {
+        btn.disabled = false;
+        btn.classList.remove('selected', 'correct', 'incorrect');
       });
       const popover = card.querySelector('.exercise-hint-popover');
       if (popover) popover.remove();

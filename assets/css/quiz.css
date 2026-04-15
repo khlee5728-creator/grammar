@@ -665,6 +665,59 @@
   background: #d1d5db;
 }
 
+/* Exercise choice (multiple-choice) buttons */
+.exercise-choice-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin: 3px 0;
+  align-items: center;
+}
+
+.exercise-choice {
+  display: inline-block;
+  font-size: 0.78em;
+  padding: 2px 12px;
+  background: #f1f5f9;
+  color: #334155;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 14px;
+  cursor: pointer;
+  user-select: none;
+  font-family: inherit;
+  font-weight: 600;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+
+.exercise-choice:hover:not(:disabled) {
+  background: #e2e8f0;
+  border-color: #94a3b8;
+}
+
+.exercise-choice.selected {
+  background: #2563eb;
+  color: #fff;
+  border-color: #2563eb;
+}
+
+.exercise-choice.correct {
+  background: #16a34a;
+  color: #fff;
+  border-color: #16a34a;
+}
+
+.exercise-choice.incorrect {
+  background: #dc2626;
+  color: #fff;
+  border-color: #dc2626;
+  text-decoration: line-through;
+}
+
+.exercise-choice:disabled {
+  cursor: not-allowed;
+  opacity: 0.85;
+}
+
 .exercise-hint-btn {
   display: inline-block;
   margin-left: 6px;
