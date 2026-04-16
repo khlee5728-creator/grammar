@@ -238,30 +238,43 @@ class ExercisePractice {
     const selected = card.querySelector('.exercise-choice.selected');
     const feedback = card.querySelector('.exercise-feedback');
     const checkBtn = card.querySelector('.exercise-check-btn');
-    if (!choiceButtons.length || !selected || selected.disabled) return;
+    if (!choiceButtons.length) return;
+    if (choiceButtons[0].disabled) return;
 
     const expected = card.dataset.answer || '';
     const alts = card.dataset.alt ? card.dataset.alt.split('|') : [];
     const allAccepted = [expected, ...alts].map(a => this.normalize(a));
-    const userValue = this.normalize(selected.dataset.value || selected.textContent);
-    const isCorrect = allAccepted.includes(userValue);
 
     choiceButtons.forEach(b => { b.disabled = true; });
-    selected.classList.remove('selected');
     if (checkBtn) checkBtn.style.display = 'none';
 
-    if (isCorrect) {
-      selected.classList.add('correct');
-      if (feedback) feedback.innerHTML = '<span class="exercise-correct-mark">✓</span>';
-    } else {
-      selected.classList.add('incorrect');
-      // Highlight the correct choice(s)
+    if (!selected) {
+      // No selection: reveal the correct answer
       choiceButtons.forEach(b => {
         const val = this.normalize(b.dataset.value || b.textContent);
         if (allAccepted.includes(val)) b.classList.add('correct');
       });
       if (feedback) {
         feedback.innerHTML = `<span class="exercise-correct-answer">→ ${expected}</span>`;
+      }
+    } else {
+      const userValue = this.normalize(selected.dataset.value || selected.textContent);
+      const isCorrect = allAccepted.includes(userValue);
+      selected.classList.remove('selected');
+
+      if (isCorrect) {
+        selected.classList.add('correct');
+        if (feedback) feedback.innerHTML = '<span class="exercise-correct-mark">✓</span>';
+      } else {
+        selected.classList.add('incorrect');
+        // Highlight the correct choice(s)
+        choiceButtons.forEach(b => {
+          const val = this.normalize(b.dataset.value || b.textContent);
+          if (allAccepted.includes(val)) b.classList.add('correct');
+        });
+        if (feedback) {
+          feedback.innerHTML = `<span class="exercise-correct-answer">→ ${expected}</span>`;
+        }
       }
     }
 
@@ -301,9 +314,7 @@ class ExercisePractice {
       if (inputs.length && !inputs[0].disabled) {
         this.checkAnswer(card);
       } else if (choiceButtons.length && !choiceButtons[0].disabled) {
-        if (card.querySelector('.exercise-choice.selected')) {
-          this.checkChoice(card);
-        }
+        this.checkChoice(card);
       }
     });
   }
