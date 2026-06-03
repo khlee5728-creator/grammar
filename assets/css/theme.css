@@ -244,6 +244,16 @@ body.hide-korean .ko {
   display: inline;
 }
 
+/* Inline supplementary note attached to an example sentence
+   — explicit sans-serif (via --font-en) so it visually separates from the
+   serif example body even when nested inside .example-sentence.
+   Margin-left omitted: the HTML already has a space before the note span. */
+.example-note {
+  font-family: var(--font-en);
+  font-size: 0.85em;
+  color: var(--text-secondary);
+}
+
 .example-explanation {
   font-size: 0.8em;
   color: var(--text-secondary);
