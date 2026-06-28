@@ -120,6 +120,12 @@
       box-shadow: var(--shadow-lg);
       border-color: var(--phase2-border);
     }
+    .card-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 10px;
+    }
     .card-week-badge {
       display: inline-block;
       background: var(--phase2-bg);
@@ -131,8 +137,34 @@
       letter-spacing: 0.3px;
       font-family: var(--font-en);
       width: fit-content;
-      margin-bottom: 10px;
     }
+    /* Tool tags — 학생이 사용한 작업 도구 */
+    .tool-tag {
+      display: inline-block;
+      padding: 3px 9px;
+      border-radius: 12px;
+      font-size: 0.7em;
+      font-weight: 600;
+      letter-spacing: 0.2px;
+      font-family: var(--font-en);
+      width: fit-content;
+      border: 1px solid transparent;
+    }
+    .tool-tag::before {
+      content: attr(data-icon);
+      margin-right: 4px;
+      font-size: 0.95em;
+    }
+    .tool-gemini      { background: #e0e7ff; color: #3730a3; border-color: #c7d2fe; }
+    .tool-claude      { background: #fef3c7; color: #92400e; border-color: #fde68a; }
+    .tool-github      { background: #f1f5f9; color: #334155; border-color: #cbd5e1; }
+    .tool-netlify     { background: #cffafe; color: #155e75; border-color: #a5f3fc; }
+    .tool-vercel      { background: #f3f4f6; color: #111827; border-color: #d1d5db; }
+    .tool-replit      { background: #fed7aa; color: #9a3412; border-color: #fdba74; }
+    .tool-genially    { background: #fce7f3; color: #9d174d; border-color: #fbcfe8; }
+    .tool-jsbin       { background: #f3e8ff; color: #6b21a8; border-color: #e9d5ff; }
+    .tool-local       { background: #ecfdf5; color: #047857; border-color: #a7f3d0; }
+    .tool-web         { background: #f8fafc; color: #475569; border-color: #e2e8f0; }
     .card-title {
       font-family: var(--font-en);
       font-size: 1.08em;
@@ -333,17 +365,34 @@
       }[c]));
     }
 
+    // ===== Tool detection from URL =====
+    // Returns { label, cssClass, icon } based on URL pattern or local fallback.
+    function detectTool(url, external) {
+      if (!external) return { label: 'Local HTML', cssClass: 'tool-local',    icon: '📄' };
+      if (url.includes('gemini.google.com'))   return { label: 'Gemini',       cssClass: 'tool-gemini',   icon: '✨' };
+      if (url.includes('claude.ai'))           return { label: 'Claude',       cssClass: 'tool-claude',   icon: '🤖' };
+      if (url.includes('.github.io'))          return { label: 'GitHub Pages', cssClass: 'tool-github',   icon: '🐙' };
+      if (url.includes('.netlify.app'))        return { label: 'Netlify',      cssClass: 'tool-netlify',  icon: '🌐' };
+      if (url.includes('.vercel.app'))         return { label: 'Vercel',       cssClass: 'tool-vercel',   icon: '▲'  };
+      if (url.includes('.replit.app'))         return { label: 'Replit',       cssClass: 'tool-replit',   icon: '⚡' };
+      if (url.includes('genially.com'))        return { label: 'Genially',     cssClass: 'tool-genially', icon: '🎨' };
+      if (url.includes('jsbin.com'))           return { label: 'JSBin',        cssClass: 'tool-jsbin',    icon: '💻' };
+      return                                          { label: 'Web',          cssClass: 'tool-web',      icon: '🔗' };
+    }
+
     function renderCard(item) {
-      const icon = item.external ? '🔗' : '📄';
-      const target = item.external ? '_blank' : '_blank';
-      const rel = item.external ? 'noopener noreferrer' : '';
+      const linkIcon = item.external ? '🔗' : '📄';
+      const tool = detectTool(item.url, item.external);
       return `
         <div class="portfolio-card">
-          <span class="card-week-badge">Week ${item.week}</span>
+          <div class="card-badges">
+            <span class="card-week-badge">Week ${item.week}</span>
+            <span class="tool-tag ${tool.cssClass}" data-icon="${tool.icon}">${tool.label}</span>
+          </div>
           <div class="card-title">${escapeHtml(item.title)}</div>
           <div class="card-student">${escapeHtml(item.displayName)}</div>
-          <a href="${encodeURI(item.url)}" class="card-link" target="${target}" rel="${rel}">
-            <span class="icon">${icon}</span> 작품 보기
+          <a href="${encodeURI(item.url)}" class="card-link" target="_blank" rel="noopener noreferrer">
+            <span class="icon">${linkIcon}</span> 작품 보기
           </a>
         </div>
       `;
