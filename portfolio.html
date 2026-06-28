@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Portfolio · English Grammar</title>
+  <link rel="stylesheet" href="assets/css/dashboard.css">
+  <style>
+    /* ===== Portfolio-specific styles ===== */
+    .portfolio-header {
+      background: linear-gradient(135deg, var(--phase2-color) 0%, #6d28d9 50%, #4c1d95 100%);
+      color: white;
+      padding: 44px 40px 36px;
+      text-align: center;
+    }
+    .portfolio-header h1 {
+      font-size: 2.1em;
+      font-weight: 700;
+      margin-bottom: 6px;
+      letter-spacing: -0.02em;
+    }
+    .portfolio-header .subtitle {
+      font-family: var(--font-ko);
+      font-size: 1em;
+      opacity: 0.9;
+      font-weight: 300;
+    }
+    .portfolio-header .meta {
+      margin-top: 14px;
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .portfolio-header .meta .badge {
+      background: rgba(255,255,255,0.15);
+      padding: 5px 14px;
+      border-radius: 16px;
+      font-size: 0.8em;
+      backdrop-filter: blur(10px);
+    }
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: white;
+      text-decoration: none;
+      font-size: 0.85em;
+      opacity: 0.85;
+      margin-bottom: 18px;
+    }
+    .back-link:hover { opacity: 1; }
+
+    /* Filter bar */
+    .filter-bar {
+      background: white;
+      border-radius: 14px;
+      padding: 18px 22px;
+      margin-bottom: 26px;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+    .filter-bar .label {
+      font-family: var(--font-ko);
+      font-size: 0.88em;
+      color: var(--text-secondary);
+      font-weight: 500;
+      margin-right: 6px;
+    }
+    .filter-btn {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+      padding: 6px 13px;
+      border-radius: 18px;
+      font-size: 0.85em;
+      cursor: pointer;
+      font-family: var(--font-ko);
+      transition: all 0.15s;
+    }
+    .filter-btn:hover {
+      background: var(--phase2-bg);
+      color: var(--phase2-color);
+      border-color: var(--phase2-border);
+    }
+    .filter-btn.active {
+      background: var(--phase2-color);
+      color: white;
+      border-color: var(--phase2-color);
+    }
+    .count-info {
+      margin-left: auto;
+      font-size: 0.82em;
+      color: var(--text-muted);
+      font-family: var(--font-ko);
+    }
+
+    /* Portfolio grid */
+    .portfolio-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 18px;
+    }
+    .portfolio-card {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 20px 22px 18px;
+      box-shadow: var(--shadow);
+      transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+    .portfolio-card:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-lg);
+      border-color: var(--phase2-border);
+    }
+    .card-week-badge {
+      display: inline-block;
+      background: var(--phase2-bg);
+      color: var(--phase2-color);
+      padding: 3px 10px;
+      border-radius: 12px;
+      font-size: 0.72em;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+      font-family: var(--font-en);
+      width: fit-content;
+      margin-bottom: 10px;
+    }
+    .card-title {
+      font-family: var(--font-en);
+      font-size: 1.08em;
+      font-weight: 600;
+      color: var(--text-primary);
+      line-height: 1.3;
+      margin-bottom: 8px;
+      word-break: keep-all;
+    }
+    .card-student {
+      font-family: var(--font-ko);
+      font-size: 0.88em;
+      color: var(--text-secondary);
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .card-student::before {
+      content: "👤";
+      font-size: 0.9em;
+    }
+    .card-link {
+      margin-top: auto;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      background: var(--phase2-color);
+      color: white;
+      text-decoration: none;
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-size: 0.85em;
+      font-weight: 500;
+      transition: background 0.15s;
+    }
+    .card-link:hover {
+      background: #6d28d9;
+    }
+    .card-link .icon {
+      font-size: 0.95em;
+    }
+
+    /* Week group divider */
+    .week-section {
+      margin-bottom: 30px;
+    }
+    .week-section.hidden { display: none; }
+    .week-section-title {
+      font-family: var(--font-ko);
+      font-size: 1em;
+      color: var(--text-secondary);
+      font-weight: 600;
+      margin-bottom: 14px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid var(--phase2-bg);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .week-section-title .count {
+      background: var(--phase2-bg);
+      color: var(--phase2-color);
+      font-size: 0.72em;
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-weight: 600;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--text-muted);
+      font-family: var(--font-ko);
+      font-size: 0.95em;
+    }
+
+    @media (max-width: 640px) {
+      .portfolio-header h1 { font-size: 1.6em; }
+      .portfolio-grid { grid-template-columns: 1fr; }
+      .filter-bar { padding: 14px 16px; }
+      .count-info { margin-left: 0; width: 100%; margin-top: 6px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="portfolio-header">
+    <a href="index.html" class="back-link">← 강의 홈으로</a>
+    <h1>Student Portfolio</h1>
+    <p class="subtitle">학생 산출물 포트폴리오</p>
+    <div class="meta">
+      <span class="badge">📅 2026학년도 1학기</span>
+      <span class="badge">👥 <span id="totalCount">0</span>명 작품</span>
+    </div>
+  </header>
+
+  <div class="container">
+
+    <!-- Filter Bar -->
+    <div class="filter-bar">
+      <span class="label">주차 필터:</span>
+      <button class="filter-btn active" data-week="all">전체</button>
+      <button class="filter-btn" data-week="2">2주차</button>
+      <button class="filter-btn" data-week="3">3주차</button>
+      <button class="filter-btn" data-week="4">4주차</button>
+      <button class="filter-btn" data-week="5">5주차</button>
+      <button class="filter-btn" data-week="6">6주차</button>
+      <button class="filter-btn" data-week="7">7주차</button>
+      <button class="filter-btn" data-week="9">9주차</button>
+      <button class="filter-btn" data-week="10">10주차</button>
+      <button class="filter-btn" data-week="11">11주차</button>
+      <button class="filter-btn" data-week="12">12주차</button>
+      <button class="filter-btn" data-week="13">13주차</button>
+      <button class="filter-btn" data-week="14">14주차</button>
+      <span class="count-info" id="visibleCount"></span>
+    </div>
+
+    <!-- Portfolio Sections (rendered by JS) -->
+    <div id="portfolioRoot"></div>
+
+  </div>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <p>English Grammar &middot; Student Portfolio &middot; 2026학년도</p>
+  </footer>
+
+  <script>
+    // ===== Portfolio Data =====
+    // Each entry: { week, displayName, title, url, external }
+    // displayName uses first character + "OO" masking for privacy.
+    const PORTFOLIO_DATA = [
+      { week: 2,  displayName: "이OO", title: "Presentation",                 url: "https://leews88.github.io/real-last-presentation/",                                                   external: true  },
+      { week: 2,  displayName: "김OO", title: "TREASURED",                    url: "https://gemini.google.com/share/42f12cc43903",                                                          external: true  },
+      { week: 3,  displayName: "이OO", title: "Grammar Kick",                 url: "https://olsang2.github.io/englishgrammarsoccergame/",                                                   external: true  },
+      { week: 3,  displayName: "이OO", title: "Grammar Quiz Game",            url: "https://2yuhann.github.io/-1_Unit11-12/",                                                                external: true  },
+      { week: 3,  displayName: "김OO", title: "TIME DETECTIVE",               url: "https://gemini.google.com/share/cbca543b53c3",                                                          external: true  },
+      { week: 4,  displayName: "정OO", title: "Frog Catch",                   url: "../student data/26-1 student portfolio/영문법_4주차_정조앤.html",                                          external: false },
+      { week: 4,  displayName: "김OO", title: "Monkey House",                 url: "../student data/26-1 student portfolio/영문법_4주차_김태정/index.html",                                     external: false },
+      { week: 4,  displayName: "김OO", title: "English Tense Visualizer",     url: "https://grammar-presentation.vercel.app/",                                                              external: true  },
+      { week: 4,  displayName: "윤OO", title: "On the Way Home",              url: "../student data/26-1 student portfolio/영문법_4주차_윤다혜.html",                                          external: false },
+      { week: 5,  displayName: "최OO", title: "My Planned Day",               url: "https://gemini.google.com/share/e86a15a0be29",                                                          external: true  },
+      { week: 5,  displayName: "한OO", title: "MAGIC WORD BATTLE",            url: "https://gemini.google.com/share/bb1a98a40ebb",                                                          external: true  },
+      { week: 5,  displayName: "박OO", title: "Galaxy Escape",                url: "../student data/26-1 student portfolio/영문법_5주차_박수호/영문법_5주차_박수호/텍스트.html",                       external: false },
+      { week: 6,  displayName: "차OO", title: "Detective Kai",                url: "../student data/26-1 student portfolio/영문법_6주차_차정은.html",                                          external: false },
+      { week: 6,  displayName: "서OO", title: "미스터리 추리 게임",                 url: "../student data/26-1 student portfolio/영문법_6주차_서동건.html",                                          external: false },
+      { week: 6,  displayName: "김OO", title: "Expressions of Certainty",     url: "https://certaintyqz.netlify.app/",                                                                      external: true  },
+      { week: 6,  displayName: "김OO", title: "Could vs Could Have",          url: "../student data/26-1 student portfolio/영문법_6주차_김의연.html",                                          external: false },
+      { week: 7,  displayName: "유OO", title: "The Duty Dilemma",             url: "../student data/26-1 student portfolio/영문법_7주차_유화경.html",                                          external: false },
+      { week: 7,  displayName: "한OO", title: "근성장 영문법 퀴즈",                  url: "../student data/26-1 student portfolio/영문법_7주차_한창규.html",                                          external: false },
+      { week: 7,  displayName: "권OO", title: "NYC Subjunctive Subway",       url: "../student data/26-1 student portfolio/영문법_7주차_권보현.html",                                          external: false },
+      { week: 7,  displayName: "강OO", title: "Escape Game Submarine",        url: "https://view.genially.com/69e0bb3429cc8b47f3667a17",                                                    external: true  },
+      { week: 7,  displayName: "김OO", title: "Grammar Match",                url: "../student data/26-1 student portfolio/영문법_7주차_김형우/dating_sim_offline.html",                            external: false },
+      { week: 9,  displayName: "유OO", title: "I Wish Card Game",             url: "https://dapper-macaron-7713f9.netlify.app/",                                                            external: true  },
+      { week: 9,  displayName: "강OO", title: "Gate Guardian",                url: "../student data/26-1 student portfolio/영문법_9주차_강지민/영문법_9주차_강지민.html",                              external: false },
+      { week: 9,  displayName: "김OO", title: "Grammar Pitch",                url: "https://endearing-strudel-ede64c.netlify.app/",                                                         external: true  },
+      { week: 10, displayName: "임OO", title: "Grammar Detective",            url: "../student data/26-1 student portfolio/영문법_10주차_임세경.html",                                         external: false },
+      { week: 10, displayName: "황OO", title: "MASTER REPAIRER",              url: "https://gemini.google.com/share/3d3ec658a823",                                                          external: true  },
+      { week: 10, displayName: "김OO", title: "Home Repair",                  url: "https://repair-quiz--seoyonugingg.replit.app/",                                                         external: true  },
+      { week: 10, displayName: "강OO", title: "Grammar Quest",                url: "https://claude.ai/public/artifacts/77adb9ee-6ee4-40ed-a99c-30b923a0a47c",                                external: true  },
+      { week: 11, displayName: "박OO", title: "CYBER TYPING ARCADE",          url: "../student data/26-1 student portfolio/영문법_11주차_박성훈.html",                                         external: false },
+      { week: 11, displayName: "김OO", title: "Market Quest",                 url: "../student data/26-1 student portfolio/영문법_11주차_김홍주.html",                                         external: false },
+      { week: 11, displayName: "서OO", title: "Interrogation Room",           url: "https://claude.ai/public/artifacts/cc272258-3ca2-4f52-a84f-8ff4adda47ec",                                external: true  },
+      { week: 12, displayName: "온OO", title: "AI 문법 퀴즈 트레이너",                url: "https://jsbin.com/kahosotoda/1/edit?html,output",                                                       external: true  },
+      { week: 12, displayName: "이OO", title: "The 4 Regrets",                url: "../student data/26-1 student portfolio/영문법_11주차_이근주/영문법_11주차_이근주.html",                            external: false },
+      { week: 12, displayName: "안OO", title: "Alice's Grammar Maze",         url: "../student data/26-1 student portfolio/영문법_12주차_안세은.html",                                         external: false },
+      { week: 13, displayName: "이OO", title: "Grammar Tug of War",           url: "../student data/26-1 student portfolio/영문법_12주차_이정빈.html",                                         external: false },
+      { week: 13, displayName: "조OO", title: "Grammar Guard",                url: "https://hohyun259.github.io/GIU_Unit57-58/",                                                            external: true  },
+      { week: 13, displayName: "이OO", title: "Grammar Hack",                 url: "../student data/26-1 student portfolio/영문법_13주차_이영화.html",                                         external: false },
+      { week: 14, displayName: "주OO", title: "Grammar Hamster",              url: "../student data/26-1 student portfolio/영어문법_14주차_주민선.html",                                         external: false },
+      { week: 14, displayName: "장OO", title: "GRAMMAR DEFUSAL SQUAD",        url: "https://claude.ai/public/artifacts/ba11e15d-11ec-4da4-a1ea-9a07077636cd",                                external: true  },
+      { week: 14, displayName: "최OO", title: "Perception Detective",         url: "https://spiffy-speculoos-553c49.netlify.app/",                                                          external: true  }
+    ];
+
+    // ===== Rendering =====
+    const root = document.getElementById('portfolioRoot');
+    const totalCountEl = document.getElementById('totalCount');
+    const visibleCountEl = document.getElementById('visibleCount');
+
+    totalCountEl.textContent = PORTFOLIO_DATA.length;
+
+    // Group by week
+    function groupByWeek(data) {
+      const groups = {};
+      data.forEach(item => {
+        if (!groups[item.week]) groups[item.week] = [];
+        groups[item.week].push(item);
+      });
+      return groups;
+    }
+
+    function escapeHtml(s) {
+      return s.replace(/[&<>"']/g, c => ({
+        '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+      }[c]));
+    }
+
+    function renderCard(item) {
+      const icon = item.external ? '🔗' : '📄';
+      const target = item.external ? '_blank' : '_blank';
+      const rel = item.external ? 'noopener noreferrer' : '';
+      return `
+        <div class="portfolio-card">
+          <span class="card-week-badge">Week ${item.week}</span>
+          <div class="card-title">${escapeHtml(item.title)}</div>
+          <div class="card-student">${escapeHtml(item.displayName)}</div>
+          <a href="${encodeURI(item.url)}" class="card-link" target="${target}" rel="${rel}">
+            <span class="icon">${icon}</span> 작품 보기
+          </a>
+        </div>
+      `;
+    }
+
+    function render(filterWeek) {
+      const groups = groupByWeek(PORTFOLIO_DATA);
+      const weeks = Object.keys(groups).map(Number).sort((a, b) => a - b);
+      let html = '';
+      let visibleCount = 0;
+
+      weeks.forEach(w => {
+        const items = groups[w];
+        const isHidden = (filterWeek !== 'all' && Number(filterWeek) !== w);
+        if (!isHidden) visibleCount += items.length;
+        html += `
+          <div class="week-section${isHidden ? ' hidden' : ''}" data-week="${w}">
+            <h3 class="week-section-title">
+              Week ${w} <span class="count">${items.length}개 작품</span>
+            </h3>
+            <div class="portfolio-grid">
+              ${items.map(renderCard).join('')}
+            </div>
+          </div>
+        `;
+      });
+
+      root.innerHTML = html || '<div class="empty-state">표시할 작품이 없습니다.</div>';
+      visibleCountEl.textContent = `${visibleCount}개 표시 중`;
+    }
+
+    // Filter buttons
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        render(btn.dataset.week);
+      });
+    });
+
+    // Initial render
+    render('all');
+  </script>
+
+</body>
+</html>
