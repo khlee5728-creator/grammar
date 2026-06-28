@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GALAXY ESCAPE: Will vs Be going to</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #050b14;
+            color: #f8fafc;
+            overflow-x: hidden;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .eng-font { font-family: 'Orbitron', sans-serif; }
+
+        /* --- 화면 레이아웃 --- */
+        #game-wrapper {
+            display: none;
+            min-height: 100vh;
+            padding: 2rem;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .game-layout {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            max-width: 1500px; /* 좌우 너비를 조금 더 넓게 */
+            width: 100%;
+            height: 100%;
+        }
+
+        @media (min-width: 1024px) {
+            .game-layout {
+                flex-direction: row;
+                height: 85vh;
+            }
+        }
+
+        /* --- 좌측 패널 (상황 및 스토리) --- */
+        .left-panel {
+            flex: 1; /* 비율 조정 */
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            height: 100%;
+        }
+
+        /* 이미지 컨테이너 */
+        .image-container {
+            width: 100%;
+            flex: 1;
+            min-height: 350px;
+            border-radius: 1.5rem;
+            overflow: hidden;
+            border: 2px solid #1e293b;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            position: relative;
+            background: #0f172a;
+        }
+
+        .image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: opacity 0.5s ease-in-out;
+            opacity: 0; 
+        }
+
+        .story-container {
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid #334155;
+            border-radius: 1.5rem;
+            padding: 2.5rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        .grammar-box {
+            margin-top: 1.5rem;
+            padding: 1.2rem 1.5rem;
+            background: rgba(16, 185, 129, 0.1);
+            border-left: 5px solid #10b981;
+            border-radius: 0 0.8rem 0.8rem 0;
+            display: none;
+        }
+
+        /* --- 우측 패널 (선택지) --- */
+        .right-panel {
+            flex: 1.1; /* 선택지 패널에 공간을 더 할당 */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 1.5rem;
+            height: 100%;
+        }
+
+        /* 버튼 컨테이너 (상하 꽉 차게) */
+        #choices-area {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem; /* 버튼 사이 간격 */
+            width: 100%;
+            height: 100%; /* 패널 높이에 꽉 차게 */
+        }
+
+        /* 선택지 버튼 디자인 대폭 확대 */
+        .choice-btn {
+            flex: 1; /* 상하 공간을 50:50으로 꽉 채움 */
+            display: flex;
+            flex-direction: column;
+            justify-content: center; /* 내용물 수직 중앙 정렬 */
+            align-items: flex-start; /* 좌측 정렬 유지 */
+            background: #0f172a;
+            border: 3px solid #334155;
+            border-radius: 1.5rem;
+            padding: 3rem; /* 여백 큼직하게 */
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.4);
+            color: white;
+            overflow: hidden;
+        }
+
+        .choice-btn:hover {
+            transform: translateX(10px);
+            box-shadow: -8px 15px 25px rgba(0,0,0,0.5);
+        }
+
+        .choice-will { border-left: 8px solid #0ea5e9; }
+        .choice-will:hover { background: rgba(14, 165, 233, 0.15); border-color: #0ea5e9; }
+        .choice-will .tense-badge { background: #0ea5e9; color: #fff; }
+
+        .choice-be { border-left: 8px solid #a855f7; }
+        .choice-be:hover { background: rgba(168, 85, 247, 0.15); border-color: #a855f7; }
+        .choice-be .tense-badge { background: #a855f7; color: #fff; }
+
+        /* 뱃지, 영어, 한글 폰트 사이즈 모두 UP */
+        .tense-badge {
+            display: inline-block;
+            padding: 0.5rem 1.5rem;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            font-weight: 900;
+            margin-bottom: 1.5rem;
+            text-transform: uppercase;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+        }
+
+        .eng-dialogue {
+            font-size: 2.8rem; /* 영어 문장 엄청 크게 */
+            font-weight: 900;
+            margin-bottom: 1rem;
+            color: #f8fafc;
+            line-height: 1.2;
+        }
+
+        .kor-translation {
+            font-size: 1.3rem; /* 한글 해석도 크게 */
+            color: #94a3b8;
+        }
+
+        /* --- 엔딩 상태 패널 --- */
+        .ending-panel {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            background: #0f172a;
+            border-radius: 1.5rem;
+            padding: 4rem 3rem;
+            height: 100%;
+            border: 3px solid #334155;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .badge-bad { background: rgba(239, 68, 68, 0.2); color: #fca5a5; border: 2px solid #ef4444; }
+        .badge-normal { background: rgba(148, 163, 184, 0.2); color: #cbd5e1; border: 2px solid #94a3b8; }
+        .badge-happy { background: rgba(16, 185, 129, 0.2); color: #6ee7b7; border: 2px solid #10b981; }
+        .badge-hidden { background: rgba(245, 158, 11, 0.2); color: #fcd34d; border: 2px solid #f59e0b; }
+
+        /* --- 기타 UI --- */
+        #start-screen {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            background: linear-gradient(rgba(2, 6, 23, 0.6), rgba(2, 6, 23, 0.9)), url('bg_start.png') center/cover;
+        }
+
+        .primary-btn {
+            background: linear-gradient(135deg, #38bdf8, #818cf8);
+            color: white;
+            font-size: 1.6rem;
+            font-weight: bold;
+            padding: 1.2rem 3.5rem;
+            border-radius: 3rem;
+            border: none;
+            cursor: pointer;
+            transition: transform 0.2s;
+            box-shadow: 0 10px 20px rgba(56, 189, 248, 0.3);
+        }
+        .primary-btn:hover { transform: scale(1.05); }
+
+        .mute-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 100;
+            background: rgba(30, 41, 59, 0.8);
+            color: white;
+            border: 1px solid #475569;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            font-size: 1.4rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+        .mute-btn:hover { background: rgba(51, 65, 85, 0.9); }
+    </style>
+</head>
+<body>
+
+    <!-- 오디오 파일 -->
+    <audio id="bg-music" src="orbiting_a_dead_moon.mp3" loop=""></audio>
+
+    <button class="mute-btn" onclick="toggleMute()" title="음악 켜기/끄기">
+        <i id="mute-icon" class="fa-solid fa-volume-high"></i>
+    </button>
+
+    <!-- 1. 타이틀 (시작) 화면 -->
+    <div id="start-screen">
+        <h2 class="text-2xl md:text-3xl text-sky-400 mb-4 font-bold tracking-widest">MULTIVERSE SURVIVAL</h2>
+        <h1 class="text-6xl md:text-8xl font-black text-white mb-8 eng-font">GALAXY ESCAPE</h1>
+        <p class="text-xl text-slate-300 max-w-2xl leading-relaxed mb-8">
+            영문법이 당신의 운명을 결정합니다.<br>
+            위기의 순간, <strong>순간적인 기지(Will)</strong>를 발휘할 것인가,<br> 
+            <strong>준비된 계획(Be going to)</strong>을 따를 것인가?
+        </p>
+
+        <button class="primary-btn mt-6" onclick="startGame()">MISSION START <i class="fa-solid fa-power-off ml-2"></i></button>
+    </div>
+
+    <!-- 2. 메인 게임 화면 -->
+    <div id="game-wrapper">
+        <div class="game-layout">
+            
+            <!-- 좌측 패널 -->
+            <div class="left-panel">
+                <!-- 상황 이미지 영역 -->
+                <div class="image-container">
+                    <img id="scene-img" src="" alt="Scene background">
+                </div>
+                
+                <!-- 스토리 및 해설 영역 -->
+                <div class="story-container">
+                    <h3 id="stage-title" class="text-xl font-bold tracking-widest mb-4 uppercase eng-font"></h3>
+                    <p id="story-text" class="text-2xl leading-relaxed text-slate-200 mb-2 font-bold"></p>
+                    
+                    <div id="grammar-lesson" class="grammar-box">
+                        <div class="flex items-center mb-2 text-emerald-400 font-bold text-lg">
+                            <i class="fa-solid fa-chalkboard-user mr-2"></i> AI 문법 분석
+                        </div>
+                        <span id="grammar-text" class="text-emerald-100/90 text-lg leading-relaxed"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 우측 패널 -->
+            <div class="right-panel">
+                <!-- 버튼 영역이 상하로 꽉 차도록 설정됨 -->
+                <div id="choices-area">
+                    <button class="choice-btn choice-will" onclick="makeChoice('W')">
+                        <span class="tense-badge"><i class="fa-solid fa-bolt mr-1"></i> Will (즉흥적 행동)</span>
+                        <div class="eng-dialogue" id="btn-eng-w">"I will..."</div>
+                        <div class="kor-translation" id="btn-kor-w">해석</div>
+                    </button>
+
+                    <button class="choice-btn choice-be" onclick="makeChoice('B')">
+                        <span class="tense-badge"><i class="fa-solid fa-clipboard-check mr-1"></i> Be going to (계획된 행동)</span>
+                        <div class="eng-dialogue" id="btn-eng-b">"I am going to..."</div>
+                        <div class="kor-translation" id="btn-kor-b">해석</div>
+                    </button>
+                </div>
+
+                <div id="ending-area" class="ending-panel">
+                    <div id="ending-badge" class="px-8 py-3 rounded-full font-bold text-2xl mb-8 tracking-widest eng-font"></div>
+                    <h2 id="ending-name" class="text-5xl font-black text-white mb-8"></h2>
+                    <p class="text-slate-400 mb-12 text-xl">새로운 시제의 평행우주를 탐험하시겠습니까?</p>
+                    <button class="primary-btn" onclick="resetGame()">
+                        <i class="fa-solid fa-rotate-left mr-2"></i> 다시 시작하기
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const storyData = {
+            "start": {
+                title: "EVENT 1: ENGINE FAILURE",
+                titleColor: "text-sky-400",
+                image: "scene_start.png", 
+                text: "탐사선 갤럭시호가 거대한 블랙홀 근처에서 통제 불능 상태에 빠졌습니다! 중력에 이끌려 빨려 들어가기 직전입니다. 선장인 당신의 결단이 필요합니다!",
+                grammar: "",
+                choiceW: { eng: "I will fix the core manually!", kor: "내가 지금 당장 수동으로 엔진 코어를 고치겠어!" },
+                choiceB: { eng: "We are going to run the emergency program.", kor: "계획대로 비상 진단 프로그램을 실행할 거야." }
+            },
+            "W": {
+                title: "EVENT 2: MASSIVE FIRE",
+                titleColor: "text-sky-400",
+                image: "scene_w.png",
+                text: "엔진을 무작정 뜯어고쳐 함선 붕괴는 막았습니다. 하지만 무리한 조작으로 스프링클러가 고장 나며 기관실에 대형 화재가 발생했습니다!",
+                grammar: "'Will'을 사용해 순간적인 위기는 피했지만, 계획(Be going to)이 없어 '화재'라는 예측 불가능한 부작용을 낳았습니다.",
+                choiceW: { eng: "I will open the airlock!", kor: "에어록을 열어서 불길을 우주 밖으로 날려버리겠어!" },
+                choiceB: { eng: "I am going to turn on the sprinklers.", kor: "수동으로라도 스프링클러 시스템을 가동할 거야." }
+            },
+            "B": {
+                title: "EVENT 2: SPACE PIRATES",
+                titleColor: "text-sky-400",
+                image: "scene_b.png",
+                text: "프로그램이 안전하게 함선을 진단 중입니다. 그런데 그 사이 표류하는 우리를 발견한 거대한 우주 해적선이 무기를 겨눕니다!",
+                grammar: "'Be going to'를 사용해 안전하게 대처했지만, 절차를 밟는 동안 시간이 지체되어 외부의 위협에 노출되었습니다.",
+                choiceW: { eng: "I will shoot them first!", kor: "저 녀석들에게 먼저 레이저를 쏘겠어!" },
+                choiceB: { eng: "We are going to use the cloaking shield.", kor: "미리 훈련한 대로 은폐장(투명막)을 켤 거야." }
+            },
+            "WW": {
+                title: "EVENT 3: NO OXYGEN",
+                titleColor: "text-sky-400",
+                image: "scene_ww.png",
+                text: "에어록을 열어 불은 껐습니다. 하지만 선내 산소까지 빠져나가 산소 농도가 1.8%로 떨어졌고 승무원들이 쓰러집니다!",
+                grammar: "당장의 불을 끄기 위해 또 충동적 판단(Will)을 내렸습니다. 연속된 즉흥성은 결국 생명을 잃게 만듭니다.",
+                choiceW: { eng: "I will hold my breath and fix it!", kor: "숨을 꾹 참고 나가서 문을 닫고 오겠어!" },
+                choiceB: { eng: "We are going to wait for rescue.", kor: "구조대가 올 때까지 산소호흡기를 쓰고 버틸 거야." }
+            },
+            "WB": {
+                title: "EVENT 3: SYSTEM ERROR",
+                titleColor: "text-sky-400",
+                image: "scene_wb.png",
+                text: "스프링클러를 켰지만 물이 안 나옵니다. 아까 엔진을 수동으로 고칠 때 전선이 망가졌습니다! 불길이 통제 불능입니다.",
+                grammar: "즉흥성(Will)으로 시스템을 망가뜨려 놓고, 이제 와서 원래의 계획(Be going to)에 의존하려니 작동할 리가 없습니다.",
+                choiceW: { eng: "I will steal the pirate ship!", kor: "(마침 지나가던) 해적선을 뺏어 타겠어!" },
+                choiceB: { eng: "We are going to crash-land.", kor: "근처 행성으로 불시착을 시도할 거야." }
+            },
+            "BW": {
+                title: "EVENT 3: UNDER ATTACK",
+                titleColor: "text-sky-400",
+                image: "scene_bw.png",
+                text: "선제공격을 했지만 화가 난 해적선이 맹공격을 퍼부어옵니다! 레이저 피격으로 함선이 부서지기 시작합니다.",
+                grammar: "계획적(Be going to)으로 잘 버티다가, 무모한 충동(Will)을 이기지 못해 화를 자초했습니다.",
+                choiceW: { eng: "I will ram our ship into theirs!", kor: "우리 배를 저기에 들이박아 버리겠어!" },
+                choiceB: { eng: "We are going to surrender.", kor: "더 이상의 피해를 막기 위해 항복할 거야." }
+            },
+            "BB": {
+                title: "EVENT 3: POWER OUTAGE",
+                titleColor: "text-sky-400",
+                image: "scene_bb.png",
+                text: "은폐장 덕에 해적은 피했습니다. 하지만 에너지를 모두 소진하는 바람에 캄캄한 블랙홀의 중력권에 다시 잡혔습니다!",
+                grammar: "계획대로 방어(Be going to)하여 적은 피했지만, 유연성이 부족해 새로운 위기를 맞았습니다.",
+                choiceW: { eng: "I will jumpstart it with my battery!", kor: "내 우주복 배터리를 엔진에 꽂아 점프스타트하겠어!" },
+                choiceB: { eng: "We are going to wait in cryo-sleep.", kor: "구조될 때까지 동면 장치에 들어갈 거야." }
+            },
+
+            // ----- [최후의 엔딩 8가지] -----
+            "WWW": {
+                isEnding: true, type: "bad", title: "BAD ENDING", endName: "우주 미아 (유령선)",
+                image: "ending_www.png",
+                text: "우주복 없이 숨을 참기엔 너무 멀었습니다. 승무원들은 쓰러졌고, 함선은 서서히 부서지며 파편으로 남았습니다.",
+                grammar: "[ Will → Will → Will ]\n모든 상황을 즉흥적으로만 해결하려 한 대가입니다. 무계획의 끝은 파멸입니다."
+            },
+            "WWB": {
+                isEnding: true, type: "normal", title: "NORMAL ENDING", endName: "우주 정거장 수리 센터",
+                image: "ending_wwb.png",
+                text: "산소호흡기를 쓰고 버틴 끝에 구조대가 도착해 함선을 견인했습니다. 화려하진 않지만 생존에 성공했습니다.",
+                grammar: "[ Will → Will → Be going to ]\n초반의 즉흥성을 뒤늦은 계획으로 수습했습니다. 현실적인 생존입니다."
+            },
+            "WBW": {
+                isEnding: true, type: "hidden", title: "HIDDEN ENDING", endName: "우주 해적왕 등극",
+                image: "ending_wbw.png",
+                text: "불타는 우주선에서 튕겨 나가듯 적선에 뛰어올랐습니다! 당신의 무모함에 반한 해적들이 당신을 새로운 해적왕으로 추대합니다!",
+                grammar: "[ Will → Be going to → Will ]\n마지막 순간 상상을 초월하는 미친 직관(Will)이 엉뚱한 돌파구를 열었습니다!"
+            },
+            "WBB": {
+                isEnding: true, type: "normal", title: "NORMAL ENDING", endName: "미지의 행성 개척자",
+                image: "ending_wbb.png",
+                text: "절차에 따른 불시착 메뉴얼 덕분에 근처 무인 행성에 안착했습니다. 이제 당신은 이 거친 행성의 첫 개척자입니다.",
+                grammar: "[ Will → Be going to → Be going to ]\n충동적인 실수로 우주선은 잃었으나, 후반부의 침착한 매뉴얼(Be going to) 덕분에 최악은 피했습니다."
+            },
+            "BWW": {
+                isEnding: true, type: "bad", title: "BAD ENDING", endName: "산산조각 (우주 먼지)",
+                image: "ending_bww.png",
+                text: "적선에 들이박았지만, 상대의 튼튼한 장갑에 부딪혀 당신의 함선만 끔찍하게 산산조각 났습니다.",
+                grammar: "[ Be going to → Will → Will ]\n한 번 이성을 잃고 폭발한 연속된 충동적 분노(Will)가 모든 것을 망쳤습니다."
+            },
+            "BWB": {
+                isEnding: true, type: "normal", title: "NORMAL ENDING", endName: "해적선의 포로",
+                image: "ending_bwb.png",
+                text: "항복을 선언하자 해적선이 다가와 강제 도킹했습니다. 비록 포로 신세가 되었지만 목숨은 부지했습니다.",
+                grammar: "[ Be going to → Will → Be going to ]\n마지막에 이성적인 항복(Be going to)을 택해 죽음은 피했습니다."
+            },
+            "BBW": {
+                isEnding: true, type: "happy", title: "HAPPY ENDING", endName: "기적의 생환 (우주 영웅)",
+                image: "ending_bbw.png",
+                text: "우주복 배터리에서 튄 스파크가 기적적으로 엔진을 깨웠습니다! 화려한 포탈을 통과해 지구로 귀환합니다!",
+                grammar: "[ Be going to → Be going to → Will ]\n완벽한 계획 후 마지막 순간 발휘한 과감한 기지(Will)가 기적을 만들었습니다! (베스트 초이스)"
+            },
+            "BBB": {
+                isEnding: true, type: "hidden", title: "HIDDEN ENDING", endName: "1000년 후 외계인 조우",
+                image: "ending_bbb.png",
+                text: "동면 장치에 들어간 후 궤도를 잃고 표류했습니다. 1000년 뒤, 낯선 외계 지성체들이 캡슐을 열어 당신을 깨웁니다.",
+                grammar: "[ Be going to → Be going to → Be going to ]\n상황이 급박할 땐 매뉴얼만 고집할 게 아니라 능동적인 행동(Will)도 필요한 법입니다."
+            }
+        };
+
+        let currentPath = "start"; 
+        let bgm = document.getElementById('bg-music');
+
+        function toggleMute() {
+            const icon = document.getElementById('mute-icon');
+            if (bgm.muted || bgm.volume === 0) {
+                bgm.muted = false;
+                bgm.volume = 0.5;
+                icon.className = "fa-solid fa-volume-high";
+            } else {
+                bgm.muted = true;
+                icon.className = "fa-solid fa-volume-xmark";
+            }
+        }
+
+        function startGame() {
+            document.getElementById('start-screen').style.display = 'none';
+            document.getElementById('game-wrapper').style.display = 'flex';
+            currentPath = "start";
+            
+            bgm.volume = 0.5;
+            let playPromise = bgm.play();
+            if (playPromise !== undefined) {
+                playPromise.catch(error => {
+                    console.log("오디오 자동 재생이 브라우저 정책에 의해 차단되었습니다.");
+                });
+            }
+            renderScene(currentPath);
+        }
+
+        function resetGame() {
+            currentPath = "start";
+            renderScene(currentPath);
+        }
+
+        function makeChoice(choiceLetter) {
+            currentPath = (currentPath === "start") ? choiceLetter : currentPath + choiceLetter;
+            renderScene(currentPath);
+        }
+
+        function renderScene(nodeId) {
+            const data = storyData[nodeId];
+
+            const imgEl = document.getElementById('scene-img');
+            imgEl.style.opacity = 0; 
+            
+            setTimeout(() => {
+                imgEl.src = data.image; 
+                imgEl.onload = () => imgEl.style.opacity = 1;
+                imgEl.onerror = () => {
+                    imgEl.style.opacity = 0.3; 
+                    imgEl.alt = "이미지를 폴더에 넣어주세요: " + data.image;
+                };
+            }, 300);
+
+            const titleEl = document.getElementById('stage-title');
+            titleEl.innerText = data.title || "";
+            titleEl.className = `text-2xl font-black tracking-widest mb-4 uppercase eng-font ${data.titleColor || 'text-white'}`;
+            
+            document.getElementById('story-text').innerText = data.text;
+
+            const grammarBox = document.getElementById('grammar-lesson');
+            if (data.grammar) {
+                grammarBox.style.display = 'block';
+                document.getElementById('grammar-text').innerText = data.grammar;
+            } else {
+                grammarBox.style.display = 'none';
+            }
+
+            const choicesArea = document.getElementById('choices-area');
+            const endingArea = document.getElementById('ending-area');
+
+            if (data.isEnding) {
+                choicesArea.style.display = 'none';
+                endingArea.style.display = 'flex';
+
+                const badge = document.getElementById('ending-badge');
+                badge.innerText = data.title;
+                badge.className = "px-8 py-3 rounded-full font-bold text-2xl mb-8 tracking-widest eng-font ";
+                if(data.type === "bad") badge.classList.add("badge-bad");
+                else if(data.type === "happy") badge.classList.add("badge-happy");
+                else if(data.type === "hidden") badge.classList.add("badge-hidden");
+                else badge.classList.add("badge-normal");
+
+                document.getElementById('ending-name').innerText = data.endName;
+                titleEl.innerText = "SIMULATION COMPLETE";
+            } else {
+                choicesArea.style.display = 'flex';
+                endingArea.style.display = 'none';
+                
+                document.getElementById('btn-eng-w').innerText = data.choiceW.eng;
+                document.getElementById('btn-kor-w').innerText = data.choiceW.kor;
+                document.getElementById('btn-eng-b').innerText = data.choiceB.eng;
+                document.getElementById('btn-kor-b').innerText = data.choiceB.kor;
+            }
+        }
+    </script>
+</body>
+</html>
+
+

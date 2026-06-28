@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Duty Dilemma: Premium</title>
+<style>
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+
+* {
+box-sizing: border-box;
+margin: 0;
+padding: 0;
+font-family: 'Pretendard', sans-serif;
+}
+
+body {
+/* 고급스러운 다크 블루/퍼플 그라데이션 배경 */
+background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+color: #ffffff;
+display: flex;
+justify-content: center;
+align-items: center;
+min-height: 100vh;
+overflow: hidden;
+}
+
+/* 글래스모피즘 컨테이너 */
+.glass-container {
+background: rgba(255, 255, 255, 0.05);
+backdrop-filter: blur(15px);
+-webkit-backdrop-filter: blur(15px);
+border: 1px solid rgba(255, 255, 255, 0.1);
+border-radius: 24px;
+padding: 40px;
+width: 90%;
+max-width: 650px;
+box-shadow: 0 25px 45px rgba(0, 0, 0, 0.2);
+position: relative;
+}
+
+.header {
+text-align: center;
+margin-bottom: 30px;
+}
+
+h1 {
+font-size: 2rem;
+background: linear-gradient(to right, #00c6ff, #0072ff);
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+margin-bottom: 10px;
+}
+
+/* 진행 상태 바 */
+.progress-container {
+width: 100%;
+background: rgba(255, 255, 255, 0.1);
+border-radius: 10px;
+height: 8px;
+margin-bottom: 30px;
+overflow: hidden;
+}
+
+.progress-bar {
+height: 100%;
+background: linear-gradient(to right, #00c6ff, #0072ff);
+width: 0%;
+transition: width 0.4s ease;
+}
+
+/* 퀴즈 카드 */
+.question-box {
+background: rgba(0, 0, 0, 0.2);
+padding: 30px;
+border-radius: 16px;
+margin-bottom: 25px;
+min-height: 150px;
+display: flex;
+flex-direction: column;
+justify-content: center;
+border-left: 4px solid #00c6ff;
+}
+
+.context-badge {
+align-self: flex-start;
+background: rgba(255, 255, 255, 0.1);
+padding: 5px 12px;
+border-radius: 20px;
+font-size: 0.85rem;
+color: #00c6ff;
+margin-bottom: 15px;
+letter-spacing: 1px;
+}
+
+.question-text {
+font-size: 1.4rem;
+line-height: 1.5;
+font-weight: 600;
+}
+
+.blank {
+display: inline-block;
+width: 80px;
+border-bottom: 2px solid #fff;
+margin: 0 10px;
+}
+
+/* 버튼 디자인 */
+.options {
+display: grid;
+grid-template-columns: 1fr 1fr;
+gap: 15px;
+}
+
+button {
+background: rgba(255, 255, 255, 0.05);
+border: 1px solid rgba(255, 255, 255, 0.2);
+color: white;
+padding: 18px;
+font-size: 1.1rem;
+font-weight: bold;
+border-radius: 12px;
+cursor: pointer;
+transition: all 0.3s ease;
+}
+
+button:hover {
+background: rgba(255, 255, 255, 0.15);
+transform: translateY(-3px);
+box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* 피드백 애니메이션 */
+.feedback {
+margin-top: 20px;
+padding: 15px;
+border-radius: 12px;
+display: none;
+font-size: 1rem;
+line-height: 1.5;
+animation: fadeIn 0.4s ease;
+}
+
+.correct { background: rgba(46, 204, 113, 0.2); border: 1px solid #2ecc71; color: #2ecc71; }
+.wrong { background: rgba(231, 76, 60, 0.2); border: 1px solid #e74c3c; color: #e74c3c; }
+
+@keyframes fadeIn {
+from { opacity: 0; transform: translateY(10px); }
+to { opacity: 1; transform: translateY(0); }
+}
+
+.result-screen {
+text-align: center;
+display: none;
+}
+
+.result-screen h2 {
+font-size: 2.5rem;
+margin-bottom: 20px;
+}
+
+.score-circle {
+width: 150px;
+height: 150px;
+border-radius: 50%;
+background: conic-gradient(#00c6ff var(--percentage), rgba(255,255,255,0.1) 0);
+display: flex;
+justify-content: center;
+align-items: center;
+font-size: 2rem;
+font-weight: bold;
+margin: 0 auto 30px auto;
+}
+
+.score-inner {
+width: 130px;
+height: 130px;
+background: #203a43;
+border-radius: 50%;
+display: flex;
+justify-content: center;
+align-items: center;
+}
+</style>
+</head>
+<body>
+
+<div class="glass-container">
+<div id="quiz-screen">
+<div class="header">
+<h1>The Duty Dilemma</h1>
+<p>규칙인가, 의지인가? 올바른 조동사를 선택하세요.</p>
+</div>
+
+<div class="progress-container">
+<div class="progress-bar" id="progress"></div>
+</div>
+
+<div class="question-box">
+<div class="context-badge" id="context-badge">상황 설명</div>
+<div class="question-text" id="question">
+문제를 불러오는 중...
+</div>
+</div>
+
+<div class="options" id="options-container">
+</div>
+
+<div id="feedback" class="feedback"></div>
+</div>
+
+<div id="result-screen" class="result-screen">
+<h2>수고하셨습니다!</h2>
+<div class="score-circle" id="score-circle" style="--percentage: 0%;">
+<div class="score-inner" id="final-score">0/0</div>
+</div>
+<p id="result-message" style="margin-bottom: 30px; font-size: 1.2rem; color: #ccc;"></p>
+<button onclick="location.reload()" style="width: 100%; background: #00c6ff; color: #000;">다시 도전하기</button>
+</div>
+</div>
+
+<script>
+const questions = [
+{
+type: "법적 규정",
+q: "All passengers [ ___ ] wear seatbelts during takeoff.",
+ans1: "have to", ans2: "must", correct: 1,
+explain: "항공법과 같은 외부 규정이나 객관적인 규칙에 의한 의무는 'have to'가 가장 자연스럽습니다."
+},
+{
+type: "개인적 결심",
+q: "I [ ___ ] lose weight before the summer vacation!",
+ans1: "have to", ans2: "must", correct: 2,
+explain: "누가 시킨 것이 아니라 화자 스스로의 강한 의지와 결심을 나타낼 때는 'must'를 사용합니다."
+},
+{
+type: "강력한 추천",
+q: "This movie is amazing! You [ ___ ] watch it.",
+ans1: "have to", ans2: "must", correct: 2,
+explain: "친구나 지인에게 무언가를 강력하게 추천할 때(진심 어린 조언)는 'must'를 씁니다."
+},
+{
+type: "회사 규정",
+q: "Employees [ ___ ] arrive at the office by 9 AM.",
+ans1: "have to", ans2: "must", correct: 1,
+explain: "회사의 취업 규칙 등 외부에서 정해진 규율을 지켜야 하는 상황이므로 'have to'입니다."
+},
+{
+type: "의사의 지시 (강한 의무)",
+q: "You have a high fever. You [ ___ ] stay in bed today.",
+ans1: "have to", ans2: "must", correct: 2,
+explain: "의사가 환자에게 내리는 강한 지시나 화자의 강한 의견이 개입된 상황에서는 'must'가 적합합니다."
+},
+{
+type: "과거의 의무",
+q: "Sorry I'm late. I [ ___ ] help my mom yesterday.",
+ans1: "had to", ans2: "must", correct: 1,
+explain: "과거의 의무를 나타낼 때 'must'의 과거형은 없으므로 반드시 'had to'를 써야 합니다."
+},
+{
+type: "강한 금지 (부정형)",
+q: "This is a secret. You [ ___ ] tell anyone!",
+ans1: "don't have to", ans2: "must not", correct: 2,
+explain: "절대 해서는 안 되는 '강한 금지'를 나타낼 때는 'must not'을 사용합니다."
+},
+{
+type: "불필요 (부정형)",
+q: "Tomorrow is Sunday. We [ ___ ] wake up early.",
+ans1: "don't have to", ans2: "must not", correct: 1,
+explain: "일요일이라서 일찍 일어날 '필요가 없다'는 의미이므로 'don't have to'가 정답입니다."
+},
+{
+type: "강한 금지 (부정형)",
+q: "Danger! You [ ___ ] touch this wire.",
+ans1: "don't have to", ans2: "must not", correct: 2,
+explain: "생명과 직결되거나 절대 하면 안 되는 위험한 행동을 금지할 때는 'must not'입니다."
+},
+{
+type: "불필요 (부정형)",
+q: "The entrance is free. You [ ___ ] pay.",
+ans1: "don't have to", ans2: "must not", correct: 1,
+explain: "무료입장이므로 돈을 낼 필요가 없다는 의미의 'don't have to'가 맞습니다. (내면 안 된다는 뜻이 아님)"
+},
+{
+type: "도덕적/개인적 의무",
+q: "I feel terrible for what I did. I [ ___ ] apologize to her.",
+ans1: "have to", ans2: "must", correct: 2,
+explain: "스스로 죄책감을 느껴 사과해야겠다고 느끼는 내면의 의무감은 'must'로 표현합니다."
+},
+{
+type: "세금 및 행정",
+q: "Citizens [ ___ ] pay their taxes by the end of this month.",
+ans1: "have to", ans2: "must", correct: 1,
+explain: "세금 납부와 같은 법적, 행정적 강제성이 있는 외부 의무는 'have to'를 사용합니다."
+}
+];
+
+let currentIdx = 0;
+let score = 0;
+
+function initGame() {
+updateProgress();
+renderQuestion();
+}
+
+function renderQuestion() {
+const q = questions[currentIdx];
+document.getElementById('context-badge').innerText = q.type;
+
+// 문제 텍스트에서 [ ___ ] 부분을 밑줄로 변환
+const questionHtml = q.q.replace('[ ___ ]', '<span class="blank"></span>');
+document.getElementById('question').innerHTML = questionHtml;
+
+document.getElementById('options-container').innerHTML = `
+<button onclick="checkAnswer(1)">${q.ans1}</button>
+<button onclick="checkAnswer(2)">${q.ans2}</button>
+`;
+document.getElementById('feedback').style.display = 'none';
+}
+
+function updateProgress() {
+const progress = (currentIdx / questions.length) * 100;
+document.getElementById('progress').style.width = `${progress}%`;
+}
+
+function checkAnswer(selectedOption) {
+const q = questions[currentIdx];
+const feedbackEl = document.getElementById('feedback');
+const buttons = document.querySelectorAll('.options button');
+
+buttons.forEach(btn => btn.disabled = true);
+
+if (selectedOption === q.correct) {
+score++;
+feedbackEl.innerHTML = `<strong>정답입니다! 🎉</strong><br>${q.explain}`;
+feedbackEl.className = 'feedback correct';
+} else {
+feedbackEl.innerHTML = `<strong>아쉽습니다! 💡</strong><br>${q.explain}`;
+feedbackEl.className = 'feedback wrong';
+}
+
+feedbackEl.style.display = 'block';
+
+setTimeout(() => {
+currentIdx++;
+if (currentIdx < questions.length) {
+updateProgress();
+renderQuestion();
+} else {
+showResult();
+}
+}, 3500); // 3.5초 후 다음 문제로 이동
+}
+
+function showResult() {
+document.getElementById('quiz-screen').style.display = 'none';
+const resultScreen = document.getElementById('result-screen');
+resultScreen.style.display = 'block';
+
+const finalScore = document.getElementById('final-score');
+finalScore.innerText = `${score} / ${questions.length}`;
+
+const percentage = (score / questions.length) * 100;
+document.getElementById('score-circle').style.setProperty('--percentage', `${percentage}%`);
+
+const msg = document.getElementById('result-message');
+if (score === questions.length) msg.innerText = "완벽합니다! Must와 Have to의 마스터시군요!";
+else if (score >= 8) msg.innerText = "훌륭합니다! 뉘앙스 차이를 아주 잘 이해하고 계시네요.";
+else msg.innerText = "조금만 더 연습해 볼까요? 헷갈리는 부정형을 위주로 복습해 보세요!";
+}
+
+initGame();
+</script>
+</body>
+</html>

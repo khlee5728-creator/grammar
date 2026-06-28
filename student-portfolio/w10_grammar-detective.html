@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>무명 탐정의 수동태 사건부: 누아르 에디션</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@400;700;800&family=Courier+Prime:ital,wght@0,400;0,700;1,400&display=swap');
+        
+        :root {
+            --bg-color: #0a0a0c;
+            --paper-color: #e8e2d3;
+            --ink-color: #1a1a1a;
+            --accent-red: #8b0000;
+        }
+
+        body {
+            font-family: 'Nanum Myeongjo', serif;
+            background-color: var(--bg-color);
+            background-image: 
+                linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)),
+                url('https://www.transparenttextures.com/patterns/carbon-fibre.png');
+            color: #d1d1d1;
+            margin: 0;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        /* 탐정 사무소 블라인드 효과 */
+        .blinds-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                transparent,
+                transparent 40px,
+                rgba(0, 0, 0, 0.15) 40px,
+                rgba(0, 0, 0, 0.15) 80px
+            );
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        /* 빈티지 서류함 컨테이너 */
+        .case-folder {
+            background: #2c2c2e;
+            border: 2px solid #3a3a3c;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
+            position: relative;
+            z-index: 5;
+        }
+
+        /* 타자기 텍스트 효과 */
+        .typewriter {
+            overflow: hidden;
+            border-right: .15em solid orange;
+            white-space: nowrap;
+            letter-spacing: .15em;
+            animation: typing 3.5s steps(40, end), blink-caret .75s step-end infinite;
+        }
+
+        @keyframes typing { from { width: 0 } to { width: 100% } }
+        @keyframes blink-caret { from, to { border-color: transparent } 50% { border-color: orange; } }
+
+        /* 증거물 종이 */
+        .evidence-paper {
+            background-color: var(--paper-color);
+            color: var(--ink-color);
+            box-shadow: inset 0 0 100px rgba(0,0,0,0.1), 5px 5px 15px rgba(0,0,0,0.5);
+            position: relative;
+            transform: rotate(-0.5deg);
+        }
+
+        .evidence-paper::after {
+            content: "CONFIDENTIAL";
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            border: 3px solid #c0392b;
+            color: #c0392b;
+            padding: 5px 10px;
+            font-weight: 900;
+            opacity: 0.2;
+            transform: rotate(15deg);
+            font-family: 'Courier Prime', monospace;
+        }
+
+        /* 선택지 버튼 - 오래된 타자기 키 느낌 */
+        .btn-choice {
+            font-family: 'Courier Prime', monospace;
+            background: #1a1a1c;
+            border-bottom: 4px solid #000;
+            transition: all 0.1s;
+        }
+        .btn-choice:hover:not(:disabled) {
+            background: #3a3a3c;
+            transform: translateY(2px);
+            border-bottom-width: 2px;
+        }
+        .btn-choice:active {
+            transform: translateY(4px);
+            border-bottom-width: 0px;
+        }
+
+        /* 오답 효과 */
+        .wrong-shake {
+            animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+            background-color: #400 !important;
+        }
+        @keyframes shake {
+            10%, 90% { transform: translate3d(-1px, 0, 0); }
+            20%, 80% { transform: translate3d(2px, 0, 0); }
+            30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+            40%, 60% { transform: translate3d(4px, 0, 0); }
+        }
+
+        /* 신문 엔딩 */
+        .newspaper-layout {
+            background: #f9f7f1;
+            color: #111;
+            padding: 20px;
+            border: 1px solid #ddd;
+            font-family: 'Times New Roman', serif;
+        }
+    </style>
+</head>
+<body>
+    <div class="blinds-overlay"></div>
+
+    <div id="game-box" class="case-folder w-full max-w-2xl rounded-sm overflow-hidden border-t-8 border-t-[#5d4037]">
+        <!-- BGM 컨트롤 -->
+        <div class="absolute top-4 right-4 z-20 flex items-center gap-2">
+            <button onclick="toggleMusic()" id="music-btn" class="text-xs bg-black/50 p-2 rounded-full hover:bg-black/80 transition">
+                🔇 BGM ON
+            </button>
+        </div>
+
+        <div id="content" class="p-10 min-h-[550px] flex flex-col justify-between">
+            <!-- 시작 화면 -->
+            <div id="start-screen" class="flex flex-col items-center justify-center h-full space-y-8">
+                <div class="relative">
+                    <span class="text-8xl opacity-20 absolute -top-10 -left-10">🔍</span>
+                    <h1 class="text-5xl font-black myeongjo tracking-tighter text-white z-10 relative">사건 번호 #40-41</h1>
+                    <p class="text-amber-600 font-bold tracking-[0.3em] text-center mt-2">THE PASSIVE VOICE</p>
+                </div>
+                
+                <p class="text-gray-400 text-center max-w-md leading-relaxed italic">
+                    "비가 내리는 수요일 오후, 낡은 사무실 문을 두드리는 소리가 들렸다. <br>누군가 단서를 수동태로 꼬아놓았군. 이제 정리가 필요해."
+                </p>
+
+                <div class="grid grid-cols-1 gap-4 w-64 pt-6">
+                    <button onclick="startGame('easy')" class="py-3 bg-[#424242] hover:bg-[#616161] text-white font-bold border-b-4 border-black transition">의뢰 1: 도난 시계</button>
+                    <button onclick="startGame('medium')" class="py-3 bg-[#3e2723] hover:bg-[#4e342e] text-white font-bold border-b-4 border-black transition">의뢰 2: 실종 화가</button>
+                    <button onclick="startGame('hard')" class="py-3 bg-[#1a237e] hover:bg-[#283593] text-white font-bold border-b-4 border-black transition">의뢰 3: 유령 저택</button>
+                </div>
+            </div>
+
+            <!-- 게임 플레이 화면 -->
+            <div id="play-screen" class="hidden flex flex-col h-full">
+                <div class="flex justify-between items-center mb-4">
+                    <span id="case-title" class="text-xs font-bold text-amber-500 tracking-widest uppercase">CASE: WATCH THEFT</span>
+                    <span id="step-indicator" class="text-xs font-mono">DOC_01/06</span>
+                </div>
+
+                <div id="scenario-box" class="evidence-paper p-8 min-h-[180px] mb-8">
+                    <div class="absolute top-0 left-0 w-full h-1 bg-black/5"></div>
+                    <p id="scenario-text" class="text-sm italic mb-4 border-l-2 border-black/20 pl-3"></p>
+                    <p id="quiz-sentence" class="text-2xl font-bold leading-tight"></p>
+                </div>
+                
+                <div id="options-container" class="grid grid-cols-1 gap-3">
+                    <!-- 버튼 생성 -->
+                </div>
+
+                <div id="feedback" class="mt-4 h-6 text-center text-red-500 font-bold text-xs opacity-0 transition-all">
+                    잘못된 진술입니다. 다시 확인하세요.
+                </div>
+            </div>
+
+            <!-- 결과 화면 -->
+            <div id="result-screen" class="hidden flex flex-col items-center justify-center space-y-6">
+                <div id="news-container" class="newspaper-layout shadow-2xl rotate-1 max-w-sm hidden">
+                    <div class="border-b-4 border-double border-black pb-1 mb-2 flex justify-between">
+                        <span class="font-black text-xl uppercase">The Chronicle</span>
+                        <span class="text-sm">Final Edition</span>
+                    </div>
+                    <h2 class="text-2xl font-bold leading-none mb-3">무명 탐정, 도시를 구하다!</h2>
+                    <p class="text-sm leading-snug">수동태의 복잡한 시제를 꿰뚫어 본 명탐정의 활약으로 도시의 모든 미제 사건이 해결되었습니다...</p>
+                </div>
+
+                <div id="fail-container" class="text-center hidden">
+                    <span class="text-8xl block mb-4">🌫️</span>
+                    <h2 class="text-3xl font-bold text-white mb-2">추리 실패</h2>
+                    <p class="text-gray-500 mb-6">"안개 속으로 범인이 사라졌군. <br>문법을 다시 갈고닦아야겠어."</p>
+                </div>
+
+                <button onclick="location.reload()" class="px-10 py-3 bg-white text-black font-black hover:bg-amber-100 transition uppercase tracking-tighter">다시 시도</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- 사운드 엔진 ---
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        let bgmSource = null;
+        let isMusicPlaying = false;
+
+        function createNoise(duration, freq, type = 'sine') {
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = type;
+            osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+            gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start();
+            osc.stop(audioCtx.currentTime + duration);
+        }
+
+        // 느와르풍 배경음 (저음의 베이스 루프 시뮬레이션)
+        function startBgm() {
+            if (bgmSource) return;
+            bgmSource = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            bgmSource.type = 'triangle';
+            bgmSource.frequency.setValueAtTime(55, audioCtx.currentTime); // Low A
+            gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
+            
+            // 단순한 리듬 생성
+            const lfo = audioCtx.createOscillator();
+            lfo.frequency.setValueAtTime(0.5, audioCtx.currentTime);
+            const lfoGain = audioCtx.createGain();
+            lfoGain.gain.setValueAtTime(0.02, audioCtx.currentTime);
+            lfo.connect(lfoGain);
+            lfoGain.connect(gain.gain);
+            
+            bgmSource.connect(gain);
+            gain.connect(audioCtx.destination);
+            lfo.start();
+            bgmSource.start();
+        }
+
+        function toggleMusic() {
+            if (!isMusicPlaying) {
+                audioCtx.resume();
+                startBgm();
+                document.getElementById('music-btn').innerText = "🔊 BGM OFF";
+                isMusicPlaying = true;
+            } else {
+                if (bgmSource) {
+                    bgmSource.stop();
+                    bgmSource = null;
+                }
+                document.getElementById('music-btn').innerText = "🔇 BGM ON";
+                isMusicPlaying = false;
+            }
+        }
+
+        // --- 데이터 ---
+        const gameData = {
+            easy: {
+                title: "CASE: WATCH THEFT",
+                questions: [
+                    { s: "현장 감식 중... 깨진 유리가 발견됨.", q: "The window _______ (break) by a thief.", options: ["break", "was broken", "is broken"], correct: 1, hint: "과거에 일어난 도난 사건입니다." },
+                    { s: "정원 조사... 신선한 발자국 발견.", q: "Footprints _______ (find) in the garden.", options: ["were found", "found", "was found"], correct: 0, hint: "복수 주어(Footprints) 시제 일치!" },
+                    { s: "용의자 심문... 그는 매일 문을 잠근다고 주장함.", q: "The door _______ (lock) every night.", options: ["locked", "is locked", "was locked"], correct: 1, hint: "현재 반복되는 사실은 현재 수동태." },
+                    { s: "증거물 분석... 이 상자는 우유로 만든 건가?", q: "Cheese _______ (make) from milk.", options: ["is made", "was made", "makes"], correct: 0, hint: "일반적 변하지 않는 진리." },
+                    { s: "협박 편지 발견... 프랑스어로 작성됨.", q: "The letter _______ (write) in French.", options: ["is written", "written", "is write"], correct: 0, hint: "be + 과거분사 형태." },
+                    { s: "추리 완료... 범인은 곧 잡힐 것이다.", q: "The suspect _______ (catch) soon.", options: ["is caught", "will be caught", "will catch"], correct: 1, hint: "미래를 나타내는 조동사 will 필요." }
+                ]
+            },
+            medium: {
+                title: "CASE: MISSING ARTIST",
+                questions: [
+                    { s: "작업실 진입... 캔버스가 젖어있음.", q: "A portrait _______ (paint) when I arrived.", options: ["is painted", "was being painted", "painted"], correct: 1, hint: "과거 특정 시점에 '진행 중'이던 수동태." },
+                    { s: "주방 조사... 아침부터 청소된 흔적.", q: "The room _______ (clean) since this morning.", options: ["is cleaned", "has been cleaned", "was cleaned"], correct: 1, hint: "과거부터 지금까지 '완료'된 상태." },
+                    { s: "실시간 감시... 단서가 수집되는 중.", q: "Evidence _______ (collect) right now.", options: ["is being collected", "is collecting", "has been collected"], correct: 0, hint: "지금(right now) 진행 중인 수동태." },
+                    { s: "화가의 명성 조사... 수년 전부터 유명함.", q: "He _______ (know) as a master for years.", options: ["is known", "has been known", "was being known"], correct: 1, hint: "지속된 기간은 현재완료 수동태." },
+                    { s: "회상... 전등이 나갔을 때 식사가 준비 중이었다.", q: "Dinner _______ (prepare) when the light failed.", options: ["is prepared", "was being prepared", "prepared"], correct: 1, hint: "과거 진행 수동태." },
+                    { s: "매표소 확인... 표는 이미 매진된 상태였다.", q: "All tickets _______ (sell) out already.", options: ["are sold", "had been sold", "will be sold"], correct: 1, hint: "과거보다 더 이전에 완료된 사건." }
+                ]
+            },
+            hard: {
+                title: "CASE: GHOST MANSION",
+                questions: [
+                    { s: "이상 현상... 갑작스러운 사고 발생.", q: "The accident _______ in this house.", options: ["was occurred", "occurred", "is occurred"], correct: 1, hint: "occur는 수동태가 불가능한 자동사입니다!" },
+                    { s: "소유권 확인... 이 열쇠는 누구의 것인가?", q: "This key _______ the master.", options: ["is belonged to", "belongs to", "was belonged to"], correct: 1, hint: "belong to는 상태 동사로 수동태 불가." },
+                    { s: "목격자 증언... 그는 부친을 닮았음.", q: "He _______ his father very much.", options: ["is resembled", "resembles", "is resembled by"], correct: 1, hint: "resemble은 수동태로 쓰지 않습니다." },
+                    { s: "취조실... 그는 무죄라고 '들었다'.", q: "He _______ that he was innocent.", options: ["told", "was told", "was tell"], correct: 1, hint: "말함을 당한 것 = 듣다(was told)." },
+                    { s: "기록실... 위원회가 그에게 훈장을 수여함.", q: "A medal _______ to him.", options: ["gave", "was given", "is give"], correct: 1, hint: "4형식 수동태 구조 확인." },
+                    { s: "최종 결론... 비밀은 곧 세상에 나올 것이다.", q: "The secret _______ soon.", options: ["will be discovered", "will discover", "is discovered"], correct: 0, hint: "미래 시제 조동사 수동태." }
+                ]
+            }
+        };
+
+        // --- 엔진 ---
+        let currentLevel = null;
+        let currentStep = 0;
+        let score = 0;
+        let isLocked = false;
+
+        function startGame(lvl) {
+            currentLevel = gameData[lvl];
+            currentStep = 0;
+            score = 0;
+            document.getElementById('case-title').innerText = currentLevel.title;
+            document.getElementById('start-screen').classList.add('hidden');
+            document.getElementById('play-screen').classList.remove('hidden');
+            createNoise(0.1, 440, 'square'); // 버튼음
+            renderQuestion();
+        }
+
+        function renderQuestion() {
+            if (currentStep >= currentLevel.questions.length) {
+                showResult();
+                return;
+            }
+
+            const data = currentLevel.questions[currentStep];
+            document.getElementById('scenario-text').innerText = `[${currentStep + 1}] ${data.s}`;
+            document.getElementById('quiz-sentence').innerText = data.q;
+            document.getElementById('step-indicator').innerText = `DOC_${String(currentStep + 1).padStart(2, '0')}/06`;
+            document.getElementById('feedback').classList.add('opacity-0');
+
+            const container = document.getElementById('options-container');
+            container.innerHTML = '';
+            data.options.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.className = "btn-choice w-full py-4 px-6 text-left text-white text-sm";
+                btn.innerHTML = `<span class="opacity-30 mr-2">></span> ${opt}`;
+                btn.onclick = () => checkAnswer(idx);
+                container.appendChild(btn);
+            });
+            isLocked = false;
+        }
+
+        function checkAnswer(idx) {
+            if (isLocked) return;
+            const data = currentLevel.questions[currentStep];
+            const feedback = document.getElementById('feedback');
+
+            if (idx === data.correct) {
+                createNoise(0.2, 880); // 정답음
+                score++;
+                currentStep++;
+                isLocked = true;
+                setTimeout(renderQuestion, 400);
+            } else {
+                createNoise(0.4, 100, 'sawtooth'); // 오답음
+                const box = document.getElementById('game-box');
+                box.classList.add('wrong-shake');
+                feedback.innerText = `❌ 단서 오류: ${data.hint}`;
+                feedback.classList.remove('opacity-0');
+                
+                isLocked = true;
+                const btns = document.querySelectorAll('.btn-choice');
+                btns.forEach(b => b.disabled = true);
+                
+                setTimeout(() => {
+                    box.classList.remove('wrong-shake');
+                    btns.forEach(b => b.disabled = false);
+                    isLocked = false;
+                }, 1500);
+            }
+        }
+
+        function showResult() {
+            document.getElementById('play-screen').classList.add('hidden');
+            document.getElementById('result-screen').classList.remove('hidden');
+
+            if (score >= currentLevel.questions.length) {
+                createNoise(0.1, 1000);
+                setTimeout(() => createNoise(0.1, 1200), 100);
+                document.getElementById('news-container').classList.remove('hidden');
+            } else {
+                document.getElementById('fail-container').classList.remove('hidden');
+            }
+        }
+    </script>
+</body>
+</html>

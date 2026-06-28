@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>NYC Subjunctive Subway</title>
+    <style>
+        body { background: #222; color: white; font-family: 'Arial', sans-serif; text-align: center; padding: 20px; }
+        #subway-screen { background: #000; border: 10px solid #555; border-radius: 20px; padding: 40px; max-width: 600px; margin: 0 auto; position: relative; }
+        .station-info { color: #fdb930; font-weight: bold; font-size: 1.2em; margin-bottom: 10px; }
+        .landmark { color: #52b1ff; font-style: italic; margin-bottom: 20px; }
+        .door-status { font-size: 3em; margin: 20px 0; transition: 0.5s; }
+        .question { font-size: 1.3em; margin-bottom: 20px; min-height: 80px; }
+        .btn { display: block; width: 100%; padding: 15px; margin: 10px 0; border: none; border-radius: 5px; cursor: pointer; font-size: 1em; transition: 0.3s; }
+        .btn:hover { opacity: 0.8; }
+        .btn-choice { background: #444; color: white; }
+        .btn-choice:active { background: #666; }
+        .status-msg { height: 30px; font-weight: bold; }
+        .open { color: #4CAF50; text-shadow: 0 0 10px #4CAF50; }
+        .closed { color: #f44336; text-shadow: 0 0 10px #f44336; }
+    </style>
+</head>
+<body>
+    <h1>🚇 NYC Subjunctive Subway</h1>
+    <div id="subway-screen">
+        <div id="station" class="station-info">NEXT STOP: Times Square-42 St</div>
+        <div id="landmark" class="landmark">🗽 Landmark: Broadway Lights</div>
+        <div id="door" class="door-status closed">🛑 DOORS CLOSED</div>
+        <div id="status-msg" class="status-msg">문법 문제를 맞춰야 문이 열립니다!</div>
+        <hr>
+        <div id="question" class="question">Loading question...</div>
+        <div id="choices"></div>
+    </div>
+
+    <script>
+        const quizData = [
+            {
+                station: "Times Square-42 St",
+                landmark: "🗽 Landmark: Broadway Lights",
+                q: "Liz suggested that Mary ____ some clothes.",
+                a: ["buy", "buys", "bought"],
+                correct: 0
+            },
+            {
+                station: "Grand Central Terminal",
+                landmark: "🚉 Landmark: The Main Concourse",
+                q: "It's essential that he ____ on time for the train.",
+                a: ["is", "was", "be"],
+                correct: 2
+            },
+            {
+                station: "Brooklyn Bridge-City Hall",
+                landmark: "🌉 Landmark: Brooklyn Bridge",
+                q: "The doctor recommended that I ____ to work today.",
+                a: ["don't go", "not go", "not to go"],
+                correct: 1
+            }
+        ];
+
+        let currentStep = 0;
+
+        function loadQuiz() {
+            const data = quizData[currentStep];
+            document.getElementById('station').innerText = "NEXT STOP: " + data.station;
+            document.getElementById('landmark').innerText = data.landmark;
+            document.getElementById('question').innerText = data.q;
+            document.getElementById('door').innerText = "🛑 DOORS CLOSED";
+            document.getElementById('door').className = "door-status closed";
+            document.getElementById('status-msg').innerText = "Stand clear of the closing doors!";
+            
+            const choicesDiv = document.getElementById('choices');
+            choicesDiv.innerHTML = '';
+            data.a.forEach((choice, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'btn btn-choice';
+                btn.innerText = (index + 1) + ". " + choice;
+                btn.onclick = () => checkAnswer(index);
+                choicesDiv.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(idx) {
+            if (idx === quizData[currentStep].correct) {
+                document.getElementById('door').innerText = "✅ DOORS OPEN";
+                document.getElementById('door').className = "door-status open";
+                document.getElementById('status-msg').innerText = "Ding-Dong! 무사히 도착했습니다!";
+                setTimeout(() => {
+                    currentStep++;
+                    if (currentStep < quizData.length) {
+                        loadQuiz();
+                    } else {
+                        alert("🎉 축하합니다! 모든 뉴욕 지하철 역을 탈출했습니다!");
+                        currentStep = 0;
+                        loadQuiz();
+                    }
+                }, 2000);
+            } else {
+                document.getElementById('status-msg').innerText = "Buzzz! 문이 열리지 않습니다. 다시 생각해보세요!";
+            }
+        }
+
+        loadQuiz();
+    </script>
+</body>
+</html>

@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>페페의 시제 정복 - 난이도별 문제판</title>
+    <style>
+        body { margin: 0; background-color: #1a1a1a; color: white; font-family: 'Malgun Gothic', sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; overflow: hidden; }
+        #game-wrapper { position: relative; border: 5px solid #4caf50; border-radius: 15px; background: #2d2d2d; box-shadow: 0 0 25px rgba(0,0,0,0.7); }
+        
+        #sentence-box { 
+            width: 800px; height: 130px; background: #fff; color: #333; 
+            display: flex; align-items: center; justify-content: center; 
+            font-size: 1.5rem; font-weight: bold; text-align: center; 
+            border-radius: 10px 10px 0 0; padding: 0 40px; box-sizing: border-box; 
+            line-height: 1.5;
+        }
+        
+        canvas { background: linear-gradient(to bottom, #1e3c72, #2a5298); display: block; cursor: crosshair; }
+        
+        .stats { position: absolute; top: 145px; width: 100%; display: flex; justify-content: space-between; padding: 0 25px; box-sizing: border-box; font-size: 1.2rem; font-weight: bold; pointer-events: none; text-shadow: 2px 2px 4px #000; z-index: 5; }
+
+        #explanation-overlay {
+            position: absolute; top: 55%; left: 50%; transform: translate(-50%, -50%);
+            width: 550px; background: rgba(0, 0, 0, 0.95); border: 4px solid #6C63FF;
+            border-radius: 20px; padding: 30px; text-align: center; display: none; z-index: 30;
+            box-shadow: 0 0 40px rgba(0,0,0,0.8);
+        }
+
+        #exp-title { font-size: 2rem; font-weight: 900; margin-bottom: 15px; }
+        #exp-text { font-size: 1.25rem; line-height: 1.7; color: #eee; }
+
+        #msg-overlay { 
+            position: absolute; top: 38%; left: 50%; transform: translate(-50%, -50%); 
+            pointer-events: none; font-size: 4.5rem; font-weight: 900; 
+            text-align: center; display: none; text-shadow: 0 0 20px rgba(0,0,0,0.8); z-index: 25; 
+        }
+        
+        .overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); display: flex; flex-direction: column; align-items: center; justify-content: center; border-radius: 10px; z-index: 100; text-align: center; }
+        
+        .level-btns { display: flex; flex-direction: column; gap: 15px; margin-top: 30px; width: 300px; }
+        .btn { padding: 15px; font-size: 1.4rem; color: white; border: none; border-radius: 50px; cursor: pointer; transition: 0.2s; font-weight: bold; }
+        
+        .btn-easy { background: #4caf50; }   /* 하: 기본 시제 구분 */
+        .btn-normal { background: #ff9800; } /* 중: 상황별 활용 */
+        .btn-hard { background: #f44336; }   /* 상: 고난도 예외/심화 */
+        .btn:hover { transform: scale(1.05); filter: brightness(1.1); }
+        
+        #retry-btn { background: #6C63FF; margin-top: 30px; padding: 15px 50px; }
+    </style>
+</head>
+<body>
+
+<div id="game-wrapper">
+    <div id="sentence-box">단계를 선택하면 공부가 시작됩니다.</div>
+    <div class="stats">
+        <div id="score-text">SCORE: 0</div>
+        <div id="lives-text">LIVES: ❤️❤️❤️❤️❤️</div>
+    </div>
+    
+    <div id="msg-overlay">CORRECT!</div>
+    
+    <div id="explanation-overlay">
+        <div id="exp-title">정답 해설</div>
+        <div id="exp-text">설명 내용</div>
+    </div>
+
+    <canvas id="gameCanvas" width="800" height="500"></canvas>
+
+    <div id="start-screen" class="overlay">
+        <h1 style="color:#4caf50; font-size: 3.2rem; margin-bottom: 10px;">🐸 시제 마스터: Unit 13</h1>
+        <p style="font-size: 1.1rem; color: #bbb;">공은 아주 천천히 떨어집니다. 문제의 난이도를 고르세요!</p>
+        <div class="level-btns">
+            <button class="btn btn-easy" onclick="startGame('easy')">하 (기초 문장)</button>
+            <button class="btn btn-normal" onclick="startGame('normal')">중 (상황 판단)</button>
+            <button class="btn btn-hard" onclick="startGame('hard')">상 (심화 문법)</button>
+        </div>
+    </div>
+
+    <div id="end-screen" class="overlay" style="display:none;">
+        <h1 id="result-title" style="font-size: 4rem;">학습 종료</h1>
+        <button id="retry-btn" onclick="location.reload()" class="btn">처음으로</button>
+    </div>
+</div>
+
+<script>
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+    const explanationOverlay = document.getElementById('explanation-overlay');
+    const expText = document.getElementById('exp-text');
+    const expTitle = document.getElementById('exp-title');
+    const sentenceBox = document.getElementById('sentence-box');
+    const msgOverlay = document.getElementById('msg-overlay');
+
+    let score = 0, lives = 5, gameRunning = false, balls = [], currentQuestion = null;
+    let isWaitingForNext = false;
+    let currentQuestions = [];
+    const FIXED_SPEED = 0.7; // 모든 난이도에서 동일한 아주 느린 속도
+    
+    const player = { x: 355, y: 410, size: 90, emoji: "🐸" };
+
+    // 교과서 기반 난이도별 문제 데이터베이스
+    const allQuestions = {
+        easy: [
+            { text: "I _______ (see) a good movie yesterday.", correct: "saw", wrong: "have seen", explanation: "<b>yesterday</b>는 과거의 특정 시점을 나타내므로 단순 과거형인 <b>saw</b>를 써야 합니다." },
+            { text: "They _______ (arrive) ten minutes ago.", correct: "arrived", wrong: "have arrived", explanation: "<b>ago</b>는 현재와 완전히 분리된 과거의 한 지점을 의미하므로 과거형을 씁니다." },
+            { text: "It _______ (not / rain) this week.", correct: "hasn't rained", wrong: "didn't rain", explanation: "<b>this week</b>은 아직 끝나지 않은 기간입니다. 과거부터 현재를 포함하므로 현재완료가 정답입니다." },
+            { text: "I _______ (live) here since 2015.", correct: "have lived", wrong: "lived", explanation: "<b>since</b>(~이후로 지금까지)는 현재완료의 지속을 나타내는 핵심 힌트입니다." },
+            { text: "We _______ (finish) our breakfast an hour ago.", correct: "finished", wrong: "have finished", explanation: "<b>an hour ago</b>라는 명확한 과거 시간이 있으므로 과거 시제를 사용합니다." }
+        ],
+        normal: [
+            { text: "I _______ (buy) a new car. Come and see it!", correct: "have bought", wrong: "bought", explanation: "단순히 예전에 샀다는 사실보다, 사서 <b>지금 그 차가 있다</b>는 현재의 결과를 강조하므로 현재완료가 적절합니다." },
+            { text: "Oh, I _______ (lose) my key. I can't find it.", correct: "have lost", wrong: "lost", explanation: "열쇠를 잃어버려서 <b>지금도 못 찾고 있는 상태</b>를 나타내므로 현재완료를 씁니다." },
+            { text: "Where _______ (you / go) on holiday last year?", correct: "did you go", wrong: "have you gone", explanation: "<b>last year</b>는 과거의 특정 기간입니다. 현재완료와 함께 쓸 수 없습니다." },
+            { text: "Everything is going well. We _______ (not / have) any problems so far.", correct: "haven't had", wrong: "didn't have", explanation: "<b>so far</b>(지금까지)는 과거부터 현재까지를 잇는 표현이므로 현재완료를 씁니다." },
+            { text: "The weather _______ (be) good when we were on holiday.", correct: "was", wrong: "has been", explanation: "<b>when we were...</b>은 과거의 특정 때를 의미하므로 단순 과거를 씁니다." }
+        ],
+        hard: [
+            { text: "I _______ (never / eat) such a delicious cake before.", correct: "have never eaten", wrong: "never ate", explanation: "과거부터 지금까지의 <b>경험</b>을 말할 때는 현재완료가 훨씬 자연스럽습니다." },
+            { text: "When _______ (they / arrive)?", correct: "did they arrive", wrong: "have they arrived", explanation: "<b>When...?</b>으로 시작하는 질문은 항상 과거의 특정 시점을 묻는 것이므로 현재완료를 쓰지 않습니다." },
+            { text: "It's the first time he _______ (drive) a car.", correct: "has driven", wrong: "drove", explanation: "<b>It's the first time...</b> 구문 뒤에는 지금까지의 경험을 나타내는 현재완료를 쓰는 것이 규칙입니다." },
+            { text: "He _______ (be) to Japan three times this year.", correct: "has been", wrong: "was", explanation: "<b>this year</b>는 아직 진행 중인 기간이며, 반복된 경험을 나타내므로 현재완료가 맞습니다." },
+            { text: "Sue _______ (not / be) at work last week.", correct: "wasn't", wrong: "hasn't been", explanation: "<b>last week</b>은 이미 지나간 과거이므로 현재완료를 절대 쓸 수 없습니다." }
+        ]
+    };
+
+    function startGame(level) {
+        currentQuestions = allQuestions[level];
+        document.getElementById('start-screen').style.display = 'none';
+        gameRunning = true;
+        nextQuestion();
+        requestAnimationFrame(gameLoop);
+    }
+
+    function nextQuestion() {
+        isWaitingForNext = false;
+        msgOverlay.style.display = 'none';
+        explanationOverlay.style.display = 'none';
+        player.emoji = "🐸";
+        balls = [];
+        currentQuestion = currentQuestions[Math.floor(Math.random() * currentQuestions.length)];
+        sentenceBox.innerHTML = currentQuestion.text.replace(/_______/g, '<span style="color:#2196f3;">_______</span>');
+    }
+
+    class Ball {
+        constructor(text, isCorrect, xPos) {
+            this.text = text;
+            this.isCorrect = isCorrect;
+            this.radius = 45;
+            this.x = xPos;
+            this.y = -60;
+            this.speed = FIXED_SPEED; 
+            this.color = isCorrect ? '#6C63FF' : '#FF6584';
+        }
+        draw() {
+            ctx.beginPath(); ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+            ctx.fillStyle = this.color; ctx.fill();
+            ctx.strokeStyle = "white"; ctx.lineWidth = 3; ctx.stroke();
+            ctx.fillStyle = "white"; ctx.font = "bold 15px Arial"; ctx.textAlign = "center";
+            ctx.fillText(this.text, this.x, this.y + 6);
+        }
+        update() { this.y += this.speed; }
+    }
+
+    function createBalls() {
+        const positions = [200, 600]; // 공 간격을 더 벌림
+        if (Math.random() > 0.5) positions.reverse();
+        balls.push(new Ball(currentQuestion.correct, true, positions[0]));
+        balls.push(new Ball(currentQuestion.wrong, false, positions[1]));
+    }
+
+    function showResult(isCorrect, message) {
+        if (isWaitingForNext) return;
+        isWaitingForNext = true;
+        
+        msgOverlay.innerText = message;
+        msgOverlay.style.display = 'block';
+        msgOverlay.style.color = isCorrect ? '#4caf50' : '#ff5252';
+
+        if (isCorrect) {
+            score += 10;
+            player.emoji = "😎";
+            expTitle.innerText = "⭕ 정답입니다!";
+            expTitle.style.color = "#4caf50";
+        } else {
+            lives--;
+            player.emoji = "😭";
+            expTitle.innerText = "❌ 오답입니다...";
+            expTitle.style.color = "#ff5252";
+        }
+        
+        expText.innerHTML = currentQuestion.explanation;
+        explanationOverlay.style.display = 'block';
+
+        document.getElementById('score-text').innerText = `SCORE: ${score}`;
+        document.getElementById('lives-text').innerText = `LIVES: ${"❤️".repeat(lives)}`;
+        
+        if (lives <= 0) {
+            setTimeout(() => { document.getElementById('end-screen').style.display = 'flex'; gameRunning = false; }, 2000);
+        } else {
+            setTimeout(nextQuestion, 5000); // 해설을 충분히 읽을 수 있게 5초 대기
+        }
+    }
+
+    function gameLoop() {
+        if(!gameRunning) return;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        ctx.font = `${player.size}px Arial`;
+        ctx.textAlign = "center";
+        ctx.fillText(player.emoji, player.x + (player.size/2), player.y + player.size);
+
+        if (!isWaitingForNext) {
+            if (balls.length === 0) {
+                createBalls();
+            }
+            for(let i = balls.length - 1; i >= 0; i--) {
+                balls[i].update(); balls[i].draw();
+                
+                if(balls[i].y + balls[i].radius > player.y && 
+                   balls[i].x > player.x - 30 && 
+                   balls[i].x < player.x + player.size + 30) {
+                    showResult(balls[i].isCorrect, balls[i].isCorrect ? "맞았습니다!" : "틀렸습니다!");
+                } else if(balls[i].y > 550) {
+                    if(balls[i].isCorrect) showResult(false, "정답을 놓쳤어요!");
+                    balls.splice(i, 1);
+                }
+            }
+        }
+        requestAnimationFrame(gameLoop);
+    }
+
+    canvas.addEventListener('mousemove', (e) => {
+        const rect = canvas.getBoundingClientRect();
+        player.x = (e.clientX - rect.left) - player.size / 2;
+        if (player.x < 0) player.x = 0;
+        if (player.x > canvas.width - player.size) player.x = canvas.width - player.size;
+    });
+</script>
+</body>
+</html>

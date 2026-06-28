@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>On the way home - Used to Quiz</title>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --accent: #e67e22;
+            --success: #27ae60;
+            --fail: #c0392b;
+        }
+
+        body, html {
+            margin: 0; padding: 0; height: 100%; overflow: hidden;
+            font-family: 'Pretendard', sans-serif;
+        }
+
+        #game-wrapper {
+            width: 100%; height: 100vh; position: relative;
+            display: flex; justify-content: center; align-items: center;
+            background-color: #f0f0f0;
+        }
+
+        .screen {
+            position: absolute; width: 100%; height: 100%;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            transition: opacity 0.5s ease;
+        }
+
+        .hidden { display: none !important; opacity: 0; }
+
+        /* 시작 화면 배경 */
+        #start-screen {
+            background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), 
+                        url('https://images.unsplash.com/photo-1502101872923-d48509bff386?q=80&w=1600&auto=format&fit=crop');
+            background-size: cover; background-position: center;
+            color: white;
+        }
+
+        h1.title { font-size: 4rem; margin-bottom: 20px; text-shadow: 3px 3px 10px rgba(0,0,0,0.7); }
+
+        /* 퀴즈 화면 배경 (갈림길) */
+        #quiz-screen {
+            background: url('https://images.unsplash.com/photo-1465447142348-e9952c393450?q=80&w=1600&auto=format&fit=crop');
+            background-size: cover; background-position: center;
+        }
+
+        .quiz-box {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            text-align: center; max-width: 600px; width: 90%;
+        }
+
+        .fork-container {
+            display: flex; justify-content: space-around; width: 100%; margin-top: 40px;
+        }
+
+        .choice-btn {
+            background: white; border: 4px solid var(--primary); padding: 20px;
+            border-radius: 15px; cursor: pointer; transition: 0.3s; width: 40%;
+            font-weight: bold; font-size: 1.1rem; box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .choice-btn:hover { transform: translateY(-10px); background: var(--primary); color: white; }
+
+        /* 주관식 입력창 */
+        .input-box { width: 100%; margin-top: 20px; }
+        input[type="text"] {
+            width: 80%; padding: 15px; border-radius: 10px; border: 2px solid #ccc; font-size: 1.1rem;
+        }
+
+        /* 자동차 프로그레스 */
+        #road-container {
+            position: absolute; bottom: 50px; width: 80%; height: 60px;
+            background: rgba(0,0,0,0.2); border-radius: 30px; display: flex; align-items: center;
+        }
+        #car {
+            position: absolute; left: 0%; font-size: 40px; transition: 1s ease-in-out;
+            filter: drop-shadow(2px 2px 5px rgba(0,0,0,0.3));
+        }
+
+        /* 성공 화면 */
+        #success-screen {
+            background: linear-gradient(rgba(255,255,255,0.7), rgba(255,255,255,0.7)),
+                        url('https://images.unsplash.com/photo-1513584684374-89744f9984c9?q=80&w=1600&auto=format&fit=crop');
+            background-size: cover;
+        }
+
+        .btn-start {
+            padding: 15px 40px; font-size: 1.5rem; margin: 10px; cursor: pointer;
+            border: none; border-radius: 10px; transition: 0.3s;
+            background-color: var(--accent); color: white;
+        }
+        .btn-start:hover { background-color: #d35400; }
+    </style>
+</head>
+<body>
+
+<div id="game-wrapper">
+    <div id="start-screen" class="screen">
+        <h1 class="title">On the way home</h1>
+        <p>Grammar in Use Unit 17 : "used to" Quiz</p>
+        <div style="margin-top: 30px;">
+            <button class="btn-start" onclick="initGame('easy')">초급</button>
+            <button class="btn-start" onclick="initGame('mid')">중급</button>
+            <button class="btn-start" onclick="initGame('hard')">상급</button>
+        </div>
+    </div>
+
+    <div id="quiz-screen" class="screen hidden">
+        <div class="quiz-box">
+            <h2 id="q-korean">한국어 문장</h2>
+            <div id="q-area">
+                </div>
+            <button id="hint-btn" class="hidden" style="margin-top:15px; cursor:pointer;" onclick="showHint()">💡 힌트 보기</button>
+        </div>
+
+        <div id="road-container">
+            <div id="car">🚗</div>
+            <span style="position:absolute; right:20px; font-size:30px;">🏠</span>
+        </div>
+    </div>
+
+    <div id="success-screen" class="screen hidden">
+        <h1 style="font-size: 3rem; color: #2c3e50;">집에 무사히 도착했습니다!</h1>
+        <h2 style="color: #e67e22;">I finally got home!</h2>
+        <button class="btn-start" onclick="location.reload()">다시 하기</button>
+    </div>
+</div>
+
+<script>
+    // 데이터셋
+    const grammarPairs = [
+        ["She used to travel a lot.", "She was used to travel a lot."],
+        ["I used to play tennis.", "I used to playing tennis."],
+        ["I never used to like drinking coffee before.", "I never used liking drinking coffee before."],
+        ["Jen used to have very long hair when she was a child.", "Jen was used to having very long hair when she was a child."],
+        ["We used to live in a small village.", "We used to living in a small village."],
+        ["I didn't use to like him.", "I didn't used to like him."],
+        ["Did you use to eat a lot of candy when you were a child?", "Did you used to eat a lot of candy when you were a child?"],
+        ["I used to be able to run ten kilometers.", "I was used to be able to run ten kilometers."],
+        ["What games did you use to play when you were a kid?", "What games do you used to play when you were a kid?"],
+        ["I don't travel a lot these days, but I used to do.", "I don't travel a lot these days, but I use to doing."],
+        ["I didn't use to read a lot, but I do now.", "I didn't used to read a lot, but I do now."]
+    ];
+
+    const translationSet = [
+        {k: "나는 혼자 사는것이 익숙하다.", e: "I am used to living alone"},
+        {k: "나는 Rob이 불렀을 때 TV를 보는 중이었다.", e: "I was watching TV when Rob called"},
+        {k: "나는 그를 좋아하곤 했다.", e: "I used to like him"},
+        {k: "우리는 작은 마을에 살곤 했지만, 지금은 도시에 산다.", e: "We used to live in a small village, but now we live in a city"},
+        {k: "나는 공장에서 일을 하곤 했다.", e: "I used to work in a factory"},
+        {k: "그들은 파리에 살곤 했다.", e: "They used to live in Paris"},
+        {k: "Sophie는 오토바이를 타곤 했지만, 그녀는 작년에 그것을 팔았고 차를 샀다.", e: "Sophie used to ride a motorcycle, but last year she sold it and bought a car"}
+    ];
+
+    let currentLevel = '';
+    let currentQuestions = [];
+    let questionIndex = 0;
+    let totalQuestions = 5;
+
+    function initGame(level) {
+        currentLevel = level;
+        questionIndex = 0;
+        document.getElementById('start-screen').classList.add('hidden');
+        document.getElementById('quiz-screen').classList.remove('hidden');
+        
+        // 난이도별 세팅
+        if(level === 'easy') {
+            currentQuestions = [...grammarPairs].sort(() => Math.random() - 0.5).slice(0, 5);
+            totalQuestions = 5;
+        } else if(level === 'mid') {
+            let choicePart = [...grammarPairs].sort(() => Math.random() - 0.5).slice(0, 3);
+            let typingPart = [...grammarPairs].sort(() => Math.random() - 0.5).slice(0, 2);
+            currentQuestions = [...choicePart, ...typingPart];
+            totalQuestions = 5;
+        } else {
+            currentQuestions = [...translationSet].sort(() => Math.random() - 0.5).slice(0, 5);
+            totalQuestions = 5;
+        }
+        
+        renderQuestion();
+    }
+
+    function renderQuestion() {
+        const qData = currentQuestions[questionIndex];
+        const qArea = document.getElementById('q-area');
+        const qKor = document.getElementById('q-korean');
+        const hintBtn = document.getElementById('hint-btn');
+        qArea.innerHTML = '';
+        hintBtn.classList.add('hidden');
+
+        // 자동차 위치 업데이트
+        let progress = (questionIndex / totalQuestions) * 90;
+        document.getElementById('car').style.left = progress + "%";
+
+        if(questionIndex >= totalQuestions) {
+            finishGame();
+            return;
+        }
+
+        // 1. 초급 & 중급(앞 3문제) - 객관식 갈림길
+        if(currentLevel === 'easy' || (currentLevel === 'mid' && questionIndex < 3)) {
+            qKor.innerText = "어떤 길이 올바른 문법일까요?";
+            let options = [qData[0], qData[1]].sort(() => Math.random() - 0.5);
+            
+            let container = document.createElement('div');
+            container.className = 'fork-container';
+            options.forEach(opt => {
+                let btn = document.createElement('div');
+                btn.className = 'choice-btn';
+                btn.innerText = opt;
+                btn.onclick = () => checkAnswer(opt === qData[0]);
+                container.appendChild(btn);
+            });
+            qArea.appendChild(container);
+        }
+        // 2. 중급(뒤 2문제) - 타이핑 수정
+        else if(currentLevel === 'mid' && questionIndex >= 3) {
+            qKor.innerText = "다음 틀린 문장을 올바르게 고쳐 쓰세요.";
+            qArea.innerHTML = `<p style="color:red; font-weight:bold;">${qData[1]}</p>
+                               <div class="input-box"><input type="text" id="userInput" autocomplete="off" placeholder="정답 입력..."></div>
+                               <button class="btn-start" style="font-size:1rem;" onclick="checkTyping('${qData[0]}')">확인</button>`;
+        }
+        // 3. 상급 - 영작
+        else {
+            qKor.innerText = qData.k;
+            hintBtn.classList.remove('hidden');
+            qArea.innerHTML = `<div class="input-box"><input type="text" id="userInput" autocomplete="off" placeholder="영작하세요..."></div>
+                               <button class="btn-start" style="font-size:1rem;" onclick="checkTyping('${qData.e}')">확인</button>`;
+        }
+    }
+
+    function checkAnswer(isCorrect) {
+        if(isCorrect) {
+            questionIndex++;
+            renderQuestion();
+        } else {
+            alert("🚧 막다른 길입니다! 다시 공부하고 돌아오세요.");
+            location.reload();
+        }
+    }
+
+    function checkTyping(correctAnswer) {
+        let userVal = document.getElementById('userInput').value.trim().toLowerCase().replace(/[.]/g, '');
+        let targetVal = correctAnswer.toLowerCase().replace(/[.]/g, '');
+
+        if(userVal === targetVal) {
+            questionIndex++;
+            renderQuestion();
+        } else {
+            alert("🚧 막다른 길입니다! (오답입니다)");
+            location.reload();
+        }
+    }
+
+    function showHint() {
+        let answer = currentQuestions[questionIndex].e;
+        alert("힌트: " + answer.substring(0, 5) + "...");
+    }
+
+    function finishGame() {
+        document.getElementById('car').style.left = "90%";
+        setTimeout(() => {
+            document.getElementById('quiz-screen').classList.add('hidden');
+            document.getElementById('success-screen').classList.remove('hidden');
+        }, 500);
+    }
+</script>
+
+</body>
+</html>

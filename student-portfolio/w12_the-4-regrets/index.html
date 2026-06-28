@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The 4 Regrets: 2-Phase Boss Battle</title>
+    <style>
+        /* 수정됨: 깔끔한 폰트 주소 */
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lora:ital,wght=0,400;0,700;1,400&display=swap');
+
+        /* --- 기본 스타일 --- */
+        * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
+        body { background-color: #000; color: #d4af37; font-family: 'Lora', serif; overflow: hidden; width: 100vw; height: 100vh; }
+
+        /* --- 화면 전환 시스템 --- */
+        .phase {
+            display: none; width: 100%; height: 100%;
+            flex-direction: column; align-items: center; justify-content: center;
+            position: absolute; top: 0; left: 0;
+            opacity: 0; transition: opacity 1.5s ease-in-out;
+            z-index: 1;
+        }
+        .phase.active { display: flex; opacity: 1; }
+
+        #blackout {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: black; z-index: 1000; pointer-events: none; opacity: 0;
+            transition: opacity 1s ease-in-out;
+        }
+
+        /* --- UI 디자인 --- */
+        button.gold-btn {   
+            background: rgba(0, 0, 0, 0.8); border: 1px solid #7a6327;
+            color: #d4af37; padding: 15px 40px; font-size: 1.2rem; cursor: pointer;
+            font-family: 'Cinzel', serif; transition: all 0.3s; pointer-events: auto;
+        }
+        button.gold-btn:hover { background: #d4af37; color: #000; box-shadow: 0 0 20px #d4af37; }
+
+        /* --- Phase 2: Cartoon --- */
+        .scroll-container {
+            width: 80%; max-width: 800px; height: 70vh;
+            overflow-y: auto; border: 1px solid #333; padding: 20px;
+            background: #000; scroll-behavior: smooth;
+        }
+        .cartoon-panel { width: 100%; margin-bottom: 60px; border: 1px solid #222; text-align: center; }
+        .cartoon-panel img { width: 100%; height: auto; display: block; background: #111; }
+
+        /* --- Phase 3: 3D Battle --- */
+        #battle-phase {
+            padding: 8px 15px !important;
+            min-height: auto !important;
+            background: rgba(10, 1, 1, 0.75) !important;
+            box-shadow: 0 0 15px rgba(255, 0, 0, 0.2);
+        }
+
+        #question-text {
+            font-size: 16px !important;
+            margin-bottom: 6px !important;
+            line-height: 1.3 !important;
+        }
+        #threejs-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; }
+        
+        .battle-ui { position: absolute; width: 100%; height: 100%; z-index: 10; pointer-events: none; display: flex; flex-direction: column; justify-content: space-between; align-items: center; padding: 50px 0; }
+        #hp-container {
+            height: 12px !important;
+            border: 1px solid #550000 !important;
+            background-color: #200000 !important;
+        }
+
+        #option-container {
+            gap: 8px !important;
+            padding: 5px !important;
+        }
+        #boss-name-ui { color: #f00; text-shadow: 0 0 15px #f00; font-family: 'Cinzel'; font-weight: 700; margin-bottom: 10px; letter-spacing: 2px; }
+        .hp-bg { width: 100%; height: 12px; background: #222; border: 1px solid #555; box-shadow: 0 0 10px rgba(0,0,0,0.8); }
+        .hp-fill { width: 100%; height: 100%; background: linear-gradient(90deg, #800, #f00); transition: width 0.4s ease-out; }
+
+        .dialogue-box {
+            width: 60%; background: rgba(5, 5, 5, 0.95); border: 1px solid #544;
+            padding: 30px; text-align: center; pointer-events: auto; box-shadow: 0 0 30px rgba(0,0,0,0.9);
+        }
+
+        /* --- Effects --- */
+        .hit-text {
+            position: absolute; top: 40%; left: 50%; font-family: 'Cinzel'; font-size: 5rem;
+            color: #ffd700; z-index: 100; pointer-events: none; animation: hitBurst 1s forwards;
+        }
+        @keyframes hitBurst {
+            0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
+            20% { transform: translate(-50%, -50%) scale(1.5); opacity: 1; text-shadow: 0 0 30px #ffd700; }
+            100% { transform: translate(-50%, -150%) scale(1.8); opacity: 0; }
+        }
+        
+        .shake { animation: shakeAnim 0.3s infinite; }
+        @keyframes shakeAnim {
+            0%, 100% { transform: translate(0, 0); }
+            10%, 30%, 50%, 70%, 90% { transform: translate(-4px, -2px); }
+            20%, 40%, 60%, 80% { transform: translate(4px, 2px); }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="blackout"></div>
+
+    <div id="intro-phase" class="phase active">
+        <h1 style="font-size: 5rem; font-family: 'Cinzel'; text-shadow: 0 0 20px rgba(212,175,55,0.3);">THE 4 REGRETS</h1>
+        <p style="color:#666; letter-spacing: 5px; margin-bottom: 50px;">Shakespeare's Souls</p>
+        <button class="gold-btn" onclick="goToCartoon()">NEW GAME</button>
+    </div>
+
+        <div id="cartoon-phase" class="phase">
+        <h2 class="cinzel" style="margin-bottom: 20px; letter-spacing: 3px;">PROLOGUE</h2>
+        <div class="scroll-container">
+            
+            <div class="cartoon-panel">
+                <img src="cut1.png" alt="Scene 1" onerror="this.style.height='400px';">
+                <p style="padding:20px; color:#888;">"성공의 끝은 시린 공허였다..."</p>
+            </div>
+
+            <div class="cartoon-panel">
+                <img src="cut2.png" alt="Scene 2" onerror="this.style.height='400px';">
+                <p style="padding:20px; color:#888;">"과거로 돌아가게 해주오. 딱 한 번만..."</p>
+            </div>
+
+    </div>
+    <button class="gold-btn" style="margin-top: 20px;" onclick="goToBattle()">FACE THE REGRET</button>
+</div>
+    <div id="battle-phase" class="phase">
+        <div id="threejs-container"></div>
+        <div class="battle-ui">
+            <div class="hp-bar-container">
+                <h3 class="cinzel" id="boss-name-ui">LEAR, THE BANISHER KING</h3>
+                <div class="hp-bg"><div id="hp-fill" class="hp-fill"></div></div>
+            </div>
+            <div class="dialogue-box">
+                <p id="question-text" style="font-size: 1.3rem; margin-bottom: 25px; line-height: 1.6;"></p>
+                <div id="option-container" style="display:flex; gap:20px; justify-content:center;"></div>
+            </div>
+        </div>
+    </div>
+
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.158.0/build/three.module.js",
+                "three/addons/": "https://unpkg.com/three@0.158.0/examples/jsm/"
+            }
+        }
+    </script>
+
+    <script type="module">
+        import * as THREE from 'three';
+        import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+        import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+        
+        function normalizeModel(model, targetHeight, rotationY = 0) {
+            model.updateMatrixWorld(true);
+            const box = new THREE.Box3().setFromObject(model);
+            const size = new THREE.Vector3();
+            box.getSize(size);
+            const scaleFactor = targetHeight / size.y;
+            model.scale.setScalar(scaleFactor);
+            model.updateMatrixWorld(true);
+            const newBox = new THREE.Box3().setFromObject(model);
+            model.position.y = -newBox.min.y;
+            model.rotation.y = rotationY;
+            return model;
+        }
+
+        const gameData = {
+            phase: 1, 
+            hp: 100, 
+            isTransitioning: false,
+            phase1: {
+                name: "LEAR, THE BANISHER KING",
+                question: "리어왕이 광기에 젖어 묻는다: <br>\"내가 내 딸 코델리아를 내쫓은 그 일을...\"",
+                options: [
+                    { text: "후회한다 (Regret acting)", isCorrect: true, effect: "PURIFIED!" },
+                    { text: "유감이다 (Regret to act)", isCorrect: false }
+                ]
+            },
+            phase2: {
+                name: "LEAR, THE MONUMENT OF REGRET",
+                question: "대지를 흔드는 거대한 비석 기사가 읊조린다:<br>\"유산은 텅 비었고, 내 마지막 말은...\"",
+                options: [
+                    { text: "Nothing will come of nothing", isCorrect: true, effect: "FORGIVEN." },
+                    { text: "Say everything but nothing", isCorrect: false }
+                ]
+            }
+        };
+
+        // 사운드 재생 헬퍼 함수 (안전하게 처리됨)
+        window.playButtonSound = () => {
+            const btnSound = document.getElementById('sfx-button');
+            if(btnSound) {
+                btnSound.currentTime = 0;
+                btnSound.play().catch(e => console.log("버튼 사운드 생략"));
+            }
+        };
+
+        window.playHitSound = () => {
+            const hitSound = document.getElementById('sfx-correct');
+            if(hitSound) {
+                hitSound.currentTime = 0;
+                hitSound.play().catch(e => console.log("타격 사운드 생략"));
+            }
+        };
+
+        // 1. 웹툰 진입
+        window.goToCartoon = () => {
+            window.playButtonSound();
+            document.getElementById('intro-phase').classList.remove('active');
+            document.getElementById('cartoon-phase').classList.add('active');
+            
+            const bgmWebtoon = document.getElementById('bgm-webtoon');
+            if(bgmWebtoon) bgmWebtoon.play().catch(e => console.log("웹툰 음악 대기 중"));
+        };
+
+        // 2. 전투 진입
+        window.goToBattle = () => {
+            window.playButtonSound();
+            const blackout = document.getElementById('blackout');
+            blackout.style.opacity = '1';
+            
+            const bgmWebtoon = document.getElementById('bgm-webtoon');
+            const bgm1 = document.getElementById('bgm-phase1');
+            
+            if(bgmWebtoon) bgmWebtoon.pause();
+            if(bgm1) bgm1.play().catch(e => console.log("1페이즈 음악 대기 중"));
+
+            setTimeout(() => {
+                document.getElementById('cartoon-phase').classList.remove('active');
+                document.getElementById('battle-phase').classList.add('active');
+                
+                initThreeJS();
+                initBattleUI();
+                blackout.style.opacity = '0';
+            }, 1000);
+        };
+
+        // 3. 2페이즈 전환
+        window.startPhase2Transition = () => {
+            gameData.isTransitioning = true;
+
+            const bgm1 = document.getElementById('bgm-phase1');
+            const bgm2 = document.getElementById('bgm-phase2');
+            
+            if(bgm1) bgm1.pause();
+            if(bgm2) bgm2.play().catch(e => console.log("2페이즈 음악 대기 중"));
+
+            gameData.hp = 0;
+            document.getElementById('hp-fill').style.width = "0%";
+            document.getElementById('option-container').innerHTML = '';
+            document.getElementById('question-text').innerHTML = "<span style='color:#f00; font-weight:bold;'>\"Aaaargh! 코델리아! 오, 나의 코델리아...!\"</span>";
+
+            flash.intensity = 35;
+            document.getElementById('battle-phase').classList.add('shake');
+            
+            setTimeout(() => { 
+                flash.intensity = 0; 
+                scene.fog.density = 0.05; 
+            }, 150);
+            
+            setTimeout(() => {
+                if(p1_kingModel) scene.remove(p1_kingModel);
+                if(p1_palaceModel) scene.remove(p1_palaceModel); 
+                
+                if(p2_stelaeModel) {
+                    scene.add(p2_stelaeModel);
+                    p2_stelaeModel.rotation.y = 0; 
+                }
+                if(p2_templeModel) scene.add(p2_templeModel);    
+                
+                camera.fov = 85;
+                camera.updateProjectionMatrix(); 
+                controls.target.set(0, 1.2, 0); 
+                camera.position.set(-2, 1.5, 8); 
+                controls.update();  
+                
+                floorLight.color.setHex(0xff0000);
+                floorLight.intensity = 15;
+                scene.fog.color.setHex(0x100202);
+                renderer.setClearColor(0x0a0101);
+
+                const colors = particleGeo.attributes.color.array;
+                for(let i=0; i<colors.length; i+=3) {
+                    colors[i] = 1.0; colors[i+1] = 0.1; colors[i+2] = 0.05;
+                }
+                particleGeo.attributes.color.needsUpdate = true;
+
+                gameData.phase = 2;
+                gameData.hp = 100; 
+                document.getElementById('hp-fill').style.width = "100%";
+                gameData.isTransitioning = false;
+                initBattleUI();
+                
+                document.getElementById('battle-phase').classList.remove('shake');
+                flash.color.setHex(0xff2222);
+                flash.intensity = 25;
+                setTimeout(() => flash.intensity = 0, 150);
+            }, 3000); 
+        };
+
+        function initBattleUI() {
+            if (gameData.isTransitioning) return;
+            const currentPhase = gameData.phase === 1 ? gameData.phase1 : gameData.phase2;
+            document.getElementById('boss-name-ui').innerText = currentPhase.name;
+            document.getElementById('question-text').innerHTML = currentPhase.question;
+            const container = document.getElementById('option-container');
+            container.innerHTML = '';
+            currentPhase.options.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = 'gold-btn';
+                btn.innerText = opt.text;
+                btn.onclick = () => handleAttack(opt);
+                container.appendChild(btn);
+            });
+        }
+
+        function handleAttack(opt) {
+            if (gameData.isTransitioning) return;
+            
+            window.playButtonSound();
+
+            if(opt.isCorrect) {
+                window.playHitSound();
+                gameData.hp -= 34; 
+                document.getElementById('hp-fill').style.width = Math.max(0, gameData.hp) + "%";
+                const el = document.createElement('div'); el.className = 'hit-text'; el.innerText = opt.effect;
+                document.body.appendChild(el); setTimeout(() => el.remove(), 1000);
+                if(gameData.hp <= 0) {
+                    if (gameData.phase === 1) window.startPhase2Transition();
+                    else document.getElementById('question-text').innerHTML = "<span style='color:#ffd700;'>REGRET SLAIN (참회의 신화가 끝났다)</span>";
+                }
+            } else {
+                const wrapper = document.getElementById('battle-phase');
+                wrapper.classList.add('shake');
+                setTimeout(() => wrapper.classList.remove('shake'), 300);
+            }
+        }
+
+        let scene, camera, renderer, controls, flash, floorLight;
+        let p1_kingModel, p2_stelaeModel;
+        let particles, particleGeo;
+        let p1_palaceModel, p2_templeModel;
+
+        let bossBones = { head: null, neck: null, spine: null };
+        let p2_bones = { head: null, rightArm: null, leftArm: null, spine: null };
+
+        function initThreeJS() {
+            const container = document.getElementById('threejs-container');
+            if (container.children.length > 0) return;
+
+            scene = new THREE.Scene();
+            scene.fog = new THREE.FogExp2(0x050505, 0.025); 
+
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 2000);
+            camera.position.set(2.30, -0.27, 7.06); 
+
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setClearColor(0x020202);
+            container.appendChild(renderer.domElement);
+
+            controls = new OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+            controls.target.set(-2.05, 2.65, 1.08); 
+
+            window.camera = camera;
+            window.controls = controls;
+
+            scene.add(new THREE.AmbientLight(0xffffff, 0.9));
+            const dirLight = new THREE.DirectionalLight(0xffffff, 1.8);
+            dirLight.position.set(10, 25, 10);
+            scene.add(dirLight);
+            
+            flash = new THREE.DirectionalLight(0xffffff, 0);
+            flash.position.set(-5, 25, -5);
+            scene.add(flash);
+            
+            floorLight = new THREE.PointLight(0xaa6622, 6, 40); 
+            floorLight.position.set(0, 1, 0); 
+            scene.add(floorLight);
+          
+            particleGeo = new THREE.BufferGeometry();
+            const pCount = 2500;
+            const pPos = new Float32Array(pCount * 3);
+            const pColors = new Float32Array(pCount * 3);
+            for(let i=0; i<pCount; i++) {
+                pPos[i*3] = (Math.random() - 0.5) * 60;
+                pPos[i*3+1] = Math.random() * 30;
+                pPos[i*3+2] = (Math.random() - 0.5) * 60;
+                pColors[i*3] = 0.7 + Math.random()*0.3; 
+                pColors[i*3+1] = 0.5 + Math.random()*0.2; 
+                pColors[i*3+2] = 0.2; 
+            }
+            particleGeo.setAttribute('position', new THREE.BufferAttribute(pPos, 3));
+            particleGeo.setAttribute('color', new THREE.BufferAttribute(pColors, 3));
+            const pMat = new THREE.PointsMaterial({ size: 0.1, vertexColors: true, transparent: true, opacity: 0.6, blending: THREE.AdditiveBlending });
+            particles = new THREE.Points(particleGeo, pMat);
+            scene.add(particles);
+
+            const loader = new GLTFLoader();
+
+            loader.load('armored_king.glb', (gltf) => {
+                p1_kingModel = normalizeModel(gltf.scene, 8, Math.PI); 
+                p1_kingModel.traverse((child) => {
+                    if (child.isBone) {
+                        const name = child.name.toLowerCase();
+                        if (name.includes('head')) bossBones.head = child;
+                        if (name.includes('neck')) bossBones.neck = child;
+                        if (name.includes('spine') || name.includes('chest')) bossBones.spine = child;
+                    }
+                });
+                scene.add(p1_kingModel);
+            });
+
+            loader.load('palace.glb', (gltf) => {
+                p1_palaceModel = gltf.scene; 
+                const box = new THREE.Box3().setFromObject(p1_palaceModel);
+                const scaleFactor = 1.5; 
+                p1_palaceModel.scale.setScalar(scaleFactor);
+                p1_palaceModel.position.set(0, (-box.min.y * scaleFactor) - 10.7, -8); 
+                scene.add(p1_palaceModel);
+            });
+
+            loader.load('desolated_greek_temple1.glb', (gltf) => {
+                p2_templeModel = gltf.scene; 
+                const scaleFactor = 50.0; 
+                p2_templeModel.scale.setScalar(scaleFactor);
+                p2_templeModel.position.set(8, -1.7, -12); 
+            });
+
+            loader.load('stelae_knight.glb', (gltf) => {
+                p2_stelaeModel = normalizeModel(gltf.scene, 8, 0); 
+                p2_stelaeModel.traverse((child) => {
+                    if (child.isBone) {
+                        const name = child.name.toLowerCase();
+                        if (name.includes('head')) p2_bones.head = child;
+                        if (name.includes('spine') || name.includes('chest')) p2_bones.spine = child;
+                        if (name.includes('arm_r') || name.includes('hand_r') || name.includes('righthand')) p2_bones.rightArm = child;
+                        if (name.includes('arm_l') || name.includes('hand_l') || name.includes('lefthand')) p2_bones.leftArm = child;
+                    }
+                });
+            });
+            
+            function animate() {
+                requestAnimationFrame(animate);
+                const time = Date.now() * 0.001;
+
+                if (gameData.phase === 1 && p1_kingModel) {
+                    const breath = Math.sin(time * 1.5) * 0.05; 
+                    if (bossBones.head) bossBones.head.rotation.x = 0.5 + breath; 
+                    if (bossBones.neck) bossBones.neck.rotation.x = 0.3 + breath * 0.5;
+                    if (bossBones.spine) bossBones.spine.rotation.x = 0.2 + breath;
+                }
+
+                const pPositions = particleGeo.attributes.position.array;
+                const speed = (gameData.phase === 1) ? 0.03 : 0.08;
+                for(let i=1; i<pPositions.length; i+=3) {
+                    pPositions[i] += speed;
+                    if(pPositions[i] > 30) {
+                        pPositions[i] = 0;
+                        pPositions[i-1] = (Math.random() - 0.5) * 60;
+                        pPositions[i+1] = (Math.random() - 0.5) * 60;
+                    }
+                }
+                particleGeo.attributes.position.needsUpdate = true;
+
+                if(Math.random() > 0.988) {
+                    flash.intensity = (gameData.phase === 1) ? 10 : 20;
+                    setTimeout(() => flash.intensity = 0, 60);
+                }
+
+                controls.update();
+
+                if (gameData.phase === 2 && p2_stelaeModel) {
+                    p2_stelaeModel.lookAt(camera.position.x, p2_stelaeModel.position.y, camera.position.z);
+                    
+                    const fastTime = time * 5; 
+                    const lungeCycle = Math.sin(time * 2.5); 
+
+                    if (p2_bones.head) {
+                        p2_bones.head.rotation.x = 0.4 + Math.sin(fastTime * 2) * 0.05; 
+                        p2_bones.head.rotation.z = Math.cos(fastTime * 3) * 0.04;
+                    }
+                    if (p2_bones.spine) p2_bones.spine.rotation.x = 0.2 + lungeCycle * 0.1;
+                    if (p2_bones.rightArm) {
+                        p2_bones.rightArm.rotation.x = -0.8 - (lungeCycle > 0 ? lungeCycle * 0.4 : 0); 
+                        p2_bones.rightArm.rotation.y = Math.sin(fastTime) * 0.05; 
+                    }
+                    if (p2_bones.leftArm) {
+                        p2_bones.leftArm.rotation.x = -0.7 - (lungeCycle > 0 ? lungeCycle * 0.3 : 0);
+                        p2_bones.leftArm.rotation.y = -Math.cos(fastTime) * 0.05;
+                    }
+                }
+                renderer.render(scene, camera);
+            }
+            animate();
+        }
+    </script>
+
+    <audio id="bgm-webtoon" src="oath.mp3" loop></audio>
+    <audio id="bgm-phase1" src="regret.mp3" loop></audio>
+    <audio id="bgm-phase2" src="Iron Choir Roar.mp3" loop></audio>
+
+</body>
+</html>

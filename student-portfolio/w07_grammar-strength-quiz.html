@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>근성장 영문법 퀴즈: should 마스터</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Noto+Sans+KR:wght@400;700;900&display=swap');
+
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #1a202c;
+            color: white;
+            overflow-x: hidden;
+        }
+
+        .title-font {
+            font-family: 'Black Han Sans', sans-serif;
+        }
+
+        /* SVG 내부 요소들의 부드러운 애니메이션 전환 */
+        #character-svg, .character-body path, .character-body g, .character-body circle {
+            transition: all 0.5s ease-in-out;
+            transform-origin: center bottom;
+        }
+
+        .equip-transition, .equip-transition circle, .equip-transition rect {
+            transition: all 0.5s ease-in-out;
+        }
+
+        .modal {
+            background: rgba(0, 0, 0, 0.92);
+            backdrop-filter: blur(10px);
+        }
+
+        .muscle-detail {
+            opacity: 0;
+            transition: opacity 0.5s, stroke-width 0.5s;
+        }
+        .show-muscle {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body class="flex flex-col items-center justify-center min-h-screen p-4">
+
+    <div id="game-container" class="max-w-md w-full bg-gray-800 rounded-3xl shadow-2xl overflow-hidden border-4 border-yellow-500">
+        <!-- 상단 상태바 -->
+        <div class="p-6 bg-gray-900 flex justify-between items-center border-b border-gray-700">
+            <div>
+                <h1 class="text-2xl title-font text-yellow-400 tracking-tight">근성장 영문법 퀴즈</h1>
+                <p class="text-xs text-gray-400 font-bold uppercase tracking-widest">Level: <span id="level-name">문법 초보</span></p>
+            </div>
+            <div id="progress-container" class="text-right transition-transform">
+                <p class="text-sm font-black">PROG: <span id="score-display" class="text-yellow-400">0</span> / 7</p>
+                <div class="w-24 h-2.5 bg-gray-700 rounded-full mt-1 border border-gray-600 overflow-hidden">
+                    <div id="progress-bar" class="h-full bg-gradient-to-r from-yellow-600 to-yellow-400 transition-all duration-500" style="width: 0%"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 캐릭터 및 운동 표시 영역 -->
+        <div id="stage" class="relative h-96 bg-gradient-to-b from-gray-700 via-gray-800 to-black flex items-center justify-center overflow-hidden">
+            <div id="character-stage" class="relative w-[220px] h-[280px] mb-4">
+                
+                <!-- 캐릭터 SVG -->
+                <svg id="character-svg" width="220" height="280" viewBox="0 0 100 130" class="character-body absolute inset-0 z-10">
+                    <!-- 머리 및 얼굴 -->
+                    <g id="head-group">
+                        <circle cx="50" cy="18" r="11" fill="#ffdbac" stroke="#333" stroke-width="0.8"/>
+                        <circle cx="46" cy="16" r="1.2" fill="#333" />
+                        <circle cx="54" cy="16" r="1.2" fill="#333" />
+                        <path id="mouth" d="M47 23 Q50 25 53 23" stroke="#333" fill="none" stroke-width="1.5" stroke-linecap="round"/>
+                    </g>
+                    
+                    <rect x="46" y="28" width="8" height="4" fill="#ffdbac" />
+                    
+                    <!-- 몸통 -->
+                    <path id="body-path" d="M38 32 Q50 32 62 32 L58 80 Q50 82 42 80 Z" fill="#ffdbac" stroke="#333" stroke-width="1.2"/>
+                    
+                    <!-- 근육 데피니션 -->
+                    <g id="muscle-lines" class="muscle-detail">
+                        <path d="M40 42 Q50 45 60 42" stroke="#d2b48c" fill="none" stroke-width="1.2" />
+                        <path d="M50 42 L50 75" stroke="#d2b48c" fill="none" stroke-width="0.8" stroke-dasharray="2,2" />
+                        <path d="M44 52 L56 52" stroke="#d2b48c" stroke-width="1.2" />
+                        <path d="M44 60 L56 60" stroke="#d2b48c" stroke-width="1.2" />
+                        <path d="M44 68 L56 68" stroke="#d2b48c" stroke-width="1.2" />
+                    </g>
+
+                    <!-- 팔 -->
+                    <g id="arms">
+                        <path id="arm-l" d="M38 35 L22 65" stroke="#ffdbac" stroke-width="5" stroke-linecap="round" />
+                        <path id="arm-r" d="M62 35 L78 65" stroke="#ffdbac" stroke-width="5" stroke-linecap="round" />
+                    </g>
+                    
+                    <!-- 다리 -->
+                    <g id="legs">
+                        <path id="shorts" d="M40 80 L60 80 L63 95 L52 95 L50 85 L48 95 L37 95 Z" fill="#2d3748" stroke="#1a202c" stroke-width="1.5" stroke-linejoin="round" />
+                        <path id="leg-l" d="M43 95 L40 125" stroke="#ffdbac" stroke-width="7" stroke-linecap="round" />
+                        <path id="leg-r" d="M57 95 L60 125" stroke="#ffdbac" stroke-width="7" stroke-linecap="round" />
+                    </g>
+                </svg>
+
+                <!-- 운동 기구 SVG 레이어 -->
+                <svg id="equipment-svg" width="220" height="280" viewBox="0 0 220 280" class="absolute inset-0 z-20 pointer-events-none">
+                    <!-- 아령 -->
+                    <g id="eq-dumbbells" class="hidden">
+                        <g id="db-left-group" class="equip-transition">
+                            <path d="M35 140 L65 140" stroke="#718096" stroke-width="4"/>
+                            <circle cx="48" cy="142" r="14" fill="#1a202c" />
+                        </g>
+                        <g id="db-right-group" class="equip-transition">
+                            <path d="M155 140 L185 140" stroke="#718096" stroke-width="4"/>
+                            <circle cx="171" cy="142" r="14" fill="#1a202c" />
+                        </g>
+                    </g>
+                </svg>
+            </div>
+            
+            <div id="exercise-label" class="absolute bottom-4 left-0 right-0 text-center text-xs font-black text-yellow-500 uppercase tracking-widest bg-black bg-opacity-60 py-1.5 shadow-lg">
+                WAITING FOR TRAINING
+            </div>
+        </div>
+
+        <!-- 퀴즈 및 진행 영역 -->
+        <div id="quiz-area" class="p-8 bg-gray-800 min-h-[280px] relative flex flex-col justify-center">
+            <div id="question-box" class="transition-opacity duration-300">
+                <p class="text-xs text-blue-400 mb-2 font-bold uppercase tracking-widest" id="q-category">Prepare</p>
+                <h2 id="question-text" class="text-lg font-bold mb-5 leading-relaxed overflow-hidden">영문법 should 지식으로 전설의 보디빌더가 되기 위한 여정을 시작하세요.</h2>
+                <div id="options-container" class="space-y-3">
+                    <button onclick="startGame()" class="w-full bg-yellow-500 hover:bg-yellow-400 text-gray-900 font-black py-4 rounded-2xl transition-all transform active:scale-95 shadow-xl border-b-4 border-yellow-700">영문법 트레이닝 시작</button>
+                </div>
+            </div>
+            
+            <!-- 트레이닝 진행 시 표시되는 오버레이 -->
+            <div id="training-overlay" class="absolute inset-0 flex items-center justify-center hidden bg-gray-800 rounded-b-3xl">
+                <div class="text-center">
+                    <div class="text-5xl mb-4 animate-bounce">🔥</div>
+                    <h3 class="text-2xl font-black text-yellow-400 tracking-widest italic">TRAINING...</h3>
+                    <p class="text-gray-400 text-sm mt-2 font-medium">문법 지식으로 근육이 성장 중입니다</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 결과 알림창 (오답 시 해설 포함) -->
+    <div id="result-modal" class="fixed inset-0 modal hidden flex items-center justify-center z-50 p-6">
+        <div class="bg-gray-800 border-4 border-yellow-500 p-8 rounded-3xl max-w-md w-full text-center shadow-2xl transform">
+            <h2 id="modal-title" class="text-4xl title-font mb-4 italic">SUCCESS!</h2>
+            <p id="modal-message" class="text-gray-300 mb-4 font-medium">멋진 동작입니다!</p>
+            
+            <!-- 오답 해설 표시 영역 -->
+            <div id="modal-explanation" class="text-sm text-left text-yellow-200 mb-6 bg-gray-900 p-4 rounded-xl hidden border border-yellow-700 leading-relaxed shadow-inner">
+                해설이 들어가는 자리
+            </div>
+
+            <button id="modal-btn" class="w-full bg-yellow-500 hover:bg-yellow-400 text-gray-900 font-black py-4 rounded-2xl shadow-lg transition-all active:scale-95 uppercase text-lg tracking-wide border-b-4 border-yellow-700">운동 수행하기</button>
+        </div>
+    </div>
+
+    <script>
+        // 처음 고정으로 나올 7개의 문제 세트
+        const initialQuestions = [
+            { q: "[조언] \"It's raining heavily outside. You ________ an umbrella.\"", options: ["should take", "should have taken", "taking"], answer: 0, explanation: "현재 비가 오고 있으므로 우산을 '가져가는 것이 좋다'는 조언을 나타내는 should + 동사원형이 적절합니다." },
+            { q: "[예상] \"Jane studied really hard for the test. She ________ get a good grade.\"", options: ["should", "shouldn't", "should have"], answer: 0, explanation: "열심히 공부했기 때문에 좋은 성적을 받을 것이라 '예상'할 때 should를 사용합니다." },
+            { q: "[과거의 후회] \"I failed the exam. I ________ harder when I had the chance.\"", options: ["should study", "must study", "should have studied"], answer: 2, explanation: "시험에 이미 떨어졌고, 과거에 '공부했어야 했는데 하지 않았다'는 후회를 나타내므로 should have + p.p. 형태가 정답입니다." },
+            { q: "[문법 형태] \"He ________ to the doctor about his back pain.\"", options: ["should goes", "should to go", "should go"], answer: 2, explanation: "조동사 should 뒤에는 반드시 '동사원형'이 와야 합니다. to 부정사나 3인칭 단수형(-es)은 올 수 없습니다." },
+            { q: "[부정 조언] \"You ________ drink too much coffee before going to bed. It's bad for your sleep.\"", options: ["shouldn't", "shouldn't have", "should"], answer: 0, explanation: "잠자기 전 커피를 많이 마시는 것은 좋지 않으므로 '~하지 않는 것이 좋다'는 의미의 부정형 shouldn't가 알맞습니다." },
+            { q: "[과거의 후회] \"My stomach hurts. I ________ that spicy food last night.\"\n(어젯밤에 그 매운 음식을 먹지 말았어야 했는데)", options: ["shouldn't eat", "shouldn't have eaten", "should have eaten"], answer: 1, explanation: "어젯밤에 매운 음식을 '먹지 말았어야 했는데 먹었다'는 과거의 행동에 대한 자책/후회이므로 shouldn't have + p.p.를 씁니다." },
+            { q: "[예상] \"They have a map and a GPS. They ________ get lost.\"", options: ["should", "shouldn't", "shouldn't have"], answer: 1, explanation: "지도와 GPS가 있으니 길을 잃지 않을 것이라고 '예상(기대)'하는 상황이므로 부정형인 shouldn't가 자연스럽습니다." }
+        ];
+
+        // '다시 운동하기'를 눌렀을 때 나올 추가 문제 풀 (랜덤으로 7개를 뽑음)
+        const questionPool = [
+            { q: "[조언] \"You look very tired. You ________ some rest.\"", options: ["should get", "should getting", "should have got"], answer: 0, explanation: "현재 피곤해 보이므로 '휴식을 취하는 것이 좋다'는 의미의 should + 동사원형이 적절합니다." },
+            { q: "[예상] \"The train departed 10 minutes ago. It ________ here soon.\"", options: ["should be", "should have been", "shouldn't be"], answer: 0, explanation: "10분 전에 출발했으므로 '곧 도착할 것이다(도착해야 정상이다)'라는 예상을 나타냅니다." },
+            { q: "[과거의 후회] \"I'm so cold. I ________ my coat.\"", options: ["should bring", "must bring", "should have brought"], answer: 2, explanation: "과거에 '코트를 가져왔어야 했는데 가져오지 않아서' 춥다는 의미이므로 should have p.p.를 사용합니다." },
+            { q: "[부정 조언] \"You ________ stay up so late. You have an exam tomorrow.\"", options: ["shouldn't", "shouldn't have", "should"], answer: 0, explanation: "내일 시험이 있으니 늦게까지 '깨어있지 않는 것이 좋다'는 현재/미래에 대한 조언입니다." },
+            { q: "[과거의 후회] \"I feel sick. I ________ so much cake.\"", options: ["shouldn't eat", "shouldn't have eaten", "should have eaten"], answer: 1, explanation: "과거에 케이크를 너무 많이 먹은 것에 대한 후회이므로 shouldn't have p.p. 형태가 정답입니다." },
+            { q: "[문법 형태] \"They should ________ the safety rules.\"", options: ["follows", "to follow", "follow"], answer: 2, explanation: "조동사 should 뒤에는 항상 동사원형이 와야 합니다." },
+            { q: "[예상/부정] \"It's a very easy test. You ________ have any problems.\"", options: ["should", "shouldn't", "shouldn't have"], answer: 1, explanation: "시험이 매우 쉬우므로 '문제가 없을 것이다'라고 예상하는 상황입니다." },
+            { q: "[과거의 후회] \"We are lost. We ________ the map before leaving.\"", options: ["should check", "should have checked", "shouldn't have checked"], answer: 1, explanation: "이미 길을 잃었고, 출발하기 전에 '지도를 확인했어야 했다'는 과거의 아쉬움/후회를 나타냅니다." },
+            { q: "[과거의 후회] \"She is very angry. You ________ to her like that yesterday.\"", options: ["shouldn't speak", "shouldn't have spoken", "should have spoken"], answer: 1, explanation: "어제 그녀에게 '그렇게 말하지 말았어야 했다'는 과거 사실에 대한 후회/비판입니다." },
+            { q: "[조언] \"If you want to lose weight, you ________ exercise regularly.\"", options: ["should", "should have", "shouldn't"], answer: 0, explanation: "살을 빼고 싶다면 규칙적으로 '운동하는 것이 좋다'는 일반적인 조언을 나타냅니다." },
+            { q: "[예상] \"She left an hour ago. She ________ at the library by now.\"", options: ["should be", "should being", "shoulds be"], answer: 0, explanation: "한 시간 전에 출발했으니 지금쯤 도서관에 '도착해 있을 것이다'라는 예상을 나타냅니다." },
+            { q: "[과거의 후회] \"I didn't bring my umbrella. I ________ the weather forecast.\"", options: ["should check", "should checking", "should have checked"], answer: 2, explanation: "이미 우산을 안 가져왔고 비가 오고 있으므로, 날씨를 '확인했어야 했다'는 과거의 후회입니다." },
+            { q: "[조언] \"Your phone is broken. You ________ buy a new one.\"", options: ["should", "should have", "shouldn't"], answer: 0, explanation: "전화기가 고장 났으니 새 것을 '사는 것이 좋다'는 조언입니다." },
+            { q: "[부정 조언] \"The movie is terrible. You ________ waste your money on it.\"", options: ["should", "shouldn't", "shouldn't have"], answer: 1, explanation: "영화가 끔찍하므로 돈을 '낭비하지 않는 것이 좋다'는 현재 상황에 대한 부정 조언입니다." }
+        ];
+
+        let activeQuestions = [...initialQuestions];
+        let currentQ = 0;
+        let score = 0;
+        let currentScale = 1.0;
+        let exerciseInterval;
+        let gameRound = 1;
+
+        // 팔과 아령의 위치 상태를 몸집에 맞춰 관리하는 전역 변수
+        let shoulderLX = 38, shoulderRX = 62;
+        let handDownLX = 22, handDownRX = 78;
+        let handUpLX = 25, handUpRX = 75;
+        let dbOffset = 0;
+
+        const characterSvg = document.getElementById('character-svg');
+        const armL = document.getElementById('arm-l');
+        const armR = document.getElementById('arm-r');
+        const legL = document.getElementById('leg-l');
+        const legR = document.getElementById('leg-r');
+        const mouth = document.getElementById('mouth');
+        const muscleLines = document.getElementById('muscle-lines');
+        const bodyPath = document.getElementById('body-path');
+        const levelName = document.getElementById('level-name');
+
+        function startGame() {
+            currentQ = 0;
+            score = 0;
+            updateCharacter(0);
+            
+            // 점수 및 상태바 초기화
+            document.getElementById('score-display').innerText = score;
+            document.getElementById('progress-bar').style.width = `0%`;
+            
+            showQuestion();
+        }
+
+        // '다시 운동하기' 버튼을 눌렀을 때 실행되는 함수
+        function restartWithNewQuestions() {
+            gameRound++;
+            // 문제 풀에서 7개의 문제를 랜덤으로 섞어서 추출
+            const shuffled = [...questionPool].sort(() => 0.5 - Math.random());
+            activeQuestions = shuffled.slice(0, 7);
+            
+            // 게임 재시작
+            startGame();
+        }
+
+        // '끝내기' 버튼을 눌렀을 때 실행되는 함수
+        function finishGame() {
+            document.getElementById('q-category').innerText = "ALL CLEAR";
+            document.getElementById('question-text').innerText = "트레이닝이 완전히 종료되었습니다.";
+            document.getElementById('options-container').innerHTML = `
+                <div class="text-center p-8 bg-gray-900 rounded-3xl border-2 border-green-500 shadow-2xl">
+                    <div class="text-5xl mb-4">🏆</div>
+                    <p class="text-2xl font-black text-white mb-2">수고하셨습니다!</p>
+                    <p class="text-sm text-gray-400 font-medium leading-relaxed">오늘의 영문법 근성장 트레이닝을 성공적으로 마쳤습니다.<br>푹 쉬시고 지식을 내 것으로 만드세요!</p>
+                </div>
+            `;
+            stopExerciseAnimation();
+        }
+
+        function showQuestion() {
+            if (currentQ >= activeQuestions.length) {
+                endGame();
+                return;
+            }
+            const q = activeQuestions[currentQ];
+            document.getElementById('q-category').innerText = gameRound === 1 ? `Unit 31. should 마스터하기 - ${currentQ + 1} / 7` : `[재도전] 추가 근성장 훈련 - ${currentQ + 1} / 7`;
+            document.getElementById('question-text').innerHTML = q.q.replace(/\n/g, '<br/>');
+            
+            const optionsContainer = document.getElementById('options-container');
+            optionsContainer.innerHTML = '';
+            
+            q.options.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.className = "w-full bg-gray-700 hover:bg-gray-600 text-white font-bold py-3 px-6 rounded-xl border-l-4 border-transparent hover:border-yellow-500 transition-all text-left flex justify-between items-center group shadow-md";
+                btn.innerHTML = `<span>${opt}</span><span class="opacity-0 group-hover:opacity-100 transition-opacity">✏️</span>`;
+                btn.onclick = () => checkAnswer(idx);
+                optionsContainer.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(idx) {
+            const isCorrect = idx === activeQuestions[currentQ].answer;
+            const explanation = activeQuestions[currentQ].explanation;
+
+            if (isCorrect) {
+                score++;
+                updateProgress();
+            }
+            
+            showResultModal(isCorrect, explanation);
+        }
+
+        function updateProgress() {
+            document.getElementById('score-display').innerText = score;
+            document.getElementById('progress-bar').style.width = `${(score / 7) * 100}%`;
+            updateCharacter(score);
+        }
+
+        function updateCharacter(currentScore) {
+            let bodyWidth = 32; 
+            let armStroke = 5;
+            let legStroke = 7;
+            currentScale = 1.0;
+
+            mouth.setAttribute('d', "M47 23 Q50 25 53 23");
+
+            if (currentScore >= 3 && currentScore < 6) {
+                bodyWidth = 50;
+                armStroke = 11;
+                legStroke = 12;
+                // 레벨 2: 몸이 커짐에 따라 팔과 손, 아령 좌표를 바깥으로 이동
+                shoulderLX = 30; shoulderRX = 70;
+                handDownLX = 14; handDownRX = 86;
+                handUpLX = 17; handUpRX = 83;
+                dbOffset = 18; 
+                levelName.innerText = "지식의 벌크업 중";
+                levelName.className = "text-blue-400 font-black";
+                muscleLines.classList.add('show-muscle');
+                mouth.setAttribute('d', "M45 22 Q50 27 55 22");
+            } else if (currentScore >= 6) {
+                bodyWidth = 72;
+                armStroke = 18;
+                legStroke = 20;
+                currentScale = 1.15;
+                // 레벨 3: 근육왕 상태, 팔을 더 바깥으로 이동
+                shoulderLX = 20; shoulderRX = 80;
+                handDownLX = 4; handDownRX = 96;
+                handUpLX = 7; handUpRX = 93;
+                dbOffset = 40;
+                levelName.innerText = "영문법 마스터 몸짱";
+                levelName.className = "text-yellow-400 font-black text-sm";
+                muscleLines.classList.add('show-muscle');
+                mouth.setAttribute('d', "M44 21 Q50 29 56 21");
+            } else {
+                bodyWidth = 32; 
+                armStroke = 5; 
+                legStroke = 7; 
+                currentScale = 1.0;
+                // 레벨 1: 기본 상태
+                shoulderLX = 38; shoulderRX = 62;
+                handDownLX = 22; handDownRX = 78;
+                handUpLX = 25; handUpRX = 75;
+                dbOffset = 0;
+                levelName.innerText = "문법 초보";
+                levelName.className = "text-gray-400";
+                muscleLines.classList.remove('show-muscle');
+            }
+
+            const x1 = 50 - (bodyWidth / 2);
+            const x2 = 50 + (bodyWidth / 2);
+            bodyPath.setAttribute('d', `M${x1} 32 Q50 30 ${x2} 32 L${x2-10} 80 Q50 85 ${x1+10} 80 Z`);
+            armL.setAttribute('stroke-width', armStroke);
+            armR.setAttribute('stroke-width', armStroke);
+            legL.setAttribute('stroke-width', legStroke);
+            legR.setAttribute('stroke-width', legStroke);
+            characterSvg.style.transform = `scale(${currentScale})`;
+
+            // 몸이 커지면서 양팔도 몸통 기준 양옆으로 자연스럽게 배치되도록 즉시 적용
+            armL.setAttribute('d', `M${shoulderLX} 35 L${handDownLX} 65`);
+            armR.setAttribute('d', `M${shoulderRX} 35 L${handDownRX} 65`);
+            document.getElementById('db-left-group').style.transform = `translate(-${dbOffset}px, 0px)`;
+            document.getElementById('db-right-group').style.transform = `translate(${dbOffset}px, 0px)`;
+        }
+
+        function showResultModal(correct, explanation) {
+            const modal = document.getElementById('result-modal');
+            const title = document.getElementById('modal-title');
+            const msg = document.getElementById('modal-message');
+            const btn = document.getElementById('modal-btn');
+            const expDiv = document.getElementById('modal-explanation');
+            
+            modal.classList.remove('hidden');
+
+            if (correct) {
+                title.innerText = "PERFECT! 💪";
+                title.className = "text-4xl title-font text-green-400 mb-4 italic drop-shadow-md";
+                msg.innerText = "정답입니다!\n지식이 쌓여 근육이 펌핑됩니다.";
+                expDiv.classList.add('hidden'); 
+                
+                btn.innerText = "훈련 보러가기";
+                btn.className = "w-full bg-green-500 hover:bg-green-400 text-gray-900 font-black py-4 rounded-2xl shadow-lg transition-all active:scale-95 text-lg border-b-4 border-green-700";
+                
+                btn.onclick = () => {
+                    modal.classList.add('hidden');
+                    playExerciseScene(); 
+                };
+            } else {
+                title.innerText = "FAILED... 💧";
+                title.className = "text-4xl title-font text-red-500 mb-4 italic drop-shadow-md";
+                msg.innerText = "오답입니다! 아래 해설을 읽고 지식을 보충하세요.";
+                
+                expDiv.innerHTML = `<strong class="text-white">💡 오답 노트:</strong><br>${explanation}`;
+                expDiv.classList.remove('hidden');
+                
+                btn.innerText = "확인하고 다음 문제로";
+                btn.className = "w-full bg-red-500 hover:bg-red-400 text-white font-black py-4 rounded-2xl shadow-lg transition-all active:scale-95 text-lg border-b-4 border-red-700";
+                mouth.setAttribute('d', "M47 25 Q50 23 53 25"); 
+                
+                btn.onclick = () => {
+                    modal.classList.add('hidden');
+                    currentQ++;
+                    showQuestion(); 
+                };
+            }
+        }
+
+        // 트레이닝 씬 전용 로직
+        function playExerciseScene() {
+            document.getElementById('question-box').classList.add('opacity-0', 'pointer-events-none');
+            setTimeout(() => document.getElementById('question-box').classList.add('hidden'), 300);
+            document.getElementById('training-overlay').classList.remove('hidden');
+            
+            startExerciseAnimation();
+
+            // 3.5초 대기 후 다음 문제로
+            setTimeout(() => {
+                stopExerciseAnimation();
+                document.getElementById('training-overlay').classList.add('hidden');
+                document.getElementById('question-box').classList.remove('hidden');
+                setTimeout(() => document.getElementById('question-box').classList.remove('opacity-0', 'pointer-events-none'), 50);
+                
+                currentQ++;
+                showQuestion();
+            }, 3500);
+        }
+
+        function startExerciseAnimation() {
+            document.getElementById('exercise-label').innerText = `운동 중...`;
+            document.querySelectorAll('#equipment-svg g').forEach(g => g.classList.add('hidden'));
+
+            document.getElementById('eq-dumbbells').classList.remove('hidden');
+            characterSvg.style.transform = `scale(${currentScale})`;
+
+            let toggle = false;
+            updateAnimFrame(toggle);
+
+            exerciseInterval = setInterval(() => {
+                toggle = !toggle;
+                updateAnimFrame(toggle);
+            }, 500);
+        }
+
+        function updateAnimFrame(t) {
+            // 변경된 팔의 가변 좌표(shoulder, hand)를 활용하여 운동 애니메이션 실행
+            armL.setAttribute('d', t ? `M${shoulderLX} 35 L${handUpLX} 20` : `M${shoulderLX} 35 L${handDownLX} 65`);
+            armR.setAttribute('d', t ? `M${shoulderRX} 35 L${handUpRX} 20` : `M${shoulderRX} 35 L${handDownRX} 65`);
+            
+            // 몸집에 따라 밖으로 밀려난 아령의 위치를 기준으로 상하 애니메이션
+            document.getElementById('db-left-group').style.transform = t ? `translate(-${dbOffset}px, -97px)` : `translate(-${dbOffset}px, 0px)`;
+            document.getElementById('db-right-group').style.transform = t ? `translate(${dbOffset}px, -97px)` : `translate(${dbOffset}px, 0px)`;
+        }
+
+        function stopExerciseAnimation() {
+            clearInterval(exerciseInterval);
+            document.getElementById('exercise-label').innerText = "WAITING FOR TRAINING";
+            document.querySelectorAll('#equipment-svg g').forEach(g => {
+                g.classList.add('hidden');
+            });
+            
+            characterSvg.style.transform = `scale(${currentScale})`;
+            
+            // 애니메이션이 끝나면 변경된 팔 너비에 맞춰 기본자세로 복구
+            armL.setAttribute('d', `M${shoulderLX} 35 L${handDownLX} 65`);
+            armR.setAttribute('d', `M${shoulderRX} 35 L${handDownRX} 65`);
+            
+            document.getElementById('db-left-group').style.transform = `translate(-${dbOffset}px, 0px)`;
+            document.getElementById('db-right-group').style.transform = `translate(${dbOffset}px, 0px)`;
+        }
+
+        function endGame() {
+            let finalMsg = "";
+            let finalLevel = "";
+            if (score >= 6) {
+                finalMsg = "should 용법을 완벽히 마스터하셨습니다! 영문법 근육이 경지에 올랐네요.";
+                finalLevel = "영문법 마스터 몸짱";
+            } else if (score >= 3) {
+                finalMsg = "훌륭합니다! 기초 지식이 단단해져 근육이 꽤 많이 붙었습니다.";
+                finalLevel = "지식의 벌크업 중";
+            } else {
+                finalMsg = "문법 기초가 더 필요합니다. 다시 도전해서 근육을 키워보세요!";
+                finalLevel = "문법 초보";
+            }
+
+            document.getElementById('q-category').innerText = "SESSION COMPLETE";
+            document.getElementById('question-text').innerText = "영문법 트레이닝 세션 종료";
+            
+            const optionsContainer = document.getElementById('options-container');
+            
+            // 완료 메시지 및 두 가지 선택지 버튼 출력
+            optionsContainer.innerHTML = `
+                <div class="text-center p-6 bg-gray-900 rounded-3xl border-2 border-yellow-500 mb-4 shadow-2xl">
+                    <p class="text-xs text-yellow-500 font-black mb-1 tracking-widest uppercase">${finalLevel}</p>
+                    <p class="text-3xl font-black text-white mb-3">TOTAL: ${score} / 7</p>
+                    <p class="text-sm text-gray-400 font-medium leading-relaxed">${finalMsg}</p>
+                </div>
+                <div class="flex gap-3">
+                    <button onclick="restartWithNewQuestions()" class="w-1/2 bg-blue-600 hover:bg-blue-500 text-white font-black py-4 rounded-2xl transition-all shadow-xl active:scale-95 text-lg border-b-4 border-blue-800">다시 운동하기</button>
+                    <button onclick="finishGame()" class="w-1/2 bg-red-600 hover:bg-red-500 text-white font-black py-4 rounded-2xl transition-all shadow-xl active:scale-95 text-lg border-b-4 border-red-800">끝내기</button>
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<title>앨리스의 문법 미로 탈출</title>
+
+<style>
+  body {
+    margin: 0;
+    height: 100vh;
+    overflow: hidden;
+    font-family: Arial, sans-serif;
+
+    /* 처음부터 끝까지 동일 배경 */
+    background-image: url("https://static.vecteezy.com/system/resources/thumbnails/004/938/563/small_2x/card-suits-blue-white-diamond-background-vector.jpg");
+    background-size: cover;
+    background-position: center;
+  }
+
+  .center {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+  }
+
+  /* 메시지 창: 흰색 + 하늘색 테두리 */
+  .box {
+    background: white;
+    border: 3px solid skyblue;
+    border-radius: 14px;
+    padding: 25px;
+    max-width: 750px;
+    font-size: 22px;
+    line-height: 1.6;
+    color: #333;
+  }
+
+  .title {
+    font-size: 34px;
+    font-weight: bold;
+  }
+
+  .question {
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+
+  .choices {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 10px;
+  }
+
+  .choice {
+    width: 40%;
+  }
+
+  button {
+    width: 100%;
+    padding: 14px;
+    font-size: 18px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+  }
+
+  .left {
+    background: #60a5fa;
+    color: white;
+  }
+
+  .right {
+    background: #f87171;
+    color: white;
+  }
+
+  .small {
+    font-size: 12px;
+    margin-top: 5px;
+    opacity: 0.7;
+  }
+
+  .fail {
+    color: red;
+    font-size: 42px;
+    font-weight: bold;
+  }
+</style>
+</head>
+
+<body>
+
+<div class="center" id="screen">
+  <div class="box title">앨리스의 문법 미로 탈출!</div>
+</div>
+
+<script>
+let state = 0;
+const screen = document.getElementById("screen");
+
+/* 화면 초기화 */
+function clearScreen() {
+  screen.innerHTML = "";
+}
+
+/* 박스 출력 */
+function show(html) {
+  clearScreen();
+  const box = document.createElement("div");
+  box.className = "box";
+  box.innerHTML = html;
+  screen.appendChild(box);
+}
+
+/* 클릭 진행 */
+document.body.addEventListener("click", () => {
+
+  // 0 → 안내판
+  if (state === 0) {
+    show(`!여왕의 문법 미로를 탈출하는 방법!<br><br>
+    만나는 카드 병사의 문법 문제를 맞추면<br>
+    병사가 알려주는 올바른 길을 따라 걸어라.`);
+    state = 1;
+  }
+
+  // 안내 → 시작
+  else if (state === 1) {
+    show("시작!");
+    state = 2;
+  }
+
+  // 병사1
+  else if (state === 2) {
+    question1();
+    state = 3;
+  }
+
+  // 병사2
+  else if (state === 4) {
+    question2();
+    state = 5;
+  }
+
+  // 병사3
+  else if (state === 6) {
+    question3();
+    state = 7;
+  }
+
+  // 탈출
+  else if (state === 8) {
+    show("여왕의 문법 미로를 탈출했다!");
+    state = 9;
+  }
+
+  // 종료
+  else if (state === 9) {
+    show("게임 종료");
+  }
+
+  // FAIL 이후 클릭 종료
+  else if (state === "fail") {
+    show("게임 종료");
+  }
+
+});
+
+/* 공통 문제 UI */
+function makeQuestion(q, left, right, correct, nextState) {
+  clearScreen();
+
+  const box = document.createElement("div");
+  box.className = "box";
+
+  box.innerHTML = `
+    <div class="question">${q}</div>
+
+    <div class="choices">
+
+      <div class="choice">
+        <button class="left">${left}</button>
+        <div class="small">왼쪽으로 향함</div>
+      </div>
+
+      <div class="choice">
+        <button class="right">${right}</button>
+        <div class="small">오른쪽으로 향함</div>
+      </div>
+
+    </div>
+  `;
+
+  const leftBtn = box.querySelector(".left");
+  const rightBtn = box.querySelector(".right");
+
+  function pick(side) {
+    if (side === correct) {
+      show("오른쪽으로!");
+      setTimeout(() => {
+        state = nextState;
+      }, 800);
+    } else {
+      show("<div class='fail'>FAIL</div><br>왼쪽으로!");
+      state = "fail";
+    }
+  }
+
+  leftBtn.onclick = (e) => {
+    e.stopPropagation();
+    pick("left");
+  };
+
+  rightBtn.onclick = (e) => {
+    e.stopPropagation();
+    pick("right");
+  };
+
+  screen.appendChild(box);
+}
+
+/* 문제 1 */
+function question1() {
+  show("카드병사1를 만났다!");
+
+  setTimeout(() => {
+    makeQuestion(
+      "They can't afford ____ a new car.",
+      "buying",
+      "to buy",
+      "right",
+      4
+    );
+  }, 900);
+}
+
+/* 문제 2 */
+function question2() {
+  show("카드병사2를 만났다!");
+
+  setTimeout(() => {
+    makeQuestion(
+      "I enjoy ____ television.",
+      "watching",
+      "to watch",
+      "left",
+      6
+    );
+  }, 900);
+}
+
+/* 문제 3 */
+function question3() {
+  show("카드병사3를 만났다!");
+
+  setTimeout(() => {
+    makeQuestion(
+      "Remember ____ the door.",
+      "locking",
+      "to lock",
+      "right",
+      8
+    );
+  }, 900);
+}
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>줄다리기 문법 퀴즈 — Verb + Prep + -ing</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --blue: #2563EB;
+    --blue-light: #DBEAFE;
+    --blue-dark: #1E40AF;
+    --red: #DC2626;
+    --red-light: #FEE2E2;
+    --red-dark: #991B1B;
+    --green: #16A34A;
+    --green-light: #DCFCE7;
+    --bg: #0F172A;
+    --surface: #1E293B;
+    --surface2: #293548;
+    --border: rgba(255,255,255,0.08);
+    --text: #F1F5F9;
+    --muted: #94A3B8;
+    --accent: #F59E0B;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-x: hidden;
+  }
+
+  /* Background grid */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(37,99,235,0.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(37,99,235,0.06) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .page { position: relative; z-index: 1; width: 100%; max-width: 680px; padding: 0 1.25rem 3rem; }
+
+  /* ── HEADER ── */
+  header {
+    text-align: center;
+    padding: 2.5rem 0 1.5rem;
+  }
+  .site-badge {
+    display: inline-block;
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    color: var(--accent);
+    background: rgba(245,158,11,0.12);
+    border: 1px solid rgba(245,158,11,0.3);
+    padding: 4px 12px;
+    border-radius: 20px;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+  }
+  header h1 {
+    font-size: clamp(1.8rem, 5vw, 2.8rem);
+    font-weight: 900;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.5rem;
+  }
+  header h1 span { color: var(--accent); }
+  header p {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  /* ── SCORE BOARD ── */
+  .scoreboard {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 12px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 1rem 1.25rem;
+    margin-bottom: 1rem;
+  }
+  .team-block { text-align: center; }
+  .team-name {
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .team-name.blue { color: #60A5FA; }
+  .team-name.red { color: #F87171; }
+  .score-num {
+    font-family: 'Space Mono', monospace;
+    font-size: 2.4rem;
+    font-weight: 700;
+    line-height: 1;
+  }
+  .score-num.blue { color: #60A5FA; }
+  .score-num.red { color: #F87171; }
+  .vs-block { text-align: center; }
+  .vs-text {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    display: block;
+    margin-bottom: 4px;
+  }
+  .q-info {
+    font-family: 'Space Mono', monospace;
+    font-size: 13px;
+    color: var(--accent);
+    font-weight: 700;
+  }
+
+  /* ── PROGRESS ── */
+  .progress-wrap {
+    margin-bottom: 1.25rem;
+    position: relative;
+  }
+  .progress-track {
+    height: 4px;
+    background: var(--surface2);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--blue), var(--accent));
+    border-radius: 4px;
+    transition: width 0.5s cubic-bezier(0.4,0,0.2,1);
+  }
+
+  /* ── ROPE ARENA ── */
+  .rope-arena {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 1rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .rope-arena::after {
+    content: '';
+    position: absolute;
+    top: 0; bottom: 0;
+    left: 50%;
+    width: 1px;
+    background: rgba(255,255,255,0.1);
+  }
+  .crowd-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    font-size: 18px;
+    position: relative;
+    z-index: 1;
+  }
+  .crowd-blue { display: flex; gap: 2px; }
+  .crowd-red { display: flex; gap: 2px; flex-direction: row-reverse; }
+  .rope-track {
+    height: 16px;
+    background: var(--surface2);
+    border-radius: 8px;
+    position: relative;
+    overflow: hidden;
+  }
+  .rope-blue {
+    position: absolute;
+    top: 0; left: 0;
+    height: 100%;
+    background: linear-gradient(90deg, var(--blue-dark), var(--blue));
+    border-radius: 8px 0 0 8px;
+    transition: width 0.7s cubic-bezier(0.4,0,0.2,1);
+  }
+  .rope-red {
+    position: absolute;
+    top: 0; right: 0;
+    height: 100%;
+    background: linear-gradient(90deg, var(--red), var(--red-dark));
+    border-radius: 0 8px 8px 0;
+    transition: width 0.7s cubic-bezier(0.4,0,0.2,1);
+  }
+  .rope-knot {
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 20px;
+    transition: left 0.7s cubic-bezier(0.4,0,0.2,1);
+    z-index: 2;
+    filter: drop-shadow(0 0 6px rgba(245,158,11,0.5));
+  }
+  .rope-labels {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 8px;
+    font-size: 11px;
+    color: var(--muted);
+  }
+
+  /* ── QUESTION CARD ── */
+  .q-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    transition: border-color 0.3s;
+  }
+  .q-card.correct-glow { border-color: rgba(22,163,74,0.5); box-shadow: 0 0 20px rgba(22,163,74,0.1); }
+  .q-card.wrong-glow { border-color: rgba(220,38,38,0.5); box-shadow: 0 0 20px rgba(220,38,38,0.1); }
+
+  .q-tag {
+    display: inline-block;
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    background: rgba(245,158,11,0.1);
+    border: 1px solid rgba(245,158,11,0.2);
+    padding: 3px 10px;
+    border-radius: 20px;
+    margin-bottom: 1rem;
+  }
+  .q-sentence {
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--muted);
+    margin-bottom: 0.5rem;
+  }
+  .q-sentence em {
+    font-style: normal;
+    color: #93C5FD;
+    font-family: 'Space Mono', monospace;
+    font-size: 14px;
+  }
+  .q-main {
+    font-size: 17px;
+    line-height: 1.6;
+    font-weight: 500;
+    color: var(--text);
+    background: var(--surface2);
+    border-radius: 10px;
+    padding: 0.875rem 1rem;
+    margin-bottom: 0.75rem;
+    font-family: 'Space Mono', monospace;
+    letter-spacing: 0.02em;
+  }
+  .q-hint {
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+  .q-hint strong { color: var(--accent); }
+
+  /* ── OX BUTTONS ── */
+  .btn-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 1rem;
+  }
+  .ox-btn {
+    padding: 1rem;
+    font-size: 1.5rem;
+    font-weight: 700;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
+    cursor: pointer;
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-family: 'Noto Sans KR', sans-serif;
+  }
+  .ox-btn span.label { font-size: 14px; font-weight: 700; letter-spacing: 0.05em; }
+  .ox-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    border-color: rgba(255,255,255,0.2);
+    background: var(--surface2);
+  }
+  .ox-btn:active:not(:disabled) { transform: scale(0.97); }
+  .ox-btn.o-btn:hover:not(:disabled) { border-color: rgba(96,165,250,0.5); background: rgba(37,99,235,0.15); }
+  .ox-btn.x-btn:hover:not(:disabled) { border-color: rgba(248,113,113,0.5); background: rgba(220,38,38,0.15); }
+  .ox-btn.chosen-correct {
+    background: rgba(22,163,74,0.2);
+    border-color: rgba(22,163,74,0.6);
+    color: #86EFAC;
+  }
+  .ox-btn.chosen-wrong {
+    background: rgba(220,38,38,0.2);
+    border-color: rgba(220,38,38,0.6);
+    color: #FCA5A5;
+  }
+  .ox-btn.reveal-correct {
+    background: rgba(22,163,74,0.1);
+    border-color: rgba(22,163,74,0.4);
+    color: #86EFAC;
+  }
+  .ox-btn:disabled { cursor: not-allowed; opacity: 0.6; }
+
+  /* ── FEEDBACK ── */
+  .feedback {
+    border-radius: 12px;
+    padding: 1rem 1.25rem;
+    margin-bottom: 1rem;
+    font-size: 14px;
+    line-height: 1.65;
+    display: none;
+    animation: slideUp 0.3s ease;
+  }
+  .feedback.show { display: block; }
+  .feedback.correct {
+    background: rgba(22,163,74,0.12);
+    border: 1px solid rgba(22,163,74,0.3);
+    color: #86EFAC;
+  }
+  .feedback.wrong {
+    background: rgba(220,38,38,0.12);
+    border: 1px solid rgba(220,38,38,0.3);
+    color: #FCA5A5;
+  }
+  .feedback .fb-title {
+    font-weight: 700;
+    font-size: 15px;
+    margin-bottom: 6px;
+    display: block;
+  }
+  .feedback .fb-correct-ans {
+    margin-top: 6px;
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    opacity: 0.8;
+  }
+
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── NEXT BUTTON ── */
+  .next-btn {
+    width: 100%;
+    padding: 14px;
+    font-size: 15px;
+    font-weight: 700;
+    font-family: 'Noto Sans KR', sans-serif;
+    border-radius: 12px;
+    border: 1px solid rgba(245,158,11,0.4);
+    background: rgba(245,158,11,0.1);
+    color: var(--accent);
+    cursor: pointer;
+    transition: all 0.15s;
+    display: none;
+    letter-spacing: 0.03em;
+  }
+  .next-btn.show { display: block; }
+  .next-btn:hover { background: rgba(245,158,11,0.2); transform: translateY(-1px); }
+
+  /* ── RESULT SCREEN ── */
+  .result-screen {
+    display: none;
+    text-align: center;
+    padding: 2.5rem 1.5rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    animation: slideUp 0.4s ease;
+  }
+  .result-screen.show { display: block; }
+  .result-trophy { font-size: 5rem; margin-bottom: 1rem; display: block; }
+  .result-title {
+    font-size: 2rem;
+    font-weight: 900;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.5rem;
+  }
+  .result-scores {
+    font-family: 'Space Mono', monospace;
+    font-size: 1.5rem;
+    margin: 1rem 0;
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    align-items: center;
+  }
+  .result-scores .blue { color: #60A5FA; font-weight: 700; }
+  .result-scores .red { color: #F87171; font-weight: 700; }
+  .result-scores .sep { color: var(--muted); }
+  .result-sub {
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+  }
+  .restart-btn {
+    padding: 12px 28px;
+    font-size: 15px;
+    font-weight: 700;
+    font-family: 'Noto Sans KR', sans-serif;
+    border-radius: 10px;
+    border: 1px solid rgba(245,158,11,0.4);
+    background: rgba(245,158,11,0.1);
+    color: var(--accent);
+    cursor: pointer;
+    transition: all 0.15s;
+    letter-spacing: 0.03em;
+  }
+  .restart-btn:hover { background: rgba(245,158,11,0.2); transform: translateY(-1px); }
+
+  /* ── FLASH ANIMATION ── */
+  .flash-correct { animation: flashGreen 0.5s ease; }
+  .flash-wrong { animation: flashRed 0.5s ease; }
+  @keyframes flashGreen {
+    0%,100% { background: var(--surface); }
+    50% { background: rgba(22,163,74,0.15); }
+  }
+  @keyframes flashRed {
+    0%,100% { background: var(--surface); }
+    50% { background: rgba(220,38,38,0.15); }
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    text-align: center;
+    padding: 1.5rem 0 2rem;
+    font-size: 12px;
+    color: var(--muted);
+    font-family: 'Space Mono', monospace;
+  }
+
+  /* ── SHAKE ── */
+  @keyframes shake {
+    0%,100% { transform: translateX(0); }
+    20% { transform: translateX(-6px); }
+    40% { transform: translateX(6px); }
+    60% { transform: translateX(-4px); }
+    80% { transform: translateX(4px); }
+  }
+  .shake { animation: shake 0.4s ease; }
+
+  @media (max-width: 480px) {
+    header h1 { font-size: 1.6rem; }
+    .score-num { font-size: 1.8rem; }
+    .q-main { font-size: 14px; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header>
+    <div class="site-badge">Grammar Battle ⚡</div>
+    <h1>줄다리기<br><span>문법 퀴즈</span></h1>
+    <p>동사 + 전치사 + -ing 패턴을 OX로 판단하세요!<br>맞추면 우리 팀이 당긴다 💪</p>
+  </header>
+
+  <div id="game-area">
+
+    <div class="scoreboard">
+      <div class="team-block">
+        <div class="team-name blue">🔵 우리 팀</div>
+        <div class="score-num blue" id="my-score">0</div>
+      </div>
+      <div class="vs-block">
+        <span class="vs-text">VS</span>
+        <div class="q-info" id="q-info">1 / 8</div>
+      </div>
+      <div class="team-block">
+        <div class="team-name red">상대 팀 🔴</div>
+        <div class="score-num red" id="opp-score">0</div>
+      </div>
+    </div>
+
+    <div class="progress-wrap">
+      <div class="progress-track">
+        <div class="progress-fill" id="progress-fill" style="width:0%"></div>
+      </div>
+    </div>
+
+    <div class="rope-arena" id="rope-arena">
+      <div class="crowd-row">
+        <div class="crowd-blue">💪🧑🧑🧑</div>
+        <div class="crowd-red">🧑🧑🧑💪</div>
+      </div>
+      <div class="rope-track">
+        <div class="rope-blue" id="rope-blue" style="width:50%"></div>
+        <div class="rope-red" id="rope-red" style="width:50%"></div>
+        <div class="rope-knot" id="rope-knot" style="left:50%">🪢</div>
+      </div>
+      <div class="rope-labels">
+        <span>← 우리 팀 영역</span>
+        <span>상대 팀 영역 →</span>
+      </div>
+    </div>
+
+    <div class="q-card" id="q-card">
+      <div class="q-tag" id="q-tag">패턴 확인</div>
+      <div class="q-sentence">다음 문장이 문법적으로 올바른지 판단하세요.</div>
+      <div class="q-main" id="q-main">문제 로딩 중...</div>
+      <div class="q-hint" id="q-hint"></div>
+    </div>
+
+    <div class="btn-row">
+      <button class="ox-btn o-btn" id="btn-o" onclick="answer(true)">⭕ <span class="label">O (맞다)</span></button>
+      <button class="ox-btn x-btn" id="btn-x" onclick="answer(false)">❌ <span class="label">X (틀리다)</span></button>
+    </div>
+
+    <div class="feedback" id="feedback">
+      <span class="fb-title" id="fb-title"></span>
+      <span id="fb-body"></span>
+      <div class="fb-correct-ans" id="fb-ans"></div>
+    </div>
+
+    <button class="next-btn" id="next-btn" onclick="nextQuestion()">다음 문제로 →</button>
+
+  </div>
+
+  <div class="result-screen" id="result-screen">
+    <span class="result-trophy" id="result-trophy">🏆</span>
+    <div class="result-title" id="result-title">게임 종료!</div>
+    <div class="result-scores">
+      <span class="blue" id="r-my">0</span>
+      <span class="sep">:</span>
+      <span class="red" id="r-opp">0</span>
+    </div>
+    <div class="result-sub" id="result-sub"></div>
+    <button class="restart-btn" onclick="restart()">🔄 다시 도전하기</button>
+  </div>
+
+  <footer>Verb + Preposition + -ing Grammar Quiz · Made with ❤️</footer>
+</div>
+
+<script>
+const ALL_QUESTIONS = [
+  {
+    tag: "동사 + for + -ing",
+    main: "She apologized for being late to class.",
+    hint: "apologize for + -ing 구조를 생각해보세요.",
+    answer: true,
+    explain: "올바른 문장입니다!",
+    detail: "apologize for + -ing: 무언가에 대해 사과하다",
+    correction: null
+  },
+  {
+    tag: "look forward to + -ing",
+    main: "I'm looking forward to meet you next week.",
+    hint: "look forward to 에서 to는 전치사인가요, to부정사인가요?",
+    answer: false,
+    explain: "틀린 문장입니다!",
+    detail: "to는 전치사이므로 뒤에 -ing형이 와야 합니다.",
+    correction: "I'm looking forward to meeting you next week."
+  },
+  {
+    tag: "insist on + -ing",
+    main: "He insisted on paying for the meal.",
+    hint: "insist on + -ing 패턴이 맞는지 확인하세요.",
+    answer: true,
+    explain: "올바른 문장입니다!",
+    detail: "insist on + -ing: ~할 것을 고집하다",
+    correction: null
+  },
+  {
+    tag: "accuse ... of + -ing",
+    main: "She was accused of not telling the truth.",
+    hint: "부정형 not + -ing도 전치사 뒤에 올 수 있을까요?",
+    answer: true,
+    explain: "올바른 문장입니다!",
+    detail: "not + -ing 부정형도 전치사 뒤에 그대로 사용할 수 있습니다.",
+    correction: null
+  },
+  {
+    tag: "prevent ... from + -ing",
+    main: "What prevented you from come to see us?",
+    hint: "prevent A from + ? 뒤에 어떤 형태가 와야 할까요?",
+    answer: false,
+    explain: "틀린 문장입니다!",
+    detail: "prevent ... from 뒤에는 반드시 -ing형이 와야 합니다.",
+    correction: "What prevented you from coming to see us?"
+  },
+  {
+    tag: "succeed in + -ing",
+    main: "Has Rob succeeded in finding a job yet?",
+    hint: "succeed in + -ing 구조를 생각해보세요.",
+    answer: true,
+    explain: "올바른 문장입니다!",
+    detail: "succeed in + -ing: ~하는 데 성공하다",
+    correction: null
+  },
+  {
+    tag: "feel like + -ing",
+    main: "I don't feel like to go out tonight.",
+    hint: "feel like 뒤에는 어떤 형태가 와야 할까요?",
+    answer: false,
+    explain: "틀린 문장입니다!",
+    detail: "feel like 뒤에는 -ing형이 와야 합니다.",
+    correction: "I don't feel like going out tonight."
+  },
+  {
+    tag: "look forward to + somebody + -ing",
+    main: "We are all looking forward to Andy coming home next week.",
+    hint: "look forward to + (사람) + -ing 구조가 가능한가요?",
+    answer: true,
+    explain: "올바른 문장입니다!",
+    detail: "look forward to somebody doing something — 사람 뒤에 -ing형이 옵니다.",
+    correction: null
+  },
+  {
+    tag: "dream of + -ing",
+    main: "She dreams of become a famous singer.",
+    hint: "dream of 뒤에는 어떤 형태가 와야 할까요?",
+    answer: false,
+    explain: "틀린 문장입니다!",
+    detail: "dream of 뒤에도 -ing형이 와야 합니다.",
+    correction: "She dreams of becoming a famous singer."
+  },
+  {
+    tag: "congratulate ... for/on + -ing",
+    main: "We congratulated Lauren on winning the prize.",
+    hint: "congratulate 뒤에 올 수 있는 전치사는 무엇인가요?",
+    answer: true,
+    explain: "올바른 문장입니다!",
+    detail: "congratulate ... for/on + -ing — for와 on 둘 다 사용 가능합니다.",
+    correction: null
+  },
+  {
+    tag: "approve of + -ing",
+    main: "I don't approve of people killing animals as a sport.",
+    hint: "approve of + somebody + -ing 구조를 생각해보세요.",
+    answer: true,
+    explain: "올바른 문장입니다!",
+    detail: "approve of somebody doing something 형태도 올바른 표현입니다.",
+    correction: null
+  },
+  {
+    tag: "think of/about + -ing",
+    main: "I'm thinking of to buy a new laptop.",
+    hint: "think of 뒤에는 어떤 형태가 와야 할까요?",
+    answer: false,
+    explain: "틀린 문장입니다!",
+    detail: "think of/about 뒤에는 -ing형이 와야 합니다.",
+    correction: "I'm thinking of buying a new laptop."
+  }
+];
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+let questions = [];
+let current = 0;
+let myScore = 0;
+let oppScore = 0;
+let ropePos = 0; // -5 ~ +5, negative = blue winning
+let answered = false;
+const TOTAL = 8;
+
+function init() {
+  questions = shuffle(ALL_QUESTIONS).slice(0, TOTAL);
+  current = 0; myScore = 0; oppScore = 0; ropePos = 0; answered = false;
+  updateScoreboard();
+  updateRope(false);
+  loadQuestion();
+}
+
+function loadQuestion() {
+  if (current >= TOTAL) { showResult(); return; }
+  answered = false;
+  const q = questions[current];
+  document.getElementById('q-tag').textContent = q.tag;
+  document.getElementById('q-main').textContent = '"' + q.main + '"';
+  document.getElementById('q-hint').innerHTML = '<strong>힌트:</strong> ' + q.hint;
+  document.getElementById('q-info').textContent = (current + 1) + ' / ' + TOTAL;
+  document.getElementById('progress-fill').style.width = (current / TOTAL * 100) + '%';
+
+  const card = document.getElementById('q-card');
+  card.className = 'q-card';
+
+  const btnO = document.getElementById('btn-o');
+  const btnX = document.getElementById('btn-x');
+  btnO.disabled = false; btnX.disabled = false;
+  btnO.className = 'ox-btn o-btn';
+  btnX.className = 'ox-btn x-btn';
+
+  const fb = document.getElementById('feedback');
+  fb.className = 'feedback';
+
+  document.getElementById('next-btn').className = 'next-btn';
+}
+
+function answer(isO) {
+  if (answered) return;
+  answered = true;
+  const q = questions[current];
+  const correct = (isO === q.answer);
+
+  const btnO = document.getElementById('btn-o');
+  const btnX = document.getElementById('btn-x');
+  btnO.disabled = true; btnX.disabled = true;
+
+  // Highlight chosen button
+  if (isO) {
+    btnO.classList.add(correct ? 'chosen-correct' : 'chosen-wrong');
+  } else {
+    btnX.classList.add(correct ? 'chosen-correct' : 'chosen-wrong');
+  }
+  // Reveal correct answer
+  if (!correct) {
+    if (q.answer === true) btnO.classList.add('reveal-correct');
+    else btnX.classList.add('reveal-correct');
+  }
+
+  const card = document.getElementById('q-card');
+  if (correct) {
+    myScore++;
+    ropePos = Math.max(ropePos - 1, -5);
+    card.classList.add('correct-glow');
+    document.getElementById('rope-arena').classList.add('flash-correct');
+    setTimeout(() => document.getElementById('rope-arena').classList.remove('flash-correct'), 500);
+  } else {
+    oppScore++;
+    ropePos = Math.min(ropePos + 1, 5);
+    card.classList.add('wrong-glow');
+    document.getElementById('rope-arena').classList.add('flash-wrong');
+    document.getElementById('rope-arena').classList.add('shake');
+    setTimeout(() => {
+      document.getElementById('rope-arena').classList.remove('flash-wrong');
+      document.getElementById('rope-arena').classList.remove('shake');
+    }, 500);
+  }
+
+  updateScoreboard();
+  updateRope(true);
+  showFeedback(q, correct);
+
+  document.getElementById('next-btn').className = 'next-btn show';
+}
+
+function updateScoreboard() {
+  document.getElementById('my-score').textContent = myScore;
+  document.getElementById('opp-score').textContent = oppScore;
+}
+
+function updateRope(animate) {
+  const center = 50;
+  const offset = ropePos * 7;
+  const blueW = Math.max(8, Math.min(92, center - offset));
+  const redW = 100 - blueW;
+  document.getElementById('rope-blue').style.width = blueW + '%';
+  document.getElementById('rope-red').style.width = redW + '%';
+  document.getElementById('rope-knot').style.left = blueW + '%';
+}
+
+function showFeedback(q, correct) {
+  const fb = document.getElementById('feedback');
+  document.getElementById('fb-title').textContent = correct ? '✅ ' + q.explain : '❌ ' + q.explain;
+  document.getElementById('fb-body').textContent = q.detail;
+  const ansEl = document.getElementById('fb-ans');
+  if (q.correction) {
+    ansEl.textContent = '올바른 문장: ' + q.correction;
+    ansEl.style.display = 'block';
+  } else {
+    ansEl.style.display = 'none';
+  }
+  fb.className = 'feedback show ' + (correct ? 'correct' : 'wrong');
+}
+
+function nextQuestion() {
+  current++;
+  loadQuestion();
+}
+
+function showResult() {
+  document.getElementById('game-area').style.display = 'none';
+  document.getElementById('progress-fill').style.width = '100%';
+
+  const diff = myScore - oppScore;
+  let trophy, title, sub;
+
+  if (diff >= 5) {
+    trophy = '🏆'; title = '압도적 승리!';
+    sub = `완벽한 이해력! 동사+전치사+-ing 패턴을 완전히 마스터했어요.`;
+  } else if (diff > 0) {
+    trophy = '🎉'; title = '우리 팀 승리!';
+    sub = `훌륭해요! 조금 더 연습하면 퍼펙트가 될 거예요.`;
+  } else if (diff === 0) {
+    trophy = '🤝'; title = '무승부!';
+    sub = `아주 팽팽했어요! 다시 도전해서 승부를 가려보세요.`;
+  } else if (diff > -3) {
+    trophy = '😅'; title = '아쉬운 패배...';
+    sub = `전치사 패턴을 한 번 더 확인하고 다시 도전해봐요!`;
+  } else {
+    trophy = '💪'; title = '분발이 필요해요!';
+    sub = `동사+전치사+-ing 구조를 다시 복습해보고 재도전!`;
+  }
+
+  document.getElementById('result-trophy').textContent = trophy;
+  document.getElementById('result-title').textContent = title;
+  document.getElementById('r-my').textContent = myScore;
+  document.getElementById('r-opp').textContent = oppScore;
+  document.getElementById('result-sub').textContent = sub;
+  document.getElementById('result-screen').className = 'result-screen show';
+}
+
+function restart() {
+  document.getElementById('game-area').style.display = 'block';
+  document.getElementById('result-screen').className = 'result-screen';
+  init();
+}
+
+init();
+</script>
+</body>
+</html>

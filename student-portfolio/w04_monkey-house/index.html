@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Monkey's House - Unit 16</title>
+    <style>
+        body { margin: 0; background: #FFF9C4; font-family: 'Arial', sans-serif; overflow: hidden; text-align: center; }
+        #start-page { position: fixed; width: 100%; height: 100%; background: url('gate.png') no-repeat center/cover; display: flex; align-items: center; justify-content: center; z-index: 100; }
+        #enter-btn { padding: 25px 60px; font-size: 40px; background: #FF9800; color: white; border: 8px solid white; border-radius: 60px; cursor: pointer; font-weight: bold; box-shadow: 0 10px #E65100; }
+        #game-room { display: none; width: 100vw; height: 100vh; position: relative; }
+        #bubble { position: absolute; top: 20px; left: 50%; transform: translateX(-50%); background: white; padding: 20px 40px; border-radius: 50px; border: 5px solid #FFC107; font-size: 32px; font-weight: bold; z-index: 10; min-width: 550px; }
+        .main-container { width: 100%; height: 100%; display: flex; justify-content: center; background: #FFF9C4; position: relative; }
+        img { height: 100%; max-width: 100%; object-fit: contain; }
+        
+        /* 클릭 영역 설정 */
+        .click-zone { position: absolute; cursor: pointer; border-radius: 10px; z-index: 5; }
+        
+        /* [테스트용] 발표 전 위치 확인하려면 아래 background의 0을 0.3으로 바꾸세요 */
+        .click-zone { background: rgba(255, 0, 0, 0); } 
+    </style>
+</head>
+<body>
+
+    <div id="start-page">
+        <button id="enter-btn" onclick="startApp()">CLICK TO ENTER</button>
+    </div>
+
+    <div id="game-room">
+        <div id="bubble">Click items in my room!</div>
+        <div class="main-container" id="img-container">
+            <img src="main_room.png" id="display-img">
+            
+            <div class="click-zone" onclick="act('winter')" style="top:65.8%; left:88.8%; width:18%; height:20%;"></div>
+            
+            <div class="click-zone" onclick="act('sick')" style="top:91.4%; left:63.2%; width:12%; height:22%;" title="체온계"></div>
+            <div class="click-zone" onclick="act('well')" style="top:91.5%; left:67.8%; width:12%; height:22%;" title="약"></div>
+            
+            <div class="click-zone" onclick="act('book')" style="top:85.3%; left:90.1%; width:15%; height:20%;"></div>
+            <div class="click-zone" onclick="act('candy')" style="top:84.5%; left:74.0%; width:12%; height:20%;"></div>
+            
+            <div class="click-zone" onclick="act('banana')" style="top:88.3%; left:30.8%; width:15%; height:20%;"></div>
+            <div class="click-zone" onclick="act('apple')" style="top:60.6%; left:14.4%; width:15%; height:20%;"></div>
+            
+            <div class="click-zone" onclick="act('dog')" style="top:56.1%; left:27.9%; width:20%; height:28%;"></div>
+        </div>
+        <button onclick="location.reload()" style="position:absolute; bottom:20px; right:20px; padding:10px; cursor:pointer; z-index:20;">Reset 🏠</button>
+    </div>
+
+    <script>
+        const img = document.getElementById('display-img');
+        const bubble = document.getElementById('bubble');
+
+        function startApp() {
+            document.getElementById('start-page').style.display = 'none';
+            document.getElementById('game-room').style.display = 'block';
+            speak("Welcome! I'm Monkey. Look at my things!", "main_room.png");
+        }
+
+        function speak(text, src) {
+            bubble.innerText = text;
+            img.src = src;
+            const tts = new SpeechSynthesisUtterance(text);
+            tts.lang = 'en-US';
+            tts.rate = 0.8;
+            window.speechSynthesis.speak(tts);
+        }
+
+        function act(item) {
+            if(item === 'apple') speak("I have an apple! It's yummy.", "apple.png");
+            if(item === 'banana') speak("I've got a banana. I like it!", "banana.png");
+            if(item === 'dog') speak("I have a little dog. Woof!", "dog.png");
+            if(item === 'winter') speak("I've got a hat and a scarf.", "winter.png");
+            if(item === 'book') speak("I have a fun book. Let's read!", "book.png");
+            if(item === 'candy') speak("No thanks. I haven't got a sweet tooth.", "candy.png");
+            
+            // 체온계(아픔) -> 약(나음) 로직
+            if(item === 'sick') speak("I have a headache. I'm sick.", "sick.png");
+            if(item === 'well') speak("I don't have a headache now! I'm okay.", "well.png");
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>Grammar Warrior: Castle Walls</title>
+    <style>
+        :root { --gold: #f1c40f; --red: #ff4757; --wall: #2c3e50; }
+        body { 
+            font-family: 'Malgun Gothic', sans-serif; background: #000; 
+            display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; overflow: hidden;
+        }
+
+        /* 🏰 이미지 없이 CSS로 그린 성벽 배경 */
+        #game-container {
+            width: 600px; height: 850px; border: 5px solid var(--gold);
+            border-radius: 40px; position: relative; overflow: hidden;
+            background-color: #1a1a1a;
+            /* 벽돌 무늬 패턴 생성 */
+            background-image: 
+                linear-gradient(335deg, #222 23px, transparent 23px),
+                linear-gradient(155deg, #222 23px, transparent 23px),
+                linear-gradient(335deg, #222 23px, transparent 23px),
+                linear-gradient(155deg, #222 23px, transparent 23px);
+            background-size: 58px 58px;
+            background-position: 0px 2px, 4px 35px, 29px 31px, 34px 6px;
+            box-shadow: 0 0 50px rgba(0,0,0,1);
+        }
+
+        /* 창문 효과 (성 내부 느낌) */
+        .window {
+            position: absolute; width: 60px; height: 100px; 
+            background: rgba(241, 196, 15, 0.2); 
+            border-radius: 30px 30px 0 0; border: 2px solid rgba(241, 196, 15, 0.3);
+            box-shadow: 0 0 20px rgba(241, 196, 15, 0.1);
+        }
+
+        /* 📜 인트로: 참여 확인 */
+        #entrance {
+            position: absolute; inset: 0; z-index: 3000; background: rgba(0,0,0,0.9);
+            display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;
+        }
+        .scroll-ui {
+            background: #d2b48c; color: #3e2723; padding: 40px; border-radius: 5px;
+            box-shadow: 0 0 30px rgba(0,0,0,1); width: 70%; border: 8px double #5d4037;
+        }
+
+        /* 🏰 성문 레이어 */
+        #gate-layer { position: absolute; inset: 0; z-index: 2000; display: none; }
+        .gate {
+            position: absolute; width: 50%; height: 100%; background: #333; border: 4px solid #222;
+            transition: 1.5s cubic-bezier(0.7, 0, 0.3, 1); display: flex; align-items: center; justify-content: center;
+        }
+        .gate-l { left: 0; border-right: 5px solid var(--gold); }
+        .gate-r { right: 0; border-left: 5px solid var(--gold); }
+
+        /* 인게임 UI */
+        #ui-layer { position: relative; z-index: 10; height: 100%; display: flex; flex-direction: column; background: rgba(0,0,0,0.5); }
+        #status-bar { padding: 25px; display: flex; justify-content: space-between; background: rgba(0,0,0,0.8); }
+        .heart { font-size: 26px; display: inline-block; transition: 0.5s; }
+        .broken { transform: scale(0) rotate(360deg); opacity: 0; }
+
+        #timer-container { width: 100%; height: 10px; background: #222; }
+        #timer-fill { width: 100%; height: 100%; background: var(--gold); }
+
+        /* 전투 영역 */
+        #battle-zone { height: 350px; position: relative; display: flex; justify-content: space-around; align-items: center; }
+        .unit { font-size: 110px; transition: 0.3s; z-index: 5; }
+        .effect { position: absolute; font-size: 100px; z-index: 100; pointer-events: none; }
+
+        /* 문제 영역 */
+        #quiz-area { flex-grow: 1; background: rgba(0,0,0,0.9); padding: 30px; border-top: 4px solid var(--gold); }
+        .q-card { background: #fff; color: #000; padding: 25px; border-radius: 20px; font-weight: bold; font-size: 22px; margin-bottom: 25px; }
+        .opt-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+
+        .btn { 
+            padding: 18px; border: 2px solid var(--gold); background: rgba(0,0,0,0.5); color: var(--gold); 
+            border-radius: 12px; font-size: 20px; cursor: pointer; font-weight: bold; transition: 0.2s;
+        }
+        .btn:hover { background: var(--gold); color: black; }
+
+        /* 팝업 */
+        .popup {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0);
+            width: 85%; padding: 40px; border-radius: 30px; z-index: 4000; text-align: center; transition: 0.4s;
+        }
+        .popup.show { transform: translate(-50%, -50%) scale(1); }
+        .bg-red { background: rgba(150, 0, 0, 0.95); color: #fff; border: 4px solid var(--red); }
+        .bg-gold { background: rgba(241, 196, 15, 0.95); color: #000; border: 4px solid #000; }
+
+        @keyframes slash { 0% { left: 20%; opacity: 1; } 100% { left: 70%; opacity: 0; } }
+        @keyframes fire { 0% { right: 20%; opacity: 1; } 100% { right: 70%; opacity: 0; } }
+        .shake { animation: shake 0.3s linear; }
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 20%, 60% { transform: translateX(-15px); } 40%, 80% { transform: translateX(15px); } }
+    </style>
+</head>
+<body>
+
+<div id="game-container">
+    <!-- 배경 장식 (창문) -->
+    <div class="window" style="top:150px; left:50px;"></div>
+    <div class="window" style="top:150px; right:50px;"></div>
+
+    <!-- 1. 참여 확인 인트로 -->
+    <div id="entrance">
+        <div class="scroll-ui">
+            <h1 style="margin-top:0">🏰 성문 앞에 서다</h1>
+            <p style="font-size: 1.2em;">몬스터가 성을 장악했습니다.<br>5개의 결계를 풀고 탈출하시겠습니까?</p>
+            <button class="btn" onclick="startStory()" style="border-color:#5d4037; color:#5d4037; margin-top:20px; background:transparent;">예, 도전합니다!</button>
+        </div>
+    </div>
+
+    <!-- 2. 성문 레이어 -->
+    <div id="gate-layer">
+        <div class="gate gate-l" id="gl"></div>
+        <div class="gate gate-r" id="gr"></div>
+    </div>
+
+    <!-- 3. 게임 화면 -->
+    <div id="ui-layer">
+        <div id="status-bar">
+            <div id="hp-box"><span class="heart" id="h1">❤️</span><span class="heart" id="h2">❤️</span><span class="heart" id="h3">❤️</span></div>
+            <div id="lv-text" style="color:var(--gold); font-weight:bold; font-size:1.2em;">결계 1 / 5</div>
+        </div>
+        <div id="timer-container"><div id="timer-fill"></div></div>
+
+        <div id="battle-zone">
+            <div id="player" class="unit">🧙‍♂️</div>
+            <div id="monster" class="unit">👹</div>
+            <div id="effect-layer"></div>
+        </div>
+
+        <div id="quiz-area">
+            <div class="q-card" id="q-text">불러오는 중...</div>
+            <div class="opt-grid" id="options"></div>
+        </div>
+    </div>
+
+    <!-- 데미지/성공 팝업 -->
+    <div id="fail-popup" class="popup bg-red">
+        <h1 style="margin:0">💥 공격당했습니다!</h1>
+        <p id="fail-msg" style="margin:20px 0; font-size:1.3em;"></p>
+        <button class="btn" style="background:white; color:black; border:none; width:100%" onclick="closePopup()">정신 차리기</button>
+    </div>
+
+    <div id="win-popup" class="popup bg-gold">
+        <h1 style="margin:0">👑 성문 탈출 성공</h1>
+        <p style="margin:20px 0; font-size:1.3em;">모든 문법 결계를 파괴했습니다!</p>
+        <button class="btn" style="background:black; color:gold; border:none; width:100%" onclick="location.reload()">다시 시작</button>
+    </div>
+</div>
+
+<script>
+    const questions = [
+        { q: "If I ______ a bird, I would fly to you.", o: ["am", "were"], a: 1, d: "현재 사실과 다른 상상은 'were'!" },
+        { q: "If it ______ tomorrow, I'll stay home.", o: ["rains", "rained"], a: 0, d: "미래 조건은 현재형 'rains'!" },
+        { q: "I would buy that if I ______ money.", o: ["have", "had"], a: 1, d: "지금 돈이 없는 상상이니 'had'!" },
+        { q: "If you ______ now, you'll be late.", o: ["don't leave", "didn't leave"], a: 0, d: "일어날 수 있는 미래의 일!" },
+        { q: "If I ______ the lottery, I'd travel.", o: ["win", "won"], a: 1, d: "당첨을 가정하는 상상은 'won'!" }
+    ];
+
+    let hp = 3, lv = 1, timeLeft = 10, timer;
+
+    function startStory() {
+        document.getElementById('entrance').style.display = 'none';
+        document.getElementById('gate-layer').style.display = 'block';
+        setTimeout(() => {
+            document.getElementById('gl').style.transform = "translateX(-100%)";
+            document.getElementById('gr').style.transform = "translateX(100%)";
+            setTimeout(() => {
+                document.getElementById('gate-layer').style.display = 'none';
+                loadQuiz();
+            }, 1500);
+        }, 300);
+    }
+
+    function loadQuiz() {
+        if(lv > 5) {
+            document.getElementById('win-popup').classList.add('show');
+            return;
+        }
+        timeLeft = 10;
+        document.getElementById('lv-text').innerText = `결계 ${lv} / 5`;
+        const q = questions[lv-1];
+        document.getElementById('q-text').innerText = q.q;
+        
+        const box = document.getElementById('options');
+        box.innerHTML = "";
+        q.o.forEach((opt, i) => {
+            const b = document.createElement('button');
+            b.className = "btn"; b.innerText = opt;
+            b.onclick = () => check(i, q);
+            box.appendChild(b);
+        });
+        startTimer();
+    }
+
+    function startTimer() {
+        clearInterval(timer);
+        timer = setInterval(() => {
+            timeLeft -= 0.1;
+            document.getElementById('timer-fill').style.width = (timeLeft * 10) + "%";
+            if(timeLeft <= 0) { clearInterval(timer); onDamage("시간 초과!"); }
+        }, 100);
+    }
+
+    function check(idx, q) {
+        clearInterval(timer);
+        if(idx === q.a) {
+            playEffect('slash', '⚔️', 'slash 0.5s forwards');
+            document.getElementById('monster').style.transform = "translateX(50px) scale(0.8)";
+            setTimeout(() => {
+                document.getElementById('monster').style.transform = "translateX(0) scale(1)";
+                lv++; loadQuiz();
+            }, 500);
+        } else {
+            onDamage(`틀렸습니다! 정답: ${q.o[q.a]}<br>${q.d}`);
+        }
+    }
+
+    function onDamage(msg) {
+        playEffect('fire', '🔥', 'fire 0.5s forwards');
+        setTimeout(() => {
+            document.getElementById('game-container').classList.add('shake');
+            document.getElementById(`h${hp}`).classList.add('broken');
+            hp--;
+            document.getElementById('fail-msg').innerHTML = msg;
+            document.getElementById('fail-popup').classList.add('show');
+        }, 400);
+    }
+
+    function playEffect(cls, emoji, anim) {
+        const e = document.createElement('div');
+        e.className = 'effect'; e.innerText = emoji;
+        e.style.animation = anim;
+        document.getElementById('effect-layer').appendChild(e);
+        setTimeout(() => e.remove(), 500);
+    }
+
+    function closePopup() {
+        document.getElementById('game-container').classList.remove('shake');
+        document.getElementById('fail-popup').classList.remove('show');
+        if(hp <= 0) location.reload(); else loadQuiz();
+    }
+</script>
+
+</body>
+</html>

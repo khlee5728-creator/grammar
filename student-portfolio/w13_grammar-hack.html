@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>네오-서울 2088: 신택스 에러 - 영문법 RPG</title>
+  <style>
+    /* 폰트 및 초기화 */
+    @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Nanum+Gothic+Coding:wght@400;700&display=swap');
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: #06050e;
+      color: #00f0ff;
+      font-family: 'Share Tech Mono', 'Nanum Gothic Coding', monospace;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 15px;
+    }
+
+    /* 사이버펑크 덱 컨테이너 */
+    #cyber-container {
+      width: 100%;
+      max-width: 750px;
+      background-color: #0c0a1f;
+      border: 3px solid #ff007f;
+      border-radius: 6px;
+      padding: 20px;
+      box-shadow: 0 0 20px rgba(255, 0, 127, 0.25), inset 0 0 10px rgba(0, 240, 255, 0.1);
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    /* 사이버 터미널 헤더 */
+    header {
+      text-align: center;
+      border-bottom: 2px dashed #00f0ff;
+      padding-bottom: 12px;
+    }
+
+    header h1 {
+      font-size: 26px;
+      color: #ff007f;
+      text-shadow: 0 0 10px #ff007f, 0 0 20px rgba(255, 0, 127, 0.5);
+      letter-spacing: 3px;
+    }
+
+    header p {
+      font-size: 13px;
+      color: #00f0ff;
+      text-shadow: 0 0 5px rgba(0, 240, 255, 0.5);
+      margin-top: 5px;
+    }
+
+    /* 사이버네틱 HUD 패널 */
+    #hud-panel {
+      background-color: #070514;
+      border: 1px solid #00f0ff;
+      border-radius: 4px;
+      padding: 12px 15px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      box-shadow: inset 0 0 8px rgba(0, 240, 255, 0.15);
+    }
+
+    @media (max-width: 580px) {
+      #hud-panel {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .hud-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .hud-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 14px;
+    }
+
+    .hud-label {
+      color: #7c6cf0;
+      font-weight: bold;
+      letter-spacing: 1px;
+    }
+
+    .hud-value {
+      color: #ffffff;
+      text-shadow: 0 0 5px rgba(255, 255, 255, 0.6);
+    }
+
+    /* 네온 게이지 바 */
+    .gauge-container {
+      width: 100%;
+      height: 16px;
+      background-color: #030208;
+      border: 1px solid #7c6cf0;
+      border-radius: 2px;
+      overflow: hidden;
+      position: relative;
+      margin-top: 2px;
+    }
+
+    .gauge-bar {
+      height: 100%;
+      width: 100%;
+      transition: width 0.3s ease-in-out;
+    }
+
+    #sys-bar {
+      background: linear-gradient(90deg, #ff007f, #ff00ff);
+      box-shadow: 0 0 8px #ff007f;
+    }
+
+    #data-bar {
+      background: linear-gradient(90deg, #00f0ff, #00aaff);
+      box-shadow: 0 0 8px #00f0ff;
+    }
+
+    .gauge-text {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 11px;
+      font-weight: bold;
+      color: #ffffff;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.9);
+    }
+
+    /* 영문법 신경 덱 패널 */
+    #grammar-directory {
+      background-color: #0b0821;
+      border: 1px solid #ffea00;
+      border-radius: 4px;
+      padding: 12px 15px;
+      font-size: 13px;
+      line-height: 1.6;
+      box-shadow: 0 0 10px rgba(255, 234, 0, 0.1);
+    }
+
+    #grammar-directory h3 {
+      color: #ffea00;
+      font-size: 15px;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      text-shadow: 0 0 5px rgba(255, 234, 0, 0.4);
+    }
+
+    #grammar-directory ul {
+      list-style-type: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    #grammar-directory li strong {
+      color: #00f0ff;
+    }
+
+    #grammar-directory li em {
+      color: #ff007f;
+      font-style: normal;
+      font-weight: bold;
+      text-shadow: 0 0 3px rgba(255, 0, 127, 0.3);
+    }
+
+    /* 텍스트 터미널 콘솔 로그 */
+    #terminal-console {
+      background-color: #020105;
+      border: 1px solid #ff007f;
+      border-radius: 4px;
+      height: 240px;
+      overflow-y: auto;
+      padding: 15px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      scroll-behavior: smooth;
+    }
+
+    /* 커스텀 터미널 스크롤바 */
+    #terminal-console::-webkit-scrollbar {
+      width: 6px;
+    }
+    #terminal-console::-webkit-scrollbar-track {
+      background: #020105;
+    }
+    #terminal-console::-webkit-scrollbar-thumb {
+      background: #ff007f;
+      border-radius: 3px;
+    }
+
+    .log-entry {
+      font-size: 14px;
+      line-height: 1.5;
+      animation: scanline 0.2s ease-in-out;
+    }
+
+    .log-sys-status { color: #7c6cf0; }
+    .log-hacker-story { color: #c4d7f5; }
+    .log-hack-success { color: #39ff14; font-weight: bold; text-shadow: 0 0 5px rgba(57, 255, 20, 0.5); }
+    .log-hack-alert { color: #ff073a; font-weight: bold; text-shadow: 0 0 5px rgba(255, 7, 58, 0.5); }
+    .log-reward { color: #ffea00; font-weight: bold; text-shadow: 0 0 5px rgba(255, 234, 0, 0.5); }
+    .log-terminal-err { color: #ff3333; }
+    .log-prompt { color: #00f0ff; }
+
+    /* 장비 오버레이 표시 */
+    #device-display {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 5px;
+    }
+
+    .device-badge {
+      font-size: 11px;
+      background-color: #0e0d29;
+      border: 1px solid #00f0ff;
+      color: #00f0ff;
+      padding: 2px 8px;
+      border-radius: 2px;
+      box-shadow: 0 0 5px rgba(0, 240, 255, 0.15);
+    }
+
+    /* 네온 테마 조작 버튼 */
+    #deck-controls {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      border-top: 1px dashed #00f0ff;
+      padding-top: 15px;
+    }
+
+    @media (max-width: 580px) {
+      #deck-controls {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .btn-cyber {
+      background-color: #0a081e;
+      color: #00f0ff;
+      border: 1px solid #00f0ff;
+      border-radius: 3px;
+      padding: 12px 10px;
+      font-family: 'Share Tech Mono', 'Nanum Gothic Coding', monospace;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      outline: none;
+      text-transform: uppercase;
+      box-shadow: 0 0 5px rgba(0, 240, 255, 0.1);
+    }
+
+    .btn-cyber:hover:not(:disabled) {
+      background-color: #00f0ff;
+      color: #06050e;
+      box-shadow: 0 0 12px #00f0ff;
+    }
+
+    .btn-cyber:active:not(:disabled) {
+      transform: scale(0.98);
+    }
+
+    .btn-cyber:disabled {
+      background-color: #060511;
+      color: #3b3a4f;
+      border-color: #1f1d3a;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+
+    /* 해킹 퀴즈 전용 선택지 버튼 */
+    .btn-decrypt {
+      text-align: left;
+      padding: 10px 15px;
+      font-size: 13px;
+      border-color: #ff007f;
+      color: #ff007f;
+      box-shadow: 0 0 5px rgba(255, 0, 127, 0.1);
+    }
+
+    .btn-decrypt:hover:not(:disabled) {
+      background-color: #ff007f;
+      color: #06050e;
+      box-shadow: 0 0 12px #ff007f;
+    }
+
+    /* 키프레임 애니메이션 */
+    @keyframes scanline {
+      from { opacity: 0.8; transform: scaleY(0.98); }
+      to { opacity: 1; transform: scaleY(1); }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="cyber-container">
+    <!-- 헤더 -->
+    <header>
+      <h1>네오-서울 2088: 신택스 에러</h1>
+      <p>&gt;_ 거대 기업 A.I. Corp의 방화벽을 우회하는 해커를 위한 문법 덱 인터페이스</p>
+    </header>
+
+    <!-- 사이버네틱 HUD -->
+    <div id="hud-panel">
+      <div class="hud-group">
+        <div class="hud-item">
+          <span class="hud-label">HACKER ID:</span>
+          <span class="hud-value" id="hud-name">사이퍼 (Cipher)</span>
+        </div>
+        <div class="hud-item">
+          <span class="hud-label">RANK (LEVEL):</span>
+          <span class="hud-value" id="hud-level">LVL. 1</span>
+        </div>
+        <div class="hud-group">
+          <div class="hud-item">
+            <span class="hud-label">SYSTEM INTEGRITY (SYS):</span>
+            <span class="hud-value" id="hud-sys-text">100 / 100</span>
+          </div>
+          <div class="gauge-container">
+            <div class="gauge-bar" id="sys-bar" style="width: 100%;"></div>
+            <div class="gauge-text" id="sys-percent-text">100% SECURE</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="hud-group">
+        <div class="hud-item">
+          <span class="hud-label">CREDITS:</span>
+          <span class="hud-value" id="hud-credits">50 CR</span>
+        </div>
+        <div class="hud-item">
+          <span class="hud-label">DECRYPT POWER / FIREWALL:</span>
+          <span class="hud-value"><span id="hud-dec">10</span> DEC / <span id="hud-fw">2</span> FW</span>
+        </div>
+        <div class="hud-group">
+          <div class="hud-item">
+            <span class="hud-label">DECRYPTION DATA (DATA):</span>
+            <span class="hud-value" id="hud-data-text">0% / 100%</span>
+          </div>
+          <div class="gauge-container">
+            <div class="gauge-bar" id="data-bar" style="width: 0%;"></div>
+            <div class="gauge-text" id="data-percent-text">DATA 0%</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="hud-group" style="grid-column: 1 / -1; margin-top: 5px;">
+        <span class="hud-label">HARDWARE CYBER-DECK MODS:</span>
+        <div id="device-display">
+          <!-- JS에서 렌더링 -->
+        </div>
+      </div>
+    </div>
+
+    <!-- 영문법 힌트 패널 -->
+    <div id="grammar-directory">
+      <h3>⚡ NEURAL GRAMMAR DIRECTORY</h3>
+      <ul>
+        <li><strong>used to + 동사원형</strong>: <em>"~하곤 했다"</em> (과거의 규칙적 습관/지속적 신분. 현재는 완전히 중단됨)</li>
+        <li><strong>be used to + -ing / 명사</strong>: <em>"~에 익숙하다"</em> (이미 특정 상태/환경에 완벽하게 익숙한 현재 상황)</li>
+        <li><strong>get used to + -ing / 명사</strong>: <em>"~에 익숙해지다"</em> (처음에는 힘들었지만 차츰 적응해 나가는 진행 과정)</li>
+      </ul>
+    </div>
+
+    <!-- 터미널 스크린 -->
+    <div id="terminal-console">
+      <!-- 동적으로 터미널 텍스트 로깅 -->
+    </div>
+
+    <!-- 조작 덱 컨트롤러 -->
+    <div id="deck-controls">
+      <!-- 동적 생성 -->
+    </div>
+  </div>
+
+  <script>
+    // 1. 플레이어 상태 정의
+    const hacker = {
+      name: "사이퍼 (Cipher)",
+      level: 1,
+      sys: 100,
+      maxSys: 100,
+      credits: 50,
+      dec: 10,
+      fw: 2,
+      data: 0,
+      nextLevelData: 100,
+      boosters: 1,
+      hasMilitaryDecryptor: false,
+      hasQuantumProxy: false
+    };
+
+    let deckScene = 'terminal_hub'; // 'terminal_hub', 'black_market', 'hacking', 'network_error', 'hack_complete'
+    let currentEpisodeIndex = 0;
+
+    // 2. 사이버펑크 7개 챕터 해킹 시나리오
+    const hackEpisodes = [
+      {
+        title: "⚡ Episode 1: 신경 링크 연동 (Neural Link Connection)",
+        text: "거대 기업 A.I. Corp 메인프레임에 접근하기 위해 암시장에서 입수한 '신경 칩'을 뇌에 임플란트했습니다. 찌릿한 신경 통증과 시각 왜곡이 덮쳐옵니다. '비록 아프고 혼란스럽지만, 이 새로운 신경 장비를 다루는 법에 서서히 적응해가고 있어!' 올바른 코드를 연결하세요.",
+        sentence: "The optic static is intense, but I am slowly ____________ this neural chip interface.",
+        choices: [
+          { text: "A. getting used to using", isCorrect: true, feedback: "정답! get used to + -ing는 가혹한 기술이나 환경에 '점차 적응해 나가는 과도기 과정'을 나타냅니다." },
+          { text: "B. used to use", isCorrect: false, feedback: "오답! used to + 동사원형은 '예전에 다루곤 했다(현재는 전혀 안 씀)'라는 과거 회상이 됩니다." },
+          { text: "C. am used to use", isCorrect: false, feedback: "오답! be used to 뒤에는 반드시 동명사(-ing) 형태가 이어져야 적응도를 표현할 수 있습니다." },
+          { text: "D. got used to use", isCorrect: false, feedback: "오답! get used to 뒤에 동사원형은 문법적 컴파일 에러입니다." }
+        ],
+        onSuccess: () => {
+          hacker.dec += 3;
+          hacker.data += 30;
+          return "[DECRYPTION SUCCESS] 동조화 100% 완료! 뇌 신경망과 덱이 최적화되었습니다. 암호 해독력 +3, 해독 데이터 30% 획득!";
+        },
+        onFailure: () => {
+          hacker.sys -= 15;
+          hacker.data += 10;
+          return "[SYSTEM INTEGRITY WARNING] 동조화 컴파일 에러! 신경 노이즈 쇼크로 뇌세포에 큰 무리가 갑니다. (SYS -15, 해독 데이터 +10%)";
+        }
+      },
+      {
+        title: "🖨️ Episode 2: 쓰레기통 옆의 노숙자 넷러너 '키드'",
+        text: "해킹 전파를 증폭하기 위해 숨어든 지하 환기구에서 왕년에 도시를 쥐락펴락했으나 지금은 뇌 손상으로 기억을 잃어가는 노숙자 해커 '키드'를 만났습니다. 그는 눈물 어린 눈으로 회상합니다. '나도 너처럼 파릇파릇했을 땐 매일 거대 기업들의 방화벽을 눈 감고 해킹하곤 했었지...'",
+        sentence: "I ____________ hack municipal databases in my sleep before the brain-fry.",
+        choices: [
+          { text: "A. am used to", isCorrect: false, feedback: "오답! am used to는 '현재 해킹하는 것에 익숙하다'가 되어 뇌가 손상되어 기술을 잃어버린 노기사의 현재 상태와 불일치합니다." },
+          { text: "B. used to", isCorrect: true, feedback: "정답! used to + 동사원형은 과거의 습관적인 동작이나 신분('예전엔 해킹하곤 했으나 지금은 손을 놓음')을 설명하는 적합한 시제입니다." },
+          { text: "C. got used to", isCorrect: false, feedback: "오답! got used to는 단순 해킹 행동의 습관적 묘사보다는 어감상 '익숙해졌다'는 뜻이며, 뒤에 동사원형 hack이 와 있으므로 사용이 불가합니다." },
+          { text: "D. used to hacking", isCorrect: false, feedback: "오답! 문장 뒤에 hack(동사원형)이 원형 그대로 존재하므로 hacking을 중복해 쓸 수 없습니다." }
+        ],
+        onSuccess: () => {
+          hacker.credits += 30;
+          hacker.data += 30;
+          return "[DECRYPTION SUCCESS] 늙은 해커가 눈물을 닦으며 구형 오버클럭 알고리즘이 담긴 크레딧 칩을 넘겨줍니다! (Credits +30, DATA +30%)";
+        },
+        onFailure: () => {
+          hacker.sys -= 10;
+          return "[SYSTEM INTEGRITY WARNING] 키드가 정색합니다. '해커 지망생이라는 녀석이 문법 덱에 버그가 가득하구나!' 라며 낡은 키보드로 어깨를 때렸습니다. (SYS -10)";
+        }
+      },
+      {
+        title: "🚁 Episode 3: 패트롤 드론의 서치라이트",
+        text: "길거리에 앉아 무선 해킹 노드를 뚫던 중, 네오-서울 기동 경찰의 정찰용 쿼드콥터 드론이 머리 위에서 빛을 쏘아내기 시작합니다. 당신의 몸을 숨긴 채 태연하게 코딩을 지속합니다: '우릴 걱정할 필요 없어. 난 원래 이런 차가운 어두운 뒷골목에서 숨소리를 죽이고 코딩하는 일에 아주 단련(익숙)되어 있으니까 말이야.'"
+        ,
+        sentence: "Don't panic. I ____________ coding in these dark alleys while being chased.",
+        choices: [
+          { text: "A. am used to", isCorrect: true, feedback: "정답! am used to + coding(-ing) 구조는 '나는 이미 이러한 열악한 상태나 행동에 완벽하게 단련/익숙하다'는 최고의 넷러너다운 모습을 묘사합니다." },
+          { text: "B. used to", isCorrect: false, feedback: "오답! used to를 넣으면 '예전에 코딩하곤 했다'가 되어, 지금은 코딩하지 않는다는 뜻이 되므로 급박한 코딩 상황에 완전히 위배됩니다." },
+          { text: "C. was getting used to", isCorrect: false, feedback: "오답! '과거에 익숙해지는 도중이었다'는 후퇴하는 묘사로 노련한 프로 해커의 스킬을 자랑하기에 약합니다." },
+          { text: "D. used to coding", isCorrect: false, feedback: "오답! be 동사가 누락되었기 때문에 익숙하다는 의미로 컴파일할 수 없습니다." }
+        ],
+        onSuccess: () => {
+          hacker.fw += 1;
+          hacker.data += 30;
+          return "[DECRYPTION SUCCESS] 완벽한 마스킹 코드로 흔적을 지웠습니다! 방화벽 효율이 1 향상되고 해독 데이터 30%를 습득했습니다! (FW +1)";
+        },
+        onFailure: () => {
+          hacker.sys -= 20;
+          return "[SYSTEM INTEGRITY WARNING] 삐비빅! 마스킹 연산 지연으로 드론의 고전압 테이저 사격 범위에 노출되었습니다! 강력한 감전 충격을 받았습니다. (SYS -20)";
+        }
+      },
+      {
+        title: "🤖 Episode 4: 보안 AI 프로토콜 '케르베로스'",
+        text: "A.I. Corp의 외부 통신 성벽에 빨간 경고창이 점멸하며 삼두견 홀로그램을 형상화한 AI 보안 가디언 '케르베로스'가 막강한 연산으로 당신을 포위해 옵니다. '침입자 발견. 나는 매초 500억 건의 가상 크랙 공격을 감지하고 무력화하는 보안 연산에 완벽하게 길들여(익숙)져 있다. 포기하라!'"
+        ,
+        sentence: "I ____________ blocking massive hostiles instantly. You cannot bypass me.",
+        choices: [
+          { text: "A. used to be", isCorrect: false, feedback: "오답! '예전에 차단하곤 했다'는 의미로 무서운 기세의 철벽 인공지능 보안봇의 기상에 어긋납니다." },
+          { text: "B. are used to", isCorrect: false, feedback: "오답! AI 가디언 본인의 주체 'I'에 어울리는 be 동사는 'are'가 아니라 'am'입니다." },
+          { text: "C. am used to", isCorrect: true, feedback: "정답! 'I am used to + blocking(-ing)'은 '나는 차단하는 것에 완전히 단련되어 있다'는 AI의 노련하고 규칙적인 차단 프로세스에 정확히 부합합니다." },
+          { text: "D. am getting used to", isCorrect: false, feedback: "오답! '차단하는 법을 차츰 익혀가는 단계다'는 대기업 1급 방화벽 보안 AI 답지 않은 소심한 자기소개입니다." }
+        ],
+        onSuccess: () => {
+          hacker.credits += 50;
+          hacker.data += 50;
+          return "[DECRYPTION SUCCESS] AI의 일인칭 대명사 매칭 오류와 문법 버그의 틈새를 정확히 역해킹하여 백도어를 열었습니다! (Credits +50, DATA +50%)";
+        },
+        onFailure: () => {
+          hacker.sys -= 25;
+          return "[SYSTEM INTEGRITY WARNING] AI 가디언의 철벽 카운터 프로그램이 작동하며 시스템 내부 레지스터를 불태웁니다! (SYS -25)";
+        }
+      },
+      {
+        title: "🔌 Episode 5: 암시장 오버클럭 덱의 발열 셋업",
+        text: "A.I. Corp의 중심 전산소로 진입하기 전 암시장 크랙 룸에서 구입한 불법 칩셋 '사이퍼-9'을 덱에 강제 업그레이드 장착했습니다. 기기 내부 온도가 섭씨 90도까지 치솟으며 키보드가 타오를 것 같습니다. '엄청난 전자기 열기군... 하지만 곧 이 뜨거운 물리 발열을 제어하는 것에 익숙해지겠지!'"
+        ,
+        sentence: "This deck runs burning hot, but my system will soon ____________ the thermal throttling.",
+        choices: [
+          { text: "A. used to handle", isCorrect: false, feedback: "오답! '과거에 다루곤 했다'는 뜻으로 다가올 전자기 열기에 점차 적응해야 할 문맥과 정반대입니다." },
+          { text: "B. get used to handling", isCorrect: true, feedback: "정답! will(조동사) 뒤에 동사원형인 get이 오고 'get used to + -ing'를 사용하여 '앞으로 곧 열기를 견뎌내고 극복하는 법에 익숙해질 것이다'라는 기기 적응 과정을 완벽히 묘사합니다." },
+          { text: "C. be used to handle", isCorrect: false, feedback: "오답! be used to 뒤에 handle(동사원형)이 오면 '열기를 다루기 위해 하드웨어가 개조되어 사용되다'라는 뜻이 되므로 주체인 my system의 내부 적응도 상태와 어색합니다." },
+          { text: "D. getting used to handle", isCorrect: false, feedback: "오답! get used to 뒤에는 동명사(-ing)가 들어가야 하며, will 뒤에는 분사 형태가 바로 올 수 없습니다." }
+        ],
+        onSuccess: () => {
+          hacker.dec += 10;
+          hacker.data += 40;
+          return "[DECRYPTION SUCCESS] 쿨러 수랭 오버클럭 셋업 완료! 해독 출력이 급증하여 디코드 파워가 10 올랐습니다! (DEC +10, DATA +40%)";
+        },
+        onFailure: () => {
+          hacker.sys -= 10;
+          hacker.data += 10;
+          return "[SYSTEM INTEGRITY WARNING] 치이익! 손가락에 가벼운 마찰 화상을 입으며 칩 하나가 타버렸습니다. (SYS -10, DATA +10%)";
+        }
+      },
+      {
+        title: "💻 Episode 6: 메인프레임 핵심 통제관의 회유",
+        text: "드디어 메인 컴퓨터 관제실의 문이 열리고, 의자에 앉아 시가를 피우는 홀로그램 중앙 통제관 리히터(Richter)가 냉소적인 미소를 짓습니다. '너 같은 애송이들이 늘 그렇지... 나 또한 한때는 자유와 진실을 부르짖던 길거리의 넷러너였단다. 하지만 이제 매달 꽂히는 넉넉한 연봉의 달콤함에 정복당했지. 항복해라!'"
+        ,
+        sentence: "I ____________ roam the street as a rogue hacker myself, but reality got in the way.",
+        choices: [
+          { text: "A. used to", isCorrect: true, feedback: "정답! used to + 동사원형은 '과거에 로 rogue 해커로서 밤거리를 배회하곤 했었으나 지금은 메가코프의 충실한 통제관이 되어 결코 그렇지 않다'는 인생의 급변을 드라마틱하게 장식합니다." },
+          { text: "B. am used to", isCorrect: false, feedback: "오답! '현재 로 rogue 해커로 거리 배회에 익숙하다'가 되므로, 최고 존엄 메가코프 통제관 신분과 상충하는 심각한 논리 에러입니다." },
+          { text: "C. am getting used to", isCorrect: false, feedback: "오답! '이제 막 길거리 해커로 적응해가고 있다'는 그의 무거운 커리어와 거리가 멉니다." },
+          { text: "D. used to roaming", isCorrect: false, feedback: "오답! 문장 뒤에 roam(동사원형)이 이미 떡하니 대기하고 있으므로 -ing를 또 사용해 컴파일 충돌을 내서는 안 됩니다." }
+        ],
+        onSuccess: () => {
+          hacker.level += 1;
+          hacker.dec += 5;
+          hacker.maxSys += 20;
+          hacker.sys = hacker.maxSys;
+          return "[DECRYPTION SUCCESS] 리히터의 자조 섞인 영혼의 틈새 프로토콜을 역해킹해 기밀 키 카드를 탈취했습니다! 기기가 튜닝되어 오버스펙 레벨로 돌입하며 시스템이 풀 리부트됩니다! (LEVEL 상승!, DEC +5, SYS 완전 회복)";
+        },
+        onFailure: () => {
+          hacker.sys -= 35;
+          return "[SYSTEM INTEGRITY WARNING] 홀로그램 시가 연기에서 방출된 실물 신경 가스 및 마그네틱 포탄이 덱을 엄습합니다! 큰 타격을 입었습니다. (SYS -35)";
+        }
+      },
+      {
+        title: "🔓 Episode 7: 기밀 데이터 유출 완료 및 탈출",
+        text: "시스템 붕괴까지 단 10초! 통제관의 인공지능 요원들이 중앙 데이터 코어의 물리 전원을 내리려고 미친 듯이 연산을 거듭합니다. 당신은 성난 전자기 참격을 키보드로 연사하며 코어 해킹을 완전히 끝마칩니다: '너희의 대칭 암호화 장벽은 무의미해. 난 이런 절박한 시간 압박 속에서 데이터를 탈취하고 방화벽을 강제 오버라이딩하는 작업엔 뼈가 굵은 넷러너니까 말이지!'"
+        ,
+        sentence: "Game over, A.I. Corp. I ____________ overriding system lockouts under pressure!",
+        choices: [
+          { text: "A. am used to", isCorrect: true, feedback: "정답! 'I am used to + overriding(-ing)'은 긴장감 넘치는 마감 직전의 가혹한 업무 압박에서도 완벽하게 작업에 적응되어 있음을 표출하는 핵심 해커 코드입니다!" },
+          { text: "B. used to", isCorrect: false, feedback: "오답! used to는 '예전에 오버라이딩하곤 했었다'는 단절된 의미를 갖게 되어, 당장 코어 해킹을 끝마쳐야 하는 일류 넷러너의 포스에 구멍을 냅니다." },
+          { text: "C. was getting used to", isCorrect: false, feedback: "오답! '예전에 한때 압박감 속에 적응해가고 있던 풋내기였다'는 회상은 폭발하는 코어 룸 속에서 어울리지 않습니다." },
+          { text: "D. used to override", isCorrect: false, feedback: "오답! 문장 뒤에 이미 overriding(-ing)이 대기하고 있는데 override를 이중 기술하여 문법 정합성을 파괴할 순 없습니다." }
+        ],
+        onSuccess: () => {
+          return "CLEAR"; // 사이버펑크 RPG 클리어 트리거
+        },
+        onFailure: () => {
+          hacker.sys -= 40;
+          return "[SYSTEM INTEGRITY WARNING] 아차! 중앙 무정전 전원 공급 장치에서 대량의 전자기 펄스(EMP)가 폭발하며 당신의 신경 링크 덱을 타격했습니다! (SYS -40)";
+        }
+      }
+    ];
+
+    // 3. UI 갱신 함수
+    function updateHUD() {
+      // 텍스트 출력 동기화
+      document.getElementById("hud-name").textContent = hacker.name;
+      document.getElementById("hud-level").textContent = `LVL. ${hacker.level}`;
+      document.getElementById("hud-sys-text").textContent = `${hacker.sys} / ${hacker.maxSys}`;
+      document.getElementById("hud-credits").textContent = `${hacker.credits} CR`;
+      document.getElementById("hud-dec").textContent = hacker.dec;
+      document.getElementById("hud-fw").textContent = hacker.fw;
+      document.getElementById("hud-data-text").textContent = `${hacker.data}% / ${hacker.nextLevelData}%`;
+
+      // 게이지 바 갱신
+      const sysPercent = Math.max(0, Math.min(100, (hacker.sys / hacker.maxSys) * 100));
+      document.getElementById("sys-bar").style.width = `${sysPercent}%`;
+      document.getElementById("sys-percent-text").textContent = sysPercent === 100 ? "100% SECURE" : `${Math.round(sysPercent)}% CORE STATUS`;
+
+      const dataPercent = Math.max(0, Math.min(100, (hacker.data / hacker.nextLevelData) * 100));
+      document.getElementById("data-bar").style.width = `${dataPercent}%`;
+      document.getElementById("data-percent-text").textContent = `DECRYPTED ${Math.round(dataPercent)}%`;
+
+      // 사이버웨어 모드 렌더링
+      const deviceContainer = document.getElementById("device-display");
+      deviceContainer.innerHTML = '';
+      
+      if (hacker.hasMilitaryDecryptor) {
+        deviceContainer.innerHTML += '<span class="device-badge" style="border-color: #ffea00; color: #ffea00;">🔌 [군용 최적화 오버디코드 칩] (DEC +10)</span>';
+      } else {
+        deviceContainer.innerHTML += '<span class="device-badge">💾 [구형 민간용 해킹 덱] (DEC +2)</span>';
+      }
+
+      if (hacker.hasQuantumProxy) {
+        deviceContainer.innerHTML += '<span class="device-badge" style="border-color: #ffea00; color: #ffea00;">🛡️ [양자 프록시 우회 방화벽] (FW +5)</span>';
+      } else {
+        deviceContainer.innerHTML += '<span class="device-badge">🩹 [보급형 단일 게이트 프록시] (FW +1)</span>';
+      }
+
+      if (hacker.boosters > 0) {
+        deviceContainer.innerHTML += `<span class="device-badge" style="border-color: #ff007f; color: #ff007f;">🧪 [RAM 부스터 x${hacker.boosters}] (사용 시 SYS +50)</span>`;
+      }
+
+      // 조작 제어 버튼들 렌더링
+      renderDeckControls();
+    }
+
+    // 4. 터미널 출력 로깅 함수
+    function logTerminal(text, type = 'prompt') {
+      const consolePanel = document.getElementById("terminal-console");
+      const entry = document.createElement("div");
+      entry.className = `log-entry log-${type}`;
+      entry.innerHTML = (type === 'prompt' ? '&gt;_ ' : '') + text;
+      consolePanel.appendChild(entry);
+      
+      // 자동 스크롤 아래 고정
+      consolePanel.scrollTop = consolePanel.scrollHeight;
+    }
+
+    // 5. 덱 조작 버튼 렌더링
+    function renderDeckControls() {
+      const deckControls = document.getElementById("deck-controls");
+      deckControls.innerHTML = '';
+
+      if (deckScene === 'terminal_hub') {
+        const btnHack = document.createElement("button");
+        btnHack.className = "btn-cyber";
+        btnHack.innerHTML = "📡 메인서버 포트 해킹 개시";
+        btnHack.onclick = startHacking;
+        deckControls.appendChild(btnHack);
+
+        const btnMarket = document.createElement("button");
+        btnMarket.className = "btn-cyber";
+        btnMarket.innerHTML = "🛒 불법 블랙마켓 상점";
+        btnMarket.onclick = () => { changeDeckScene('black_market'); };
+        deckControls.appendChild(btnMarket);
+
+        const btnPurge = document.createElement("button");
+        btnPurge.className = "btn-cyber";
+        btnPurge.innerHTML = "🧹 시스템 디톡스 클리닝 (10 크레딧)";
+        btnPurge.disabled = hacker.credits < 10 || hacker.sys === hacker.maxSys;
+        btnPurge.onclick = networkPurge;
+        deckControls.appendChild(btnPurge);
+
+        const btnBoost = document.createElement("button");
+        btnBoost.className = "btn-cyber";
+        btnBoost.innerHTML = `🧪 RAM 부스터 가동 (${hacker.boosters}개)`;
+        btnBoost.disabled = hacker.boosters <= 0 || hacker.sys === hacker.maxSys;
+        btnBoost.onclick = triggerRamBooster;
+        deckControls.appendChild(btnBoost);
+
+      } else if (deckScene === 'black_market') {
+        const btnBuyDecryptor = document.createElement("button");
+        btnBuyDecryptor.className = "btn-cyber";
+        btnBuyDecryptor.innerHTML = "🔌 군용 오버디코더 (30 CR / DEC +10)";
+        btnBuyDecryptor.disabled = hacker.credits < 30 || hacker.hasMilitaryDecryptor;
+        btnBuyDecryptor.onclick = () => buyCyberware('decryptor');
+        deckControls.appendChild(btnBuyDecryptor);
+
+        const btnBuyProxy = document.createElement("button");
+        btnBuyProxy.className = "btn-cyber";
+        btnBuyProxy.innerHTML = "🛡️ 양자 프록시 우회막 (40 CR / FW +5)";
+        btnBuyProxy.disabled = hacker.credits < 40 || hacker.hasQuantumProxy;
+        btnBuyProxy.onclick = () => buyCyberware('proxy');
+        deckControls.appendChild(btnBuyProxy);
+
+        const btnBuyBooster = document.createElement("button");
+        btnBuyBooster.className = "btn-cyber";
+        btnBuyBooster.innerHTML = "🧪 RAM 부스터 임시 충전 (10 CR)";
+        btnBuyBooster.disabled = hacker.credits < 10;
+        btnBuyBooster.onclick = () => buyCyberware('booster');
+        deckControls.appendChild(btnBuyBooster);
+
+        const btnExit = document.createElement("button");
+        btnExit.className = "btn-cyber";
+        btnExit.style.borderColor = "#ff007f";
+        btnExit.style.color = "#ff007f";
+        btnExit.innerHTML = "🔙 메인 허브 터미널 복귀";
+        btnExit.onclick = () => { changeDeckScene('terminal_hub'); };
+        deckControls.appendChild(btnExit);
+
+      } else if (deckScene === 'hacking') {
+        const currentEp = hackEpisodes[currentEpisodeIndex];
+        
+        // 퀴즈 사지선다 버튼 렌더링
+        currentEp.choices.forEach((choice, idx) => {
+          const btnChoice = document.createElement("button");
+          btnChoice.className = "btn-cyber btn-decrypt";
+          btnChoice.textContent = choice.text;
+          btnChoice.onclick = () => decryptHackingSequence(choice);
+          deckControls.appendChild(btnChoice);
+        });
+
+        // 위기의 순간 RAM 부스터 버튼 활성화
+        const btnBoost = document.createElement("button");
+        btnBoost.className = "btn-cyber";
+        btnBoost.style.gridColumn = "1 / -1";
+        btnBoost.innerHTML = `🧪 긴급 자가 수리: RAM 부스터 (${hacker.boosters}개 남음)`;
+        btnBoost.disabled = hacker.boosters <= 0 || hacker.sys === hacker.maxSys;
+        btnBoost.onclick = triggerRamBooster;
+        deckControls.appendChild(btnBoost);
+
+      } else if (deckScene === 'network_error' || deckScene === 'hack_complete') {
+        const btnReboot = document.createElement("button");
+        btnReboot.className = "btn-cyber";
+        btnReboot.style.gridColumn = "1 / -1";
+        btnReboot.innerHTML = "🔄 넷러너 신경망 시스템 콜드 부팅 (재시작)";
+        btnReboot.onclick = coldRebootSystem;
+        deckControls.appendChild(btnReboot);
+      }
+    }
+
+    // 6. 덱 화면 씬 전환
+    function changeDeckScene(scene) {
+      deckScene = scene;
+      if (scene === 'terminal_hub') {
+        logTerminal(`네트워크 로컬 게이트웨이 접속 성공. 시스템 보안 상태를 점검하십시오.`, 'sys-status');
+      } else if (scene === 'black_market') {
+        logTerminal(`블랙 마켓의 어두운 전자기 상인 NPC와 커넥션이 연결되었습니다. 크레딧을 준비하세요.`, 'sys-status');
+      }
+      updateHUD();
+    }
+
+    // 7. 시스템 클리닝 디톡스
+    function networkPurge() {
+      if (hacker.credits >= 10) {
+        hacker.credits -= 10;
+        hacker.sys = hacker.maxSys;
+        logTerminal(`크랙 룸 정화 프로토콜 완수. 손상된 메모리를 완전 정리하고 상태를 최고로 리프레시했습니다. (Credits -10)`, 'prompt');
+        updateHUD();
+      }
+    }
+
+    // 8. RAM 부스터 즉각 치료
+    function triggerRamBooster() {
+      if (hacker.boosters > 0) {
+        hacker.boosters--;
+        const beforeSys = hacker.sys;
+        hacker.sys = Math.min(hacker.maxSys, hacker.sys + 50);
+        const repAmount = hacker.sys - beforeSys;
+        logTerminal(`RAM 부스터 주입! 하드웨어 과열이 해소되고 임시 안정성 레벨이 ${repAmount} 복구되었습니다. (부스터 잔여: ${hacker.boosters}개)`, 'prompt');
+        updateHUD();
+      }
+    }
+
+    // 9. 블랙마켓 물품 거래
+    function buyCyberware(techType) {
+      if (techType === 'decryptor' && hacker.credits >= 30) {
+        hacker.credits -= 30;
+        hacker.hasMilitaryDecryptor = true;
+        hacker.dec += 10;
+        logTerminal(`군용 고출력 디코더 장착 완료! 방화벽 압축 비트를 손쉽게 썰어버립니다. (DEC +10, -30 CR)`, 'reward');
+      } else if (techType === 'proxy' && hacker.credits >= 40) {
+        hacker.credits -= 40;
+        hacker.hasQuantumProxy = true;
+        hacker.fw += 5;
+        logTerminal(`양자 프록시 다중화 방화벽 설치 완료! 패킷 추적이 기만됩니다. (FW +5, -40 CR)`, 'reward');
+      } else if (techType === 'booster' && hacker.credits >= 10) {
+        hacker.credits -= 10;
+        hacker.boosters++;
+        logTerminal(`RAM 부스터 주사율 추가 적재 완료. 비상 상황에 대비하세요. (+1 RAM Booster, -10 CR)`, 'reward');
+      } else {
+        logTerminal(`크레딧 부족 또는 이미 디바이스에 슬롯 장착이 만료된 칩셋입니다!`, 'terminal-err');
+      }
+      updateHUD();
+    }
+
+    // 10. 해킹 개시
+    function startHacking() {
+      deckScene = 'hacking';
+      currentEpisodeIndex = 0;
+      logTerminal(`A.I. Corp 중앙 클라우드 네트워크 스캐닝 개시...`, 'sys-status');
+      presentCurrentEpisode();
+    }
+
+    // 11. 에피소드 출력
+    function presentCurrentEpisode() {
+      const currentEp = hackEpisodes[currentEpisodeIndex];
+      logTerminal(`============================================`, 'sys-status');
+      logTerminal(`⚡ <strong>STORY ACCESS : ${currentEp.title}</strong>`, 'prompt');
+      logTerminal(currentEp.text, 'hacker-story');
+      logTerminal(`<span style="color: #ff007f; font-size: 15px; font-weight: bold; background-color: #030208; padding: 4px 8px; border-radius: 2px; display: inline-block; margin-top: 8px; border: 1px solid #ff007f;">💡 [HACKING TARGET SYNTAX]:<br>${currentEp.sentence}</span>`, 'hacker-story');
+      
+      updateHUD();
+    }
+
+    // 12. 디코드 풀기 제출
+    function decryptHackingSequence(choice) {
+      const currentEp = hackEpisodes[currentEpisodeIndex];
+      
+      if (choice.isCorrect) {
+        logTerminal(`🟢 <strong>[코드 통과]</strong> : '${choice.text}' 입력값 매칭 성공!`, 'hack-success');
+        logTerminal(choice.feedback, 'prompt');
+        
+        // 성공 보상
+        const succMsg = currentEp.onSuccess();
+        logTerminal(succMsg, 'reward');
+
+        // 레벨업 체크
+        checkRankLevelUp();
+
+        // 최종 탈출 체크
+        if (succMsg === "CLEAR") {
+          triggerHackingClear();
+          return;
+        }
+
+        currentEpisodeIndex++;
+        if (currentEpisodeIndex < hackEpisodes.length) {
+          setTimeout(presentCurrentEpisode, 1000);
+        } else {
+          triggerHackingClear();
+        }
+      } else {
+        logTerminal(`🔴 <strong>[방화벽 탐지됨]</strong> : '${choice.text}'는 부적합한 신택스 코드입니다!`, 'hack-alert');
+        logTerminal(choice.feedback, 'terminal-err');
+        
+        // 타격 페널티
+        const failMsg = currentEp.onFailure();
+        logTerminal(failMsg, 'terminal-err');
+
+        // 자멸 상태 체크
+        if (hacker.sys <= 0) {
+          triggerNetworkError();
+        } else {
+          logTerminal(`💡 정답 비트가 매칭될 때까지 동일한 보안망 관문을 다시 스캔합니다! 힌트 텍스트 카드를 읽어보세요!`, 'sys-status');
+          updateHUD();
+        }
+      }
+    }
+
+    // 13. 해킹 등급 랭크업 관리
+    function checkRankLevelUp() {
+      if (hacker.data >= hacker.nextLevelData) {
+        hacker.data -= hacker.nextLevelData;
+        hacker.level++;
+        hacker.maxSys += 15;
+        hacker.sys = hacker.maxSys;
+        hacker.dec += 4;
+        hacker.fw += 1;
+        hacker.nextLevelData = hacker.level * 100;
+        logTerminal(`👑💻 <strong>RANK UP!</strong> 당신의 정보 침투 지수(RANK)가 LVL. ${hacker.level}로 튜닝되었습니다! (최대 전압 시스템 안정성 +15, SYS 완전 복구, 디코드 파워 +4, 방화벽 방어율 +1)`, 'reward');
+      }
+    }
+
+    // 14. 네트워크 에러 (게임오버)
+    function triggerNetworkError() {
+      deckScene = 'network_error';
+      logTerminal(`💀💀💀 [HARDWARE OVERHEAT & NETWORK CRASHED] 💀💀💀`, 'hack-alert');
+      logTerminal(`A.I. Corp 보안 본부에 신경 터미널이 추적당해 고압의 역전류 피해를 받았습니다. 넷러너 본체의 뇌 신경 시스템의 안전을 위해 접속이 영구 강제 차단되었습니다.`, 'hacker-story');
+      updateHUD();
+    }
+
+    // 15. 해킹 컴플리트 (클리어 엔딩)
+    function triggerHackingClear() {
+      deckScene = 'hack_complete';
+      logTerminal(`🎉🔐🎉 [DECRYPTION PROCESS COMPLETE : SYSTEM HIJACKED] 🎉🔐🎉`, 'hack-success');
+      logTerminal(`성공입니다! 거대 부패 메가코프인 A.I. Corp의 깊숙한 금기 코어를 무력화하고 700만 개의 불법 비밀 자금 칩과 기밀 설계도 데이터를 무사히 탈취하는 데 승리했습니다!`, 'hack-success');
+      logTerminal(`당신은 영문법의 3대 핵심 분기 기둥인 <strong>used to</strong>, <strong>be used to</strong>, <strong>get used to</strong>의 매칭 비트를 완전 장악하고, 전설적인 언더그라운드 넷러너로 명예의 전당에 등재되었습니다!`, 'reward');
+      updateHUD();
+    }
+
+    // 16. 콜드 재부팅 시스템
+    function coldRebootSystem() {
+      hacker.level = 1;
+      hacker.sys = 100;
+      hacker.maxSys = 100;
+      hacker.credits = 50;
+      hacker.dec = 10;
+      hacker.fw = 2;
+      hacker.data = 0;
+      hacker.nextLevelData = 100;
+      hacker.boosters = 1;
+      hacker.hasMilitaryDecryptor = false;
+      hacker.hasQuantumProxy = false;
+
+      deckScene = 'terminal_hub';
+      currentEpisodeIndex = 0;
+
+      const consolePanel = document.getElementById("terminal-console");
+      consolePanel.innerHTML = `
+        <div class="log-entry log-sys-status">[SYSTEM] 로컬 가상 네트워크 모뎀 초기 콜드 리부트...</div>
+        <div class="log-entry log-prompt">&gt;_ 시스템 연결 온라인. 네오-서울 거리에 밤안개가 자욱합니다.</div>
+        <div class="log-entry log-hacker-story">A.I. Corp의 비밀 방화벽의 빈틈을 파고들어 소중한 진실 데이터 비트를 손에 넣으십시오.</div>
+      `;
+      
+      updateHUD();
+    }
+
+    // 17. 초기 진입 실행
+    document.addEventListener("DOMContentLoaded", () => {
+      const consolePanel = document.getElementById("terminal-console");
+      consolePanel.innerHTML = `
+        <div class="log-entry log-sys-status">[SYSTEM] 로컬 가상 네트워크 모뎀 온라인 접속 중...</div>
+        <div class="log-entry log-prompt">&gt;_ 시스템 연결 온라인. 네오-서울 거리에 밤안개가 자욱합니다.</div>
+        <div class="log-entry log-hacker-story">A.I. Corp의 비밀 방화벽의 빈틈을 파고들어 소중한 진실 데이터 비트를 손에 넣으십시오.</div>
+      `;
+      updateHUD();
+    });
+  </script>
+</body>
+</html>

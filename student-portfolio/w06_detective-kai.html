@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Time Loop: Grammar Escape</title>
+    <style>
+        :root {
+            --neon-blue: #00d4ff;
+            --neon-pink: #ff007f;
+            --bg-dark: #0d0d12;
+            --text-gold: #ffd700;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: white;
+            font-family: 'Segoe UI', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        #game-container {
+            width: 90%;
+            max-width: 650px;
+            background: rgba(25, 25, 35, 0.95);
+            border: 3px solid var(--neon-blue);
+            border-radius: 25px;
+            padding: 40px;
+            box-shadow: 0 0 50px rgba(0, 212, 255, 0.3);
+            text-align: center;
+            position: relative;
+        }
+
+        /* 캐릭터 섹션 */
+        #character-visual {
+            font-size: 5rem;
+            margin-bottom: 10px;
+            display: block;
+            filter: drop-shadow(0 0 10px var(--neon-blue));
+            transition: transform 0.2s;
+        }
+
+        #clock-display {
+            font-size: 3.5rem;
+            font-family: 'Courier New', monospace;
+            color: var(--neon-pink);
+            margin: 15px 0;
+            text-shadow: 0 0 15px var(--neon-pink);
+            letter-spacing: 5px;
+        }
+
+        #message-box {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            min-height: 80px;
+            border-left: 5px solid var(--neon-pink);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        #quiz-area { display: none; }
+
+        .question-text {
+            font-size: 1.4rem;
+            margin-bottom: 25px;
+            color: var(--text-gold);
+            font-weight: bold;
+            line-height: 1.5;
+        }
+
+        .btn-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        button {
+            background: transparent;
+            border: 2px solid var(--neon-blue);
+            color: white;
+            padding: 20px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background: var(--neon-blue);
+            color: black;
+            box-shadow: 0 0 25px var(--neon-blue);
+            transform: translateY(-3px);
+        }
+
+        #progress-bar-container {
+            width: 100%;
+            height: 12px;
+            background: #222;
+            border-radius: 6px;
+            margin-top: 40px;
+            border: 1px solid #444;
+        }
+
+        #progress-bar-fill {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, var(--neon-blue), #00ff88);
+            border-radius: 6px;
+            transition: width 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        /* 타임워프 번쩍임 효과 */
+        #flash-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: white;
+            display: none;
+            z-index: 1000;
+            pointer-events: none;
+        }
+
+        .highlight { color: var(--neon-blue); text-decoration: underline; }
+    </style>
+</head>
+<body>
+
+<div id="flash-overlay"></div>
+
+<div id="game-container">
+    <span id="character-visual">🕵️‍♂️</span>
+    <div id="clock-display">07:00 AM</div>
+    
+    <div id="message-box">
+        <span id="char-name" style="font-weight: bold; color: var(--neon-blue); margin-bottom: 5px; display: block;">Detective Kai:</span>
+        <span id="char-msg">"I'm stuck in a loop! We need to use the correct tenses to escape. Help me reach tomorrow!"</span>
+    </div>
+
+    <div id="quiz-area">
+        <p class="question-text" id="q-text"></p>
+        <div class="btn-group" id="options"></div>
+    </div>
+
+    <button id="start-btn" onclick="startGame()">START MISSION</button>
+
+    <div id="progress-bar-container">
+        <div id="progress-bar-fill"></div>
+    </div>
+</div>
+
+<script>
+    const quizData = [
+        {
+            situation: "If it <span class='highlight'>(____)</span> tomorrow, I'll stay home.",
+            choices: ["rains", "will rain"],
+            answer: 0,
+            time: "10:15 AM",
+            reaction: "Good! Time is moving forward."
+        },
+        {
+            situation: "I'll call you when I <span class='highlight'>(____)</span> the station.",
+            choices: ["will reach", "reach"],
+            answer: 1,
+            time: "01:30 PM",
+            reaction: "Perfect! We're halfway through the day."
+        },
+        {
+            situation: "I'll go out as soon as I <span class='highlight'>(____)</span> my homework.",
+            choices: ["have finished", "will have finished"],
+            answer: 0,
+            time: "05:45 PM",
+            reaction: "Excellent! Present Perfect for the future!"
+        },
+        {
+            situation: "By the time he <span class='highlight'>(____)</span>, it will be dark.",
+            choices: ["will arrive", "arrives"],
+            answer: 1,
+            time: "09:20 PM",
+            reaction: "Almost there! The loop is weakening."
+        },
+        {
+            situation: "The moment I <span class='highlight'>(____)</span> this button, we're free!",
+            choices: ["press", "will press"],
+            answer: 0,
+            time: "11:59 PM",
+            reaction: "Final step! Tomorrow is just a second away!"
+        }
+    ];
+
+    let currentIdx = 0;
+
+    function startGame() {
+        document.getElementById('start-btn').style.display = 'none';
+        document.getElementById('quiz-area').style.display = 'block';
+        loadQuestion();
+    }
+
+    function loadQuestion() {
+        const q = quizData[currentIdx];
+        document.getElementById('q-text').innerHTML = q.situation;
+        document.getElementById('clock-display').innerText = q.time;
+        
+        const optBox = document.getElementById('options');
+        optBox.innerHTML = '';
+        
+        q.choices.forEach((choice, i) => {
+            const btn = document.createElement('button');
+            btn.innerText = choice;
+            btn.onclick = () => handleAnswer(i);
+            optBox.appendChild(btn);
+        });
+    }
+
+    function handleAnswer(selected) {
+        if (selected === quizData[currentIdx].answer) {
+            // Correct Answer
+            document.getElementById('char-msg').innerText = `"${quizData[currentIdx].reaction}"`;
+            document.getElementById('character-visual').style.transform = "scale(1.2)";
+            setTimeout(() => { document.getElementById('character-visual').style.transform = "scale(1)"; }, 200);
+            
+            currentIdx++;
+            updateProgress();
+            
+            if (currentIdx < quizData.length) {
+                loadQuestion();
+            } else {
+                winGame();
+            }
+        } else {
+            // Wrong Answer (Time Warp)
+            triggerTimeWarp();
+        }
+    }
+
+    function updateProgress() {
+        const percent = (currentIdx / quizData.length) * 100;
+        document.getElementById('progress-bar-fill').style.width = percent + "%";
+    }
+
+    function triggerTimeWarp() {
+        const flash = document.getElementById('flash-overlay');
+        flash.style.display = 'block';
+        flash.style.opacity = '1';
+        
+        document.getElementById('character-visual').innerText = "😱";
+        document.getElementById('char-msg').innerHTML = "<span style='color:red; font-weight:bold;'>GRAMMAR ERROR! Resetting to 07:00 AM...</span>";
+
+        setTimeout(() => {
+            flash.style.opacity = '0';
+            setTimeout(() => {
+                flash.style.display = 'none';
+                resetGame();
+            }, 500);
+        }, 150);
+    }
+
+    function resetGame() {
+        currentIdx = 0;
+        document.getElementById('character-visual').innerText = "🕵️‍♂️";
+        document.getElementById('clock-display').innerText = "07:00 AM";
+        document.getElementById('progress-bar-fill').style.width = "0%";
+        loadQuestion();
+    }
+
+    function winGame() {
+        document.getElementById('quiz-area').style.display = 'none';
+        document.getElementById('character-visual').innerText = "🎉";
+        document.getElementById('clock-display').innerText = "08:00 AM";
+        document.getElementById('clock-display').style.color = "#00ff88";
+        document.getElementById('char-msg').innerHTML = 
+            "<strong style='color:#00ff88;'>SUCCESS!</strong><br>\"The loop is broken! Look at the sunrise. It's finally tomorrow!\"";
+        
+        const restartBtn = document.createElement('button');
+        restartBtn.innerText = "PLAY AGAIN";
+        restartBtn.style.marginTop = "20px";
+        restartBtn.onclick = () => location.reload();
+        document.getElementById('game-container').appendChild(restartBtn);
+    }
+</script>
+
+</body>
+</html>

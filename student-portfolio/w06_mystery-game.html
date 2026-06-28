@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>English Grammar: May and Might Master</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+/* 1. 기본 설정 (고대비 및 가독성 중심) */
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background-color: #cbd5e1;
+  display: grid;
+  gap: 30px;
+  grid-template-columns: 1fr;
+  margin: 0;
+  min-height: 100vh;
+  padding: 40px 0;
+  place-items: center;
+}
+
+.slide-container {
+  align-items: flex-start;
+  background-color: #ffffff;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  font-family: 'Noto Sans KR', sans-serif;
+  height: 720px;
+  justify-content: flex-start;
+  overflow: hidden;
+  padding: 60px 80px;
+  position: relative;
+  width: 1280px;
+}
+
+/* 데코레이션: 가독성을 방해하지 않는 상단 바 */
+.slide-container::before {
+  background-color: #1e3a8a;
+  content: '';
+  height: 10px;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 100%;
+}
+
+/* 2. 타이포그래피 */
+
+.slide-container h1,
+.slide-container h2,
+.slide-container h3 {
+  color: #1e3a8a;
+  font-family: 'Poppins', sans-serif;
+  margin: 0;
+}
+
+.slide-container h1 {
+  font-size: 72px;
+  margin-bottom: 20px;
+}
+
+.slide-container .slide-title {
+  border-left: 10px solid #facc15;
+  color: #1e3a8a;
+  font-size: 44px;
+  font-weight: 700;
+  margin-bottom: 30px;
+  padding-left: 20px;
+  text-align: left;
+}
+
+.slide-container h3 {
+  font-size: 26px;
+  margin-bottom: 15px;
+}
+
+.slide-container p,
+.slide-container li {
+  color: #1e293b;
+  font-size: 21px;
+  line-height: 1.6;
+}
+
+.slide-container .kor {
+  color: #64748b;
+  display: block;
+  font-size: 18px;
+  margin-top: 4px;
+}
+
+.slide-container .eng-bold {
+  background-color: #f1f5f9;
+  color: #000;
+  font-weight: 700;
+  padding: 2px 6px;
+}
+
+/* 3. 레이아웃 */
+
+.content-area {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  width: 100%;
+}
+
+.grid-2 {
+  display: grid;
+  gap: 40px;
+  grid-template-columns: 1fr 1fr;
+  width: 100%;
+}
+
+.content-box {
+  background-color: #f8fafc;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  padding: 30px;
+}
+
+.formula-box {
+  background-color: #eff6ff;
+  border-radius: 10px;
+  border: 1px dashed #3b82f6;
+  margin: 20px 0;
+  padding: 15px;
+  text-align: center;
+}
+
+/* 문제 풀이 스타일 */
+
+.problem-card {
+  border-left: 8px solid #3b82f6;
+  margin-bottom: 25px;
+  padding-left: 25px;
+}
+
+.selection-reason {
+  background-color: #fffbeb;
+  color: #92400e;
+  font-size: 15px;
+  font-weight: 700;
+  margin-top: 10px;
+  padding: 8px 12px;
+}
+
+.problem-rationale {
+  background-color: #f0f9ff;
+  border: 1px solid #bae6fd;
+  color: #0369a1;
+  font-size: 17px;
+  margin-top: 10px;
+  padding: 12px;
+  display: none; /* 초기 상태 숨김 */
+}
+
+/* 시험 문제 스타일 */
+
+.exam-section {
+  background-color: #ffffff;
+  border-radius: 15px;
+  border: 3px dashed #1e3a8a;
+  padding: 30px;
+}
+
+/* 정답 가리기 버튼형 스타일 */
+.answer-toggle-btn {
+  background-color: #dbeafe;
+  border: 1px solid #3b82f6;
+  border-radius: 4px;
+  color: #1e3a8a;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 700;
+  padding: 2px 8px;
+  margin: 0 5px;
+  transition: all 0.2s;
+}
+
+.answer-toggle-btn:hover {
+  background-color: #3b82f6;
+  color: white;
+}
+
+.answer-text {
+  display: none; /* 초기 상태 숨김 */
+  font-weight: 700;
+  color: #1e3a8a;
+  background-color: #fef08a;
+  padding: 2px 6px;
+  border-radius: 4px;
+  animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* 하단 크레딧 스타일 */
+.gemini-credit {
+  position: absolute;
+  bottom: 15px;
+  right: 80px;
+  font-size: 14px;
+  color: #94a3b8;
+  font-weight: 400;
+}
+    </style>
+</head>
+<body>
+
+<!-- Slide 1: Title_Slide -->
+<div class="slide-container" id="slide1">
+    <div class="content-area" style="justify-content: center; align-items: center; text-align: center;">
+        <h1>May and Might</h1>
+        <p style="font-size: 28px; color: #64748b;">English Grammar in Use Unit 28 & 29 Masterclass</p>
+        <div style="background-color: #facc15; height: 6px; margin: 30px 0; width: 150px;"></div>
+        <p>교재 섹션별 상세 분석 | 연습문제 해설 | AI 프로젝트 | 제작 피드백 정리</p>
+    </div>
+    <div class="gemini-credit">제미나이를 활용하여 제작하였음</div>
+</div>
+
+<!-- Slide 2: Unit 28-A: Present Possibility -->
+<div class="slide-container" id="slide2">
+    <h2 class="slide-title">Unit 28-A: Present Possibility</h2>
+    <div class="content-area">
+        <div class="grid-2">
+            <div class="content-box">
+                <h3>1. 기본 개념 (Possibility)</h3>
+                <p>무언가가 일어날 가능성이 있지만 <strong>확실하지 않을 때</strong> 사용합니다.</p>
+                <ul style="list-style: none; padding: 0;">
+                    <li style="margin-bottom: 15px;">
+                        <span class="eng-bold">It may be true.</span>
+                        <span class="kor">= Perhaps it is true. (사실일지도 모른다)</span>
+                    </li>
+                    <li>
+                        <span class="eng-bold">She might know.</span>
+                        <span class="kor">= Perhaps she knows. (그녀가 알지도 모른다)</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="content-box">
+                <h3>2. 부정형 (Negative)</h3>
+                <p><strong>may not</strong> 또는 <strong>might not</strong>을 사용합니다.</p>
+                <ul style="list-style: none; padding: 0;">
+                    <li style="margin-bottom: 15px;">
+                        <span class="eng-bold">It may not be true.</span>
+                        <span class="kor">= Perhaps it isn't true. (사실이 아닐지도 모른다)</span>
+                    </li>
+                    <li>
+                        <span class="eng-bold">She might not know.</span>
+                        <span class="kor">= Perhaps she doesn't know. (모를지도 모른다)</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="gemini-credit">제미나이를 활용하여 제작하였음</div>
+</div>
+
+<!-- Slide 3: Unit 28-B: Past Possibility -->
+<div class="slide-container" id="slide3">
+    <h2 class="slide-title">Unit 28-B: Past Possibility</h2>
+    <div class="content-area">
+        <div class="content-box">
+            <h3>과거 사실에 대한 불확실한 추측</h3>
+            <p>과거에 대해 추측할 때는 <span class="eng-bold">may/might have + p.p.</span> 구조를 사용합니다.</p>
+            <div class="formula-box">
+                <math xmlns="http://www.w3.org/1998/Math/MathML" display="math">
+                  <mi>Subject</mi>
+                  <mo>+</mo>
+                  <mtext>may/might</mtext>
+                  <mo>+</mo>
+                  <mi>have</mi>
+                  <mo>+</mo>
+                  <mtext>past participle</mtext>
+                </math>
+            </div>
+            <div class="grid-2" style="margin-top: 30px;">
+                <div>
+                    <p><span class="eng-bold">She may have been asleep.</span></p>
+                    <span class="kor">= Perhaps she was asleep. (자고 있었을지도 모른다)</span>
+                </div>
+                <div>
+                    <p><span class="eng-bold">You might have left it at work.</span></p>
+                    <span class="kor">= Perhaps you left it at work. (직장에 두고 왔을지도 모른다)</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="gemini-credit">제미나이를 활용하여 제작하였음</div>
+</div>
+
+<!-- Slide 4: Unit 28-C: Could vs. May/Might -->
+<div class="slide-container" id="slide4">
+    <h2 class="slide-title">Unit 28-C: Could vs. May/Might</h2>
+    <div class="content-area">
+        <div class="content-box">
+            <p>긍정문에서 <strong>could</strong>는 <em>may/might</em>와 비슷하지만, 부정문은 의미가 완전히 다릅니다.</p>
+            <table style="border-collapse: collapse; margin-top: 20px; width: 100%;">
+                <tr style="background-color: #1e3a8a; color: white;">
+                    <th style="padding: 15px; text-align: left;">형태</th>
+                    <th style="padding: 15px; text-align: left;">의미 및 예시</th>
+                </tr>
+                <tr style="border-bottom: 1px solid #e2e8f0;">
+                    <td style="padding: 15px;"><strong>Couldn't (확신)</strong></td>
+                    <td style="padding: 15px;">
+                        <span class="eng-bold">She couldn't have received my message.</span>
+                        <span class="kor">= 그것은 불가능하다. (받았을 리가 없다)</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding: 15px;"><strong>Might not (추측)</strong></td>
+                    <td style="padding: 15px;">
+                        <span class="eng-bold">She might not have received it.</span>
+                        <span class="kor">= 그럴 수도 아닐 수도 있다. (안 받았을지도 모른다)</span>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div class="gemini-credit">제미나이를 활용하여 제작하였음</div>
+</div>
+
+<!-- Slide 5: Unit 29-A: Future Possibility -->
+<div class="slide-container" id="slide5">
+    <h2 class="slide-title">Unit 29-A: Future Possibility</h2>
+    <div class="content-area">
+        <div class="grid-2">
+            <div class="content-box">
+                <h3>미래의 가능성</h3>
+                <p>미래의 불확실한 행동이나 사건을 말할 때 사용합니다.</p>
+                <ul>
+                    <li style="margin-bottom: 15px;">
+                        <span class="eng-bold">It might rain later.</span>
+                        <span class="kor">= Perhaps it will rain. (비가 올지도 모른다)</span>
+                    </li>
+                    <li>
+                        <span class="eng-bold">I may go to Ireland.</span>
+                        <span class="kor">= Perhaps I will go. (갈지도 모른다)</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="content-box" style="border-left: 8px solid #1e3a8a;">
+                <h3>Compare: Going to vs. May</h3>
+                <p>• <span class="eng-bold">I'm going to buy a car.</span> (For sure / 확신)</p>
+                <p>• <span class="eng-bold">I may buy a car.</span> (Possible / 가능성)</p>
+            </div>
+        </div>
+    </div>
+    <div class="gemini-credit">제미나이를 활용하여 제작하였음</div>
+</div>
+
+<!-- Slide 6: Unit 29-B: Unreal Situations -->
+<div class="slide-container" id="slide6">
+    <h2 class="slide-title">Unit 29-B: Unreal Situations</h2>
+    <div class="content-area">
+        <div class="content-box">
+            <h3>비현실적인 상황 (Might)</h3>
+            <p>상황이 실제가 아닐 때는 <strong>might</strong>를 주로 사용합니다. (may는 어색함)</p>
+            <div style="background-color: #fff; border: 1px solid #cbd5e1; margin-top: 20px; padding: 30px;">
+                <p style="font-size: 24px;"><span class="eng-bold">"If they paid me better, I might work harder."</span></p>
+                <p class="kor" style="font-size: 20px; margin-top: 15px;">해설: 그들은 나에게 돈을 많이 주지 않으므로, 더 열심히 일하지 않는다는 비현실적인 가정을 의미합니다.</p>
+            </div>
+        </div>
+    </div>
+    <div class="gemini-credit">제미나이를 활용하여 제작하였음</div>
+</div>
+
+<!-- Slide 7: Unit 29-C: Will be -ing vs. Might be -ing -->
+<div class="slide-container" id="slide7">
+    <h2 class="slide-title">Unit 29-C: Future Continuous Comparison</h2>
+    <div class="content-area">
+        <div class="grid-2">
+            <div class="content-box" style="border-top: 10px solid #ef4444;">
+                <h3 style="color: #ef4444;">1. Will be -ing (확신)</h3>
+                <p><span class="eng-bold">"Don't phone at 8:30. I'll be watching the game."</span></p>
+                <p class="kor">해설: 8시 반에 나는 확실히 경기를 보고 있을 것이다. (계획됨)</p>
+            </div>
+            <div class="content-box" style="border-top: 10px solid #3b82f6;">
+                <h3 style="color: #3b82f6;">2. Might be -ing (추측)</h3>
+                <p><span class="eng-bold">"Don't phone at 8:30. I might be watching the game."</span></p>
+                <p class="kor">해설: 8시 반에 나는 경기를 보고 있을지도 모른다. (어쩌면)</p>
+            </div>
+        </div>
+        <p style="background-color: #f1f5f9; margin-top: 30px; padding: 20px;">
+            <strong>Possible plans:</strong> "I <strong>might be going</strong> to Hawaii soon."<br>
+            <span class="kor">= 어쩌면 곧 하와이에 갈지도 모른다. (불확실한 계획)</span>
+        </p>
+    </div>
+    <div class="gemini-credit">제미나이를 활용하여 제작하였음</div>
+</div>
+
+<!-- Slide 8: Unit 29-D: Might as well -->
+<div class="slide-container" id="slide8">
+    <h2 class="slide-title">Unit 29-D: Might as Well</h2>
+    <div class="content-area">
+        <div class="content-box">
+            <h3>더 나은 대안이 없는 경우</h3>
+            <p>기왕 이렇게 된 거 ~하는 게 낫겠다는 의미로 씁니다.</p>
+            <div style="border-left: 10px solid #facc15; margin-top: 25px; padding-left: 20px;">
+                <p><strong>Example:</strong> "Buses are so expensive these days you <span class="eng-bold">might as well take a taxi.</span>"</p>
+                <p class="kor" style="margin-top: 10px;">= 택시비가 버스만큼 비싸니, 택시를 타는 게 버스보다 나을 게 없다(그냥 택시 타자).</p>
+            </div>
+            <p style="margin-top: 30px;">• <span class="eng-bold">We might as well walk.</span> (그냥 걷는 게 낫겠어 - 버스도 없고 다른 방법도 없으니까)</p>
+        </div>
+    </div>
+    <div class="gemini-credit">제미나이를 활용하여 제작하였음</div>
+</div>
+
+<!-- Slide 9: 핵심 요약 슬라이드 -->
+<div class="slide-container" id="slide9">
+    <h2 class="slide-title">Core Summary: May & Might</h2>
+    <div class="content-area">
+        <div class="content-box" style="background-color: #1e3a8a; color: white;">
+            <table style="color: white; width: 100%;">
+                <tr style="border-bottom: 1 solid rgba(255,255,255,0.2);">
+                    <th style="padding: 20px; text-align: left;">구분</th>
+                    <th style="padding: 20px; text-align: left;">문장 구조</th>
+                    <th style="padding: 20px; text-align: left;">핵심 뉘앙스</th>
+                </tr>
+                <tr style="border-bottom: 1 solid rgba(255,255,255,0.1);">
+                    <td style="padding: 20px;">현재/미래 추측</td>
+                    <td style="padding: 20px;">may / might + V</td>
+                    <td style="padding: 20px;">어쩌면 ~일지도 모른다</td>
+                </tr>
+                <tr style="border-bottom: 1 solid rgba(255,255,255,0.1);">
+                    <td style="padding: 20px;">과거 추측</td>
+                    <td style="padding: 20px;">may / might + have p.p.</td>
+                    <td style="padding: 20px;">어쩌면 ~했을지도 모른다</td>
+                </tr>
+                <tr>
+                    <td style="padding: 20px;">관용구</td>
+                    <td style="padding: 20px;">might as well</td>
+                    <td style="padding: 20px;">기왕이면 ~하는 게 낫다</td>
+                </tr>
+            </table>
+        </div>
+        <p style="color: #64748b; font-size: 18px; margin-top: 20px;">
+            *Might는 May보다 더 불확실하거나 비현실적인 상황(Unreal)에서 선호됩니다.
+        </p>
+    </div>
+    <div class="gemini-credit">제미나이를 활용하여 제작하였음</div>
+</div>
+
+<!-- Slide 10: Unit 28 연습문제 풀이 -->
+<div class="slide-container" id="slide10">
+    <h2 class="slide-title">Unit 28 Practice Analysis</h2>
+    <div class="content-area">
+        <div class="problem-card">
+            <p><strong>[Ex 28.2-1]</strong> A: Where's Ben? B: I'm not sure. He 
+                <button class="answer-toggle-btn" onclick="toggleAnswer(this)">정답 보기</button>
+                <span class="answer-text">might be having</span> lunch.</p>
+            <div class="selection-reason">선정 이유: 현재 진행 중인 동작에 대한 불확실한 추측을 묻는 가장 기본적이고 핵심적인 문제입니다.</div>
+            <div class="problem-rationale">해설: '지금 먹고 있는 중일지도 모른다'는 진행형 추측이므로 might be -ing를 사용합니다.</div>
+        </div>
+        <div class="problem-card">
+            <p><strong>[Ex 28.3-1]</strong> She 
+                <button class="answer-toggle-btn" onclick="toggleAnswer(this)">정답 보기</button>
+                <span class="answer-text">might not have known</span> about the meeting.</p>
+            <div class="selection-reason">선정 이유: 과거의 부정적 추측(may not have p.p.)에서 not의 위치와 시제를 정확히 아는지 테스트합니다.</div>
+            <div class="problem-rationale">해설: 과거에 '몰랐을지도 모른다'는 추측이므로 might have p.p. 구조 사이에 not을 넣습니다.</div>
+        </div>
+    </div>
+    <div class="gemini-credit">제미나이를 활용하여 제작하였음</div>
+</div>
+
+<!-- Slide 11: Unit 29 연습문제 풀이 -->
+<div class="slide-container" id="slide11">
+    <h2 class="slide-title">Unit 29 Practice Analysis</h2>
+    <div class="content-area">
+        <div class="problem-card">
+            <p><strong>[Ex 29.1-1]</strong> I haven't decided where to go for my holidays. I 
+                <button class="answer-toggle-btn" onclick="toggleAnswer(this)">정답 보기</button>
+                <span class="answer-text">might go</span> to Hawaii.</p>
+            <div class="selection-reason">선정 이유: 확정된 계획(going to)과 불확실한 계획(might)의 차이를 구별하는 능력을 평가합니다.</div>
+            <div class="problem-rationale">해설: '결정하지 않았다'는 문맥이 있으므로 확정이 아닌 가능성을 뜻하는 might가 정답입니다.</div>
+        </div>
+        <div class="problem-card">
+            <p><strong>[Ex 29.5-1]</strong> We missed the bus. The buses run every hour. We 
+                <button class="answer-toggle-btn" onclick="toggleAnswer(this)">정답 보기</button>
+                <span class="answer-text">might as well walk</span>.</p>
+            <div class="selection-reason">선정 이유: 실생활에서 대안이 없는 상황을 표현하는 'might as well'의 용법을 체크합니다.</div>
+            <div class="problem-rationale">해설: 한 시간을 기다리는 것보다 걷는 것이 더 낫거나 차라리 낫다는 판단이므로 관용구를 사용합니다.</div>
+        </div>
+    </div>
+    <div class="gemini-credit">제미나이를 활용하여 제작하였음</div>
+</div>
+
+<!-- Slide 12: Review Test (Exam) -->
+<div class="slide-container" id="slide12">
+    <h2 class="slide-title">Final Review Test</h2>
+    <div class="content-area">
+        <div class="exam-section">
+            <div style="margin-bottom: 40px;">
+                <p><strong>1. 빈칸 채우기: 다음 문장의 의미가 같도록 ( )의 단어를 변형하세요.</strong></p>
+                <p style="margin-left: 20px;">Perhaps he forgot the appointment. (may)<br>
+                → He <button class="answer-toggle-btn" onclick="toggleAnswer(this)">정답 보기</button>
+                <span class="answer-text">may have forgotten</span> the appointment.</p>
+                <div class="problem-rationale" style="margin-left: 20px; border: none; background: transparent; padding: 0; color: #64748b; font-size: 16px;">
+                    해설: 과거 사실(forgot)에 대한 추측이므로 may have p.p. 형식을 사용해야 합니다.
+                </div>
+            </div>
+            <div>
+                <p><strong>2. 객관식: 다음 중 문맥상 가장 어색한 문장은?</strong></p>
+                <p style="margin-left: 20px;">
+                    ① I might go to the party tonight.<br>
+                    ② If I knew her number, I may call her.<br>
+                    ③ We might as well stay at home.<br>
+                    ④ She might be working at the moment.
+                </p>
+                <p style="margin-left: 20px;">정답: <button class="answer-toggle-btn" onclick="toggleAnswer(this)">정답 보기</button>
+                    <span class="answer-text">②</span></p>
+                <div class="problem-rationale" style="margin-left: 20px; border: none; background: transparent; padding: 0; color: #64748b; font-size: 16px;">
+                    해설: 비현실적인 가정(If I knew...)에서는 may보다 might를 사용하는 것이 교재의 핵심 규칙입니다.
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="gemini-credit">제미나이를 활용하여 제작하였음</div>
+</div>
+
+<!-- Slide 13: AI Project: AI Agony Aunt (추리 게임) -->
+<div class="slide-container" id="slide13">
+    <h2 class="slide-title">AI Project: AI Agony Aunt</h2>
+    <div class="content-area">
+        <div style="background-color: #0f172a; border-radius: 20px; color: white; padding: 40px; position: relative; min-height: 500px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <h3 style="color: #facc15; margin: 0;">미스터리 추리 게임</h3>
+                <button id="refresh-scenario" style="background: none; border: 1px solid #475569; color: #94a3b8; cursor: pointer; padding: 5px 10px; border-radius: 5px; font-size: 14px;">사건 교체</button>
+            </div>
+            
+            <p style="color: #facc15; font-size: 16px; margin-bottom: 15px; font-weight: 700;">[게임 방법] 아래의 단서를 보고 'May' 또는 'Might'를 활용하여 문법에 맞는 영어 추측 문장을 만들어 보세요.</p>
+
+            <div id="scenario-box" style="background: rgba(255,255,255,0.05); padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+                <p id="scenario-title" style="font-weight: 700; color: #facc15; font-size: 20px; margin-bottom: 5px;">사건 #1: 민지의 실종</p>
+                <p id="scenario-desc" style="color: #cbd5e1; font-size: 18px;">민지가 창백한 얼굴로 점심시간에 피자도 남기고 갑자기 나갔습니다. 무슨 일이 있었을까요?</p>
+            </div>
+            
+            <div style="display: flex; gap: 15px;">
+                <input type="text" id="user-input" placeholder="예: She might have been sick." style="border-radius: 10px; border: none; flex-grow: 1; padding: 15px; font-size: 18px;">
+                <button id="analyze-btn" style="background-color: #facc15; border-radius: 10px; border: none; color: black; cursor: pointer; font-weight: 700; padding: 0 30px; font-size: 18px;">분석</button>
+            </div>
+            
+            <div id="ai-response" style="background-color: rgba(255,255,255,0.1); border-radius: 10px; margin-top: 20px; min-height: 140px; padding: 20px; border: 1px dashed rgba(255,255,255,0.2);">
+                <p id="response-text" style="color: #94a3b8; margin: 0;">추측을 입력하고 분석 버튼을 눌러주세요...</p>
+            </div>
+        </div>
+    </div>
+    <div class="gemini-credit" style="bottom: 10px;">제미나이를 활용하여 제작하였음</div>
+</div>
+
+<!-- Slide 14: Production Process Summary -->
+<div class="slide-container" id="slide14">
+    <h2 class="slide-title">제작 과정 슬라이드 (Production Feedback)</h2>
+    <div class="content-area">
+        <div class="content-box">
+            <h3>사용자 피드백 반영 요약</h3>
+            <ul style="list-style: square;">
+                <li style="margin-bottom: 15px;"><strong>섹션별 상세화:</strong> 슬라이드 개수를 아끼지 않고 Unit 28-29의 모든 섹션(A~D)을 풍성하게 분리하여 정리함.</li>
+                <li style="margin-bottom: 15px;"><strong>가독성 최적화:</strong> 고대비 텍스트 배치를 통해 글씨가 안 보이는 문제를 해결하고, 불필요한 장식용 이미지를 전면 배제함.</li>
+                <li style="margin-bottom: 15px;"><strong>연습문제 고도화:</strong> 각 문제에 번호를 부여하고, 선정 이유 및 상세 해설(Rationale)을 추가하여 교육적 가치를 높임.</li>
+                <li style="margin-bottom: 15px;"><strong>비교 분석 추가:</strong> will be -ing와 might be -ing의 확신도 차이를 다루는 비교 섹션을 명확히 삽입함.</li>
+                <li><strong>완성도 제고:</strong> 핵심 요약 슬라이드와 시험 문제(빈칸/객관식)를 추가하여 학습 마무리 단계를 강화함.</li>
+            </ul>
+        </div>
+    </div>
+    <div class="gemini-credit">제미나이를 활용하여 제작하였음</div>
+</div>
+
+<script>
+// 정답 토글 함수 (새로 추가됨)
+function toggleAnswer(btn) {
+    const parent = btn.parentElement;
+    const grandparent = parent.parentElement;
+    
+    // 정답 텍스트 찾기 및 표시
+    const answerText = parent.querySelector('.answer-text');
+    if (answerText) {
+        answerText.style.display = 'inline-block';
+    }
+    
+    // 해설 박스 찾기 및 표시 (Grandparent 또는 parent 내부에서 탐색)
+    const rationale = grandparent.querySelector('.problem-rationale') || parent.nextElementSibling;
+    if (rationale && rationale.classList.contains('problem-rationale')) {
+        rationale.style.display = 'block';
+    }
+
+    // 버튼 숨기기
+    btn.style.display = 'none';
+}
+
+window.onload = function() {
+    const btn = document.getElementById('analyze-btn');
+    const inputField = document.getElementById('user-input');
+    const responseBox = document.getElementById('response-text');
+    const refreshBtn = document.getElementById('refresh-scenario');
+    const scenarioTitle = document.getElementById('scenario-title');
+    const scenarioDesc = document.getElementById('scenario-desc');
+
+    const scenarios = [
+        { title: "사건 #1: 민지의 실종", desc: "민지가 창백한 얼굴로 점심시간에 피자도 남기고 갑자기 나갔습니다. 무슨 일이 있었을까요?", keywords: ["sick", "ill", "appointment", "emergency"] },
+        { title: "사건 #2: 도둑맞은 도시락", desc: "체육 시간이 끝나고 오니 철수의 도시락이 비어있습니다. 옆자리 영희는 입가에 김가루가 묻어있네요.", keywords: ["ate", "hungry", "stole", "joke"] },
+        { title: "사건 #3: 사라진 선생님의 안경", desc: "선생님이 안경을 찾고 계십니다. 아까 교무실에서는 분명히 쓰고 계셨는데 지금은 없네요.", keywords: ["office", "left", "forgot", "classroom"] },
+        { title: "사건 #4: 젖어있는 바닥", desc: "아침에 일어나보니 마당 바닥이 축축하게 젖어있습니다. 어젯밤 무슨 일이 있었을까요?", keywords: ["rain", "rainy", "water", "hose"] },
+        { title: "사건 #5: 어두운 옆집", desc: "평소 이 시간이면 불이 켜져 있어야 할 옆집이 며칠째 캄캄합니다. 어떻게 된 걸까요?", keywords: ["vacation", "holiday", "travel", "moved"] }
+    ];
+
+    let currentIdx = 0;
+
+    refreshBtn.addEventListener('click', () => {
+        currentIdx = (currentIdx + 1) % scenarios.length;
+        scenarioTitle.innerText = scenarios[currentIdx].title;
+        scenarioDesc.innerText = scenarios[currentIdx].desc;
+        responseBox.innerHTML = "사건이 바뀌었습니다! 추측을 영어로 입력해보세요.";
+        inputField.value = "";
+    });
+
+    btn.addEventListener('click', function() {
+        const input = inputField.value.trim();
+        const lowerInput = input.toLowerCase();
+        
+        if (input === "") {
+            responseBox.innerHTML = "<span style='color: #f87171;'>문장을 입력해 주세요!</span>";
+            return;
+        }
+
+        let feedback = "";
+        
+        if (!lowerInput.includes("may") && !lowerInput.includes("might")) {
+            feedback = "<strong>AI 문법 피드백:</strong> 문법적으로는 괜찮을 수 있지만, 이번 단원의 목표인 <strong>'may'</strong> 또는 <strong>'might'</strong>를 사용하여 불확실한 가능성을 표현해 보세요! <br>👉 추천: <em>It <strong>might</strong> be...</em>";
+        } 
+        else if (lowerInput.includes("mights") || lowerInput.includes("mighted") || lowerInput.includes("mayed")) {
+            feedback = "<strong>AI 문법 피드백:</strong> 아차! 조동사(may/might)는 형태가 변하지 않습니다. 's'나 'ed'를 제거해 주세요.";
+        }
+        else if (/\b(may|might)\s+\w+s\b/.test(lowerInput) && !lowerInput.includes(" has ") && !lowerInput.includes(" is ")) {
+             feedback = "<strong>AI 문법 피드백:</strong> 조동사 바로 뒤에는 <strong>동사원형</strong>이 와야 합니다. 동사에 's'를 붙이지 마세요! <br>👉 예: <em>might <strong>go</strong></em> (O), <em>might goes</em> (X)";
+        }
+        else if (/\b(may|might)\s+have\s+(go|be|do|eat|take|leave)\b/.test(lowerInput)) {
+            const verb = lowerInput.match(/\b(may|might)\s+have\s+(\w+)\b/)[2];
+            let pp = "p.p. 형태";
+            if(verb === "go") pp = "gone";
+            if(verb === "be") pp = "been";
+            if(verb === "do") pp = "done";
+            if(verb === "eat") pp = "eaten";
+            if(verb === "take") pp = "taken";
+            if(verb === "leave") pp = "left";
+            
+            feedback = "<strong>AI 문법 피드백:</strong> 과거의 일을 추측할 때 <strong>have</strong> 뒤에는 과거분사(p.p.)가 옵니다. <br>👉 수정: <em>have <strong>" + pp + "</strong></em>";
+        }
+        else {
+            const isContentMatch = scenarios[currentIdx].keywords.some(k => lowerInput.includes(k));
+            feedback = "<strong>AI 분석 결과:</strong> 문법이 매우 정확합니다! ";
+            if (isContentMatch) {
+                feedback += "사건의 정답에 거의 근접한 논리적인 추리입니다. 훌륭해요! 🕵️";
+            } else {
+                feedback += "창의적인 추측이네요! 하지만 사건의 다른 단서도 한번 고려해 볼까요? (힌트: " + scenarios[currentIdx].keywords[0] + ")";
+            }
+        }
+        responseBox.style.color = "#ffffff";
+        responseBox.innerHTML = feedback;
+    });
+};
+</script>
+
+</body>
+</html>

@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Grammar Dating Sim</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --cream:   #fef7ee;
+    --warm:    #fef3e2;
+    --amber:   #d97706;
+    --gold:    #f59e0b;
+    --rust:    #c2410c;
+    --brown:   #78350f;
+    --text:    #1c1008;
+    --sub:     #78716c;
+    --dim:     #a8a29e;
+    --bd:      #e8d5b7;
+    --card:    #ffffff;
+    --ok:      #166534;
+    --ok-bg:   #f0fdf4;
+    --ok-bd:   #bbf7d0;
+    --ng:      #991b1b;
+    --ng-bg:   #fff5f5;
+    --ng-bd:   #fecaca;
+    --font: -apple-system,'SF Pro Display','Helvetica Neue','Apple SD Gothic Neo','Noto Sans KR',sans-serif;
+  }
+
+  html, body {
+    background: var(--cream);
+    color: var(--text);
+    font-family: var(--font);
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ══════════════════════════════════════ */
+  /* SCREENS                               */
+  /* ══════════════════════════════════════ */
+  .screen { display: none; min-height: 100vh; flex-direction: column; }
+  .screen.active { display: flex; }
+
+  /* ══════════════════════════════════════ */
+  /* INTRO SCREEN                          */
+  /* ══════════════════════════════════════ */
+  #scr-intro {
+    background: var(--cream);
+  }
+
+  /* Scene illustration panel */
+  .intro-scene {
+    width: 100%;
+    height: 260px;
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(
+      180deg,
+      #1a0a00 0%,
+      #7c2d12 15%,
+      #c2410c 35%,
+      #ea580c 50%,
+      #f97316 62%,
+      #fbbf24 75%,
+      #fde68a 88%,
+      #fef3c7 100%
+    );
+    flex-shrink: 0;
+  }
+
+  /* Sun */
+  .intro-scene::before {
+    content: '';
+    position: absolute;
+    bottom: 40px; left: 50%; transform: translateX(-50%);
+    width: 80px; height: 80px; border-radius: 50%;
+    background: radial-gradient(circle, #fff9c4 0%, #fde68a 40%, #fbbf24 70%, transparent 100%);
+    box-shadow: 0 0 60px 30px rgba(251,191,36,.35);
+  }
+
+  /* City silhouette */
+  .intro-scene::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0; height: 80px;
+    background:
+      linear-gradient(180deg, transparent 0%, rgba(28,16,8,.7) 100%);
+  }
+
+  /* Car silhouette overlay */
+  .car-overlay {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    height: 100px;
+    background: linear-gradient(180deg, transparent 0%, rgba(28,16,8,.85) 100%);
+    display: flex; align-items: flex-end; justify-content: center;
+    padding-bottom: 16px; gap: 40px;
+  }
+
+  .char-silhouette {
+    display: flex; flex-direction: column; align-items: center; gap: 4px;
+  }
+  .char-head {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: rgba(255,255,255,.15);
+    border: 2px solid rgba(255,255,255,.25);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; backdrop-filter: blur(4px);
+  }
+  .char-name { font-size: 10px; color: rgba(255,255,255,.6); letter-spacing: .5px; }
+
+  /* Title overlay on scene */
+  .scene-title-overlay {
+    position: absolute; top: 20px; left: 0; right: 0;
+    text-align: center;
+  }
+  .scene-eyebrow {
+    font-size: 10px; letter-spacing: 2px; text-transform: uppercase;
+    color: rgba(255,255,255,.6); margin-bottom: 6px;
+  }
+  .scene-title-text {
+    font-size: 22px; font-weight: 800; color: #fff;
+    letter-spacing: -.5px; line-height: 1.2;
+    text-shadow: 0 2px 12px rgba(0,0,0,.4);
+  }
+
+  /* Intro body */
+  .intro-body {
+    flex: 1; padding: 28px 24px 100px;
+    display: flex; flex-direction: column; gap: 20px;
+  }
+  .intro-desc {
+    font-size: 15px; color: var(--sub); line-height: 1.75;
+  }
+  .rule-card {
+    background: var(--card); border: 1px solid var(--bd);
+    border-radius: 16px; overflow: hidden;
+    box-shadow: 0 2px 12px rgba(120,53,15,.07);
+  }
+  .rule-item {
+    padding: 15px 20px; display: flex; gap: 14px; align-items: flex-start;
+    border-bottom: 1px solid var(--bd);
+  }
+  .rule-item:last-child { border-bottom: none; }
+  .rule-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+  .rule-label { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 2px; }
+  .rule-desc  { font-size: 12px; color: var(--sub); line-height: 1.5; }
+
+  /* ══════════════════════════════════════ */
+  /* GAME SCREEN                           */
+  /* ══════════════════════════════════════ */
+  #scr-game { background: var(--cream); }
+
+  /* Scene header */
+  .game-scene {
+    width: 100%; height: 200px; position: relative; overflow: hidden; flex-shrink: 0;
+  }
+  .game-scene-bg {
+    position: absolute; inset: 0;
+    transition: opacity .6s ease;
+  }
+  .bg-r1 {
+    background: linear-gradient(180deg,
+      #0f0500 0%, #7c2d12 20%, #c2410c 40%,
+      #f97316 60%, #fbbf24 78%, #fde68a 90%, #fef3c7 100%
+    );
+  }
+  .bg-r2 {
+    background: linear-gradient(180deg,
+      #0f0a1e 0%, #1e1b4b 25%, #312e81 50%,
+      #3730a3 65%, #4338ca 78%, #6366f1 90%, #a5b4fc 100%
+    );
+  }
+
+  /* Sun / Moon */
+  .game-scene-sun {
+    position: absolute;
+    bottom: 30px; right: 30%;
+    width: 54px; height: 54px; border-radius: 50%;
+    background: radial-gradient(circle, #fff9c4 0%, #fbbf24 60%, transparent 100%);
+    box-shadow: 0 0 40px 20px rgba(251,191,36,.3);
+    transition: all .6s ease;
+  }
+  .game-scene-ground {
+    position: absolute; bottom: 0; left: 0; right: 0; height: 60px;
+    background: linear-gradient(180deg, transparent 0%, rgba(28,16,8,.8) 100%);
+  }
+
+  /* Characters in scene */
+  .scene-chars {
+    position: absolute; bottom: 12px;
+    left: 0; right: 0;
+    display: flex; justify-content: center; gap: 36px;
+    align-items: flex-end;
+  }
+  .scene-char {
+    display: flex; flex-direction: column; align-items: center; gap: 3px;
+  }
+  .scene-char-avatar {
+    width: 44px; height: 44px; border-radius: 50%;
+    border: 2px solid rgba(255,255,255,.3);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+    backdrop-filter: blur(8px);
+    background: rgba(255,255,255,.12);
+    position: relative;
+  }
+  .scene-char-mood {
+    position: absolute; bottom: -2px; right: -2px;
+    font-size: 12px; background: var(--cream);
+    border-radius: 50%; width: 18px; height: 18px;
+    display: flex; align-items: center; justify-content: center;
+    border: 1px solid var(--bd);
+    transition: all .3s;
+  }
+  .scene-char-name {
+    font-size: 9px; color: rgba(255,255,255,.65);
+    letter-spacing: .5px; text-transform: uppercase;
+  }
+
+  /* Scene label */
+  .scene-info {
+    position: absolute; top: 14px; left: 16px; right: 16px;
+    display: flex; justify-content: space-between; align-items: flex-start;
+  }
+  .scene-tag {
+    background: rgba(0,0,0,.35); backdrop-filter: blur(8px);
+    border-radius: 20px; padding: 4px 12px;
+    font-size: 11px; color: rgba(255,255,255,.9);
+    letter-spacing: .3px;
+  }
+  .scene-round-tag {
+    background: rgba(0,0,0,.35); backdrop-filter: blur(8px);
+    border-radius: 20px; padding: 4px 12px;
+    font-size: 10px; color: rgba(255,255,255,.75);
+    letter-spacing: .5px; text-transform: uppercase;
+  }
+
+  /* Affection bar */
+  .aff-strip {
+    background: var(--card); border-bottom: 1px solid var(--bd);
+    padding: 12px 20px; display: flex; align-items: center; gap: 12px;
+    flex-shrink: 0;
+  }
+  .aff-hearts { font-size: 14px; letter-spacing: 1px; flex-shrink: 0; }
+  .aff-bar-wrap { flex: 1; }
+  .aff-bar-label {
+    display: flex; justify-content: space-between;
+    font-size: 11px; color: var(--dim); margin-bottom: 5px;
+  }
+  .aff-bar-label strong { color: var(--amber); font-weight: 700; }
+  .aff-bar-track {
+    height: 4px; background: var(--warm); border-radius: 2px; overflow: hidden;
+  }
+  .aff-bar-fill {
+    height: 100%; border-radius: 2px;
+    background: linear-gradient(90deg, var(--amber), var(--gold));
+    transition: width .5s cubic-bezier(.4,0,.2,1);
+  }
+  .aff-num { font-size: 13px; font-weight: 700; color: var(--amber); flex-shrink: 0; min-width: 28px; text-align: right; }
+
+  /* Scroll body */
+  .game-body {
+    flex: 1; padding: 20px 20px 140px;
+    display: flex; flex-direction: column; gap: 14px;
+    overflow-y: auto;
+  }
+
+  /* Scene description */
+  .scene-desc-card {
+    background: var(--warm); border: 1px solid var(--bd);
+    border-radius: 12px; padding: 14px 18px;
+    font-size: 13px; color: var(--sub); line-height: 1.7;
+    display: flex; gap: 10px;
+  }
+  .scene-desc-icon { flex-shrink: 0; font-size: 15px; }
+
+  /* Dialog */
+  .dialog-row { display: flex; gap: 12px; align-items: flex-end; }
+  .dialog-avatar {
+    width: 42px; height: 42px; border-radius: 50%; flex-shrink: 0;
+    background: linear-gradient(135deg, #c2410c, #d97706);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; box-shadow: 0 2px 8px rgba(194,65,12,.25);
+    border: 2px solid var(--bd);
+  }
+  .dialog-bubble {
+    flex: 1; background: var(--card);
+    border: 1px solid var(--bd); border-radius: 18px; border-bottom-left-radius: 4px;
+    padding: 14px 18px;
+    box-shadow: 0 2px 10px rgba(120,53,15,.07);
+  }
+  .dialog-name {
+    font-size: 11px; font-weight: 700; color: var(--amber);
+    letter-spacing: .4px; margin-bottom: 5px;
+  }
+  .dialog-text { font-size: 15px; color: var(--text); line-height: 1.75; }
+  .cursor {
+    display: inline-block; width: 1.5px; height: 14px;
+    background: var(--amber); margin-left: 1px; vertical-align: middle;
+    animation: blink .9s infinite;
+  }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+  /* Feedback */
+  .feedback {
+    display: none; border-radius: 12px; padding: 14px 18px;
+    font-size: 13px; line-height: 1.7; border: 1px solid;
+  }
+  .feedback.show { display: block; animation: fadeUp .25s ease; }
+  .feedback.ok { background: var(--ok-bg); border-color: var(--ok-bd); }
+  .feedback.ng { background: var(--ng-bg); border-color: var(--ng-bd); }
+  .feedback.nt { background: var(--warm); border-color: var(--bd); }
+  .fb-head { font-weight: 700; font-size: 13px; margin-bottom: 5px; }
+  .feedback.ok .fb-head { color: var(--ok); }
+  .feedback.ng .fb-head { color: var(--ng); }
+  .feedback.nt .fb-head { color: var(--sub); }
+  .feedback em  { font-style: normal; font-weight: 700; color: var(--text); }
+  .feedback del { color: var(--ng); }
+  @keyframes fadeUp {
+    from { opacity:0; transform:translateY(6px); }
+    to   { opacity:1; transform:translateY(0); }
+  }
+
+  /* ── FIXED BOTTOM INPUT ── */
+  .input-dock {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    background: rgba(254,247,238,.95);
+    backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+    border-top: 1px solid var(--bd);
+    padding: 12px 16px 20px;
+    display: flex; flex-direction: column; gap: 10px;
+  }
+  .input-hint-row { display: flex; justify-content: space-between; align-items: center; }
+  .hint-btn {
+    background: none; border: none; cursor: pointer; font-family: var(--font);
+    font-size: 13px; color: var(--amber); padding: 0;
+    display: flex; align-items: center; gap: 5px;
+    transition: opacity .15s;
+  }
+  .hint-btn:hover:not(:disabled) { opacity: .7; }
+  .hint-btn:disabled { opacity: .3; cursor: default; }
+  .input-row {
+    background: var(--card); border: 1.5px solid var(--bd);
+    border-radius: 14px; display: flex; align-items: center;
+    overflow: hidden; transition: border-color .15s;
+    box-shadow: 0 2px 10px rgba(120,53,15,.07);
+  }
+  .input-row:focus-within { border-color: var(--amber); }
+  .player-input {
+    flex: 1; background: transparent; border: none; outline: none;
+    font-size: 15px; font-family: var(--font); color: var(--text);
+    padding: 14px 16px;
+  }
+  .player-input::placeholder { color: var(--dim); }
+  .player-input:disabled { opacity: .4; }
+  .input-send {
+    margin: 8px; width: 36px; height: 36px; border-radius: 10px;
+    background: linear-gradient(135deg, var(--rust), var(--amber));
+    border: none; cursor: pointer; color: #fff; font-size: 15px;
+    display: flex; align-items: center; justify-content: center;
+    transition: opacity .15s, transform .1s; flex-shrink: 0;
+    box-shadow: 0 2px 8px rgba(194,65,12,.3);
+  }
+  .input-send:hover:not(:disabled) { opacity: .85; }
+  .input-send:active { transform: scale(.93); }
+  .input-send:disabled { opacity: .25; cursor: default; }
+  .next-btn {
+    background: linear-gradient(135deg, var(--rust), var(--amber));
+    color: #fff; border: none; border-radius: 12px;
+    padding: 14px; font-size: 15px; font-weight: 600; cursor: pointer;
+    font-family: var(--font); width: 100%;
+    box-shadow: 0 4px 16px rgba(194,65,12,.3);
+    display: none; letter-spacing: -.2px; transition: opacity .15s;
+  }
+  .next-btn.show { display: block; animation: fadeUp .2s ease; }
+  .next-btn:hover { opacity: .9; }
+
+  /* ══════════════════════════════════════ */
+  /* ENDING SCREEN                         */
+  /* ══════════════════════════════════════ */
+  #scr-ending { background: var(--cream); }
+
+  .ending-scene {
+    width: 100%; height: 200px; position: relative; overflow: hidden; flex-shrink: 0;
+  }
+  .ending-scene-bg {
+    position: absolute; inset: 0;
+  }
+  .ending-scene-overlay {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 6px;
+  }
+  .ending-emoji { font-size: 48px; }
+  .ending-type-tag {
+    font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
+    color: rgba(255,255,255,.75); font-weight: 600;
+  }
+
+  .ending-body {
+    flex: 1; padding: 24px 20px 40px;
+    display: flex; flex-direction: column; gap: 20px;
+  }
+  .ending-score-row { display: flex; align-items: baseline; gap: 6px; }
+  .ending-score-big { font-size: 52px; font-weight: 800; color: var(--amber); letter-spacing: -2px; }
+  .ending-score-max { font-size: 20px; color: var(--dim); }
+  .ending-title { font-size: 22px; font-weight: 700; color: var(--text); letter-spacing: -.4px; }
+  .ending-msg { font-size: 14px; color: var(--sub); line-height: 1.75; }
+
+  .review-wrap { display: flex; flex-direction: column; gap: 10px; }
+  .review-label { font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--dim); }
+  .r-card { background: var(--card); border: 1px solid var(--bd); border-radius: 14px; overflow: hidden; }
+  .r-item { padding: 14px 18px; display: flex; gap: 12px; border-bottom: 1px solid var(--bd); }
+  .r-item:last-child { border-bottom: none; }
+  .r-badge { width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; flex-shrink: 0; margin-top: 1px; }
+  .r-badge.ok { background: var(--ok-bg); color: var(--ok); }
+  .r-badge.ng { background: var(--ng-bg); color: var(--ng); }
+  .r-body { flex: 1; }
+  .r-round { font-size: 10px; color: var(--dim); text-transform: uppercase; letter-spacing: .3px; margin-bottom: 3px; }
+  .r-ans { font-size: 14px; font-weight: 600; color: var(--text); }
+  .r-exp { font-size: 12px; color: var(--dim); margin-top: 3px; line-height: 1.6; }
+
+  .retry-btn {
+    background: linear-gradient(135deg, var(--rust), var(--amber));
+    color: #fff; border: none; border-radius: 14px;
+    padding: 16px; font-size: 16px; font-weight: 700; cursor: pointer;
+    font-family: var(--font); width: 100%;
+    box-shadow: 0 4px 20px rgba(194,65,12,.3);
+    letter-spacing: -.3px; transition: opacity .15s;
+  }
+  .retry-btn:hover { opacity: .9; }
+
+  /* ══════════════════════════════════════ */
+  /* BOTTOM CTA (intro / ending)           */
+  /* ══════════════════════════════════════ */
+  .bottom-cta {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    padding: 16px 20px 28px;
+    background: rgba(254,247,238,.95);
+    backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+    border-top: 1px solid var(--bd);
+  }
+  .start-btn {
+    background: linear-gradient(135deg, var(--rust), var(--amber));
+    color: #fff; border: none; border-radius: 14px;
+    padding: 16px; font-size: 16px; font-weight: 700; cursor: pointer;
+    font-family: var(--font); width: 100%;
+    box-shadow: 0 4px 20px rgba(194,65,12,.3);
+    letter-spacing: -.3px; transition: opacity .15s;
+  }
+  .start-btn:hover { opacity: .9; }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════ -->
+<!-- INTRO                                 -->
+<!-- ══════════════════════════════════════ -->
+<div class="screen active" id="scr-intro">
+  <div class="intro-scene">
+    <div class="scene-title-overlay">
+      <div class="scene-eyebrow">Grammar Activity</div>
+      <div class="scene-title-text">문법을 알아야<br>마음을 얻는다</div>
+    </div>
+    <div class="car-overlay">
+      <div class="char-silhouette">
+        <div class="char-head">🧑‍💼</div>
+        <div class="char-name">Alex</div>
+      </div>
+      <div class="char-silhouette">
+        <div class="char-head">🙋</div>
+        <div class="char-name">You</div>
+      </div>
+    </div>
+  </div>
+  <div class="intro-body">
+    <div class="intro-desc">
+      올바른 <strong>had better</strong> / <strong>It's time</strong> 문장으로 Alex와 대화를 이어가세요. 문법이 맞으면 호감도가 오르고, 틀리면 내려갑니다.
+    </div>
+    <div class="rule-card">
+      <div class="rule-item">
+        <div class="rule-icon">❤️</div>
+        <div>
+          <div class="rule-label">호감도 시스템</div>
+          <div class="rule-desc">50으로 시작 · 정답 +20 · 오답 -20 · 힌트 +10 (1회)</div>
+        </div>
+      </div>
+      <div class="rule-item">
+        <div class="rule-icon">💬</div>
+        <div>
+          <div class="rule-label">2라운드</div>
+          <div class="rule-desc">도서관 → 귀가 길 · 상황마다 다른 문법 포인트</div>
+        </div>
+      </div>
+      <div class="rule-item">
+        <div class="rule-icon">📖</div>
+        <div>
+          <div class="rule-label">즉각 피드백</div>
+          <div class="rule-desc">매 답변마다 문법 해설 제공 · 마지막에 전체 복기</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="bottom-cta">
+    <button class="start-btn" onclick="startGame()">시작하기 →</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- GAME                                  -->
+<!-- ══════════════════════════════════════ -->
+<div class="screen" id="scr-game">
+  <!-- Scene -->
+  <div class="game-scene">
+    <div class="game-scene-bg bg-r1" id="scene-bg"></div>
+    <div class="game-scene-sun" id="scene-sun"></div>
+    <div class="game-scene-ground"></div>
+    <div class="scene-info">
+      <div class="scene-tag" id="scene-tag">📚 도서관</div>
+      <div class="scene-round-tag" id="scene-round">Round 1 / 2</div>
+    </div>
+    <div class="scene-chars">
+      <div class="scene-char">
+        <div class="scene-char-avatar">
+          🧑‍💼
+          <div class="scene-char-mood" id="mood">😐</div>
+        </div>
+        <div class="scene-char-name">Alex</div>
+      </div>
+      <div class="scene-char">
+        <div class="scene-char-avatar">🙋</div>
+        <div class="scene-char-name">You</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Aff bar -->
+  <div class="aff-strip">
+    <div class="aff-hearts" id="hearts">♥♥♥</div>
+    <div class="aff-bar-wrap">
+      <div class="aff-bar-label">
+        <span>호감도</span>
+        <span><strong id="aff-num">50</strong> / 100</span>
+      </div>
+      <div class="aff-bar-track">
+        <div class="aff-bar-fill" id="aff-fill" style="width:50%"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Body -->
+  <div class="game-body" id="game-body">
+    <div class="scene-desc-card">
+      <div class="scene-desc-icon">🌇</div>
+      <div id="scene-desc">—</div>
+    </div>
+    <div class="dialog-row">
+      <div class="dialog-avatar">🧑‍💼</div>
+      <div class="dialog-bubble">
+        <div class="dialog-name">ALEX</div>
+        <div class="dialog-text" id="dialog">…</div>
+      </div>
+    </div>
+    <div class="feedback" id="feedback"></div>
+  </div>
+
+  <!-- Input -->
+  <div class="input-dock">
+    <div class="input-hint-row">
+      <button class="hint-btn" id="btn-hint" onclick="useHint()">💡 힌트 사용 (+10)</button>
+      <span style="font-size:12px;color:var(--dim)" id="inp-len">0 / 120</span>
+    </div>
+    <div class="input-row">
+      <input class="player-input" id="player-input" maxlength="120"
+        placeholder="문장을 입력하세요..."
+        oninput="document.getElementById('inp-len').textContent=this.value.length+' / 120'"
+        onkeydown="if(event.key==='Enter')submit()">
+      <button class="input-send" id="btn-send" onclick="submit()">↑</button>
+    </div>
+    <button class="next-btn" id="btn-next" onclick="nextRound()">다음 →</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- ENDING                                -->
+<!-- ══════════════════════════════════════ -->
+<div class="screen" id="scr-ending">
+  <div class="ending-scene">
+    <div class="ending-scene-bg" id="end-bg"></div>
+    <div class="ending-scene-overlay">
+      <div class="ending-emoji" id="end-emoji">💛</div>
+      <div class="ending-type-tag" id="end-type">Ending</div>
+    </div>
+  </div>
+  <div class="ending-body">
+    <div>
+      <div class="ending-score-row">
+        <div class="ending-score-big" id="end-score">—</div>
+        <div class="ending-score-max">/ 100</div>
+      </div>
+      <div class="ending-title" id="end-title">—</div>
+    </div>
+    <div class="ending-msg" id="end-msg">—</div>
+    <div class="review-wrap">
+      <div class="review-label">문법 복기</div>
+      <div class="r-card" id="review-list"></div>
+    </div>
+    <button class="retry-btn" onclick="restart()">다시 시작하기</button>
+  </div>
+</div>
+
+<script>
+/* ══════════ DATA ══════════ */
+const ROUNDS = [
+  {
+    label:'Round 1 / 2',
+    sceneTag:'📚 영문학과 도서관, 밤 10시',
+    sceneRound:'Round 1 / 2',
+    sceneDesc:'조별발표가 내일인데, Alex가 아직 자기 파트를 시작도 못 했다고 한다.',
+    opening:'아, 맞다... 내일이 발표잖아. 나 아직 내 파트 손도 못 댔는데... 어떡하지.',
+    ph:'had better 로 Alex에게 말해보세요',
+    hint:'You had better + 동사원형 (to 없이!)   예: You had better start now.',
+    bgClass:'bg-r1',
+    sunStyle:'bottom:30px;right:30%;background:radial-gradient(circle,#fff9c4 0%,#fbbf24 60%,transparent 100%);box-shadow:0 0 40px 20px rgba(251,191,36,.3)',
+    check(s){
+      s=s.toLowerCase().replace(/[''']/g,"'");
+      if(/(had\s*better|'d\s*better)\s+not\s+to\s/i.test(s)) return'wrong';
+      if(/(had\s*better|'d\s*better)\s+to\s/i.test(s)) return'wrong';
+      if(/(had\s*better|'d\s*better)(\s+not)?\s+[a-z]/i.test(s)) return'correct';
+      return'none';
+    },
+    correct:['...알겠어. 맞아, 내가 좀 무책임했지. 오늘 밤 무조건 끝낼게.','그 말이 맞아. 팀한테 미안하다고 생각해. 지금 바로 시작할게.','...사실 알고 있었어. 네 말대로 할게. 고마워, 걱정해줘서.'],
+    wrong:['...그게 무슨 말이야? 잘 이해가 안 됐어. 다시 말해줄 수 있어?','미안, 뭔가 어색하게 들렸어. 다르게 말해볼 수 있어?'],
+    noneResp:'좀 더 직접적으로 말해줄 수 있어? had better 같은 표현으로.',
+    fb_ok:'<div class="fb-head">✓ 올바른 문법</div><em>had better + 동사원형</em> — 정확한 구조입니다. had 뒤에 <em>to</em>를 넣으면 오류가 됩니다.',
+    fb_ng:'<div class="fb-head">문법 오류</div><em>had better</em> 다음에는 <del>to</del> 없이 바로 동사원형이 와야 합니다.<br>예: <em>You had better start now.</em>',
+    fb_none:'<div class="fb-head">힌트</div>had better 구조를 사용해보세요.<br>형태: <em>had better + 동사원형</em>',
+    r_exp:'had better + 동사원형 (had better to → 오류)'
+  },
+  {
+    label:'Round 2 / 2',
+    sceneTag:'🌙 도서관 앞, 귀가 길',
+    sceneRound:'Round 2 / 2',
+    sceneDesc:'과제 얘기가 잘 해결됐다. Alex가 뭔가 더 하고 싶은 말이 있어 보인다.',
+    opening:'고마워, 아까... 신경 써줘서. 사실 나도 네한테 하고 싶은 말이 있었는데... 어떻게 말해야 할지 몰라서.',
+    ph:"It's time 으로 말해보세요",
+    hint:"It's time you + 과거시제 동사   예: It's time you told me the truth.",
+    bgClass:'bg-r2',
+    sunStyle:'bottom:45px;right:38%;width:40px;height:40px;background:radial-gradient(circle,#e0e7ff 0%,#818cf8 60%,transparent 100%);box-shadow:0 0 30px 15px rgba(129,140,248,.25)',
+    check(s){
+      s=s.toLowerCase().replace(/[''']/g,"'").replace(/it is /g,"it's ");
+      const PAST=['went','told','came','said','got','made','took','gave','showed','admitted','confessed','talked','spoke','asked','knew','thought','felt','found','tried','expressed','shared','started','decided','realized','opened','moved'];
+      if(/it'?s\s+time\s+(you|he|she|we|they|i)\s+/i.test(s)){
+        if(PAST.some(v=>new RegExp('\\b'+v+'\\b').test(s))||/\b\w{3,}ed\b/.test(s)) return'correct';
+      }
+      if(/it'?s\s+time\s+to\s+/i.test(s)) return'neutral';
+      return'none';
+    },
+    correct:['...사실 나도 그렇게 생각하고 있었어. 용기 내줘서 고마워.','...맞아, 이제 솔직하게 말할게. 사실 나... 꽤 오래 좋아했어.','그 말 듣고 나니 용기가 생기네. 나도 같은 마음이야.'],
+    wrong:['...그게 무슨 말이야? 좀 더 자연스럽게 말해줄 수 있어?','음, 뭔가 이상하게 들렸어. 다시 한 번 말해볼래?'],
+    neutral:'그 표현도 맞는데... 더 직접적으로 말해줄 수 있어? 과거형으로.',
+    noneResp:"It's time 이라는 표현으로 말해줄 수 있어?",
+    fb_ok:"<div class=\"fb-head\">✓ 올바른 문법</div><em>It's time S + 과거시제</em> — 가정법 과거 구조입니다. '이제 말해야 할 때가 됐다'는 압박감을 전달합니다.",
+    fb_ng:"<div class=\"fb-head\">문법 오류</div><em>It's time (that) S + 과거시제</em> 형태를 사용하세요.<br>예: <em>It's time you told me.</em>",
+    fb_neutral:"<div class=\"fb-head\">중립 형태</div><em>It's time to R</em>은 맞지만 압박감이 약합니다.<br><em>It's time you told me</em>처럼 S + 과거시제를 써보세요.",
+    fb_none:"<div class=\"fb-head\">힌트</div>형태: <em>It's time + S + 과거시제</em>",
+    r_exp:"It's time S + 과거시제 → 가정법 과거, 압박·재촉"
+  }
+];
+
+/* ══════════ STATE ══════════ */
+let st={round:0,aff:50,lives:3,hintUsed:false,answered:false,log:[]};
+let typeTimer=null;
+
+/* ══════════ SCREENS ══════════ */
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+/* ══════════ START ══════════ */
+function startGame(){
+  st={round:0,aff:50,lives:3,hintUsed:false,answered:false,log:[]};
+  showScreen('scr-game');
+  renderRound(0);
+}
+
+/* ══════════ RENDER ══════════ */
+function renderRound(i){
+  const r=ROUNDS[i];
+  st.answered=false; st.hintUsed=false;
+
+  // Scene
+  document.getElementById('scene-tag').textContent=r.sceneTag;
+  document.getElementById('scene-round').textContent=r.sceneRound;
+  document.getElementById('scene-desc').textContent=r.sceneDesc;
+  const bg=document.getElementById('scene-bg');
+  bg.className='game-scene-bg '+r.bgClass;
+  document.getElementById('scene-sun').style.cssText=r.sunStyle;
+  document.getElementById('mood').textContent='😐';
+
+  // Input
+  document.getElementById('player-input').placeholder=r.ph;
+  document.getElementById('player-input').value='';
+  document.getElementById('player-input').disabled=false;
+  document.getElementById('inp-len').textContent='0 / 120';
+  document.getElementById('btn-send').disabled=false;
+  document.getElementById('btn-hint').disabled=false;
+  document.getElementById('btn-next').className='next-btn';
+
+  // Feedback
+  const fb=document.getElementById('feedback');
+  fb.className='feedback'; fb.innerHTML='';
+
+  // Scroll top
+  document.getElementById('game-body').scrollTop=0;
+
+  updateHUD();
+  type(document.getElementById('dialog'), r.opening);
+  setTimeout(()=>document.getElementById('player-input').focus(), 300);
+}
+
+/* ══════════ HUD ══════════ */
+function updateHUD(){
+  const a=Math.max(0,Math.min(100,st.aff));
+  document.getElementById('aff-num').textContent=a;
+  document.getElementById('aff-fill').style.width=a+'%';
+  document.getElementById('hearts').textContent='♥'.repeat(st.lives)+'♡'.repeat(Math.max(0,3-st.lives));
+}
+
+/* ══════════ TYPEWRITER ══════════ */
+function type(el,text,speed=28,cb){
+  clearTimeout(typeTimer);
+  el.innerHTML='';
+  let i=0;
+  const cur=document.createElement('span');
+  cur.className='cursor';
+  el.appendChild(cur);
+  (function tick(){
+    if(i<text.length){ cur.before(text[i++]); typeTimer=setTimeout(tick,speed); }
+    else { cur.remove(); if(cb) cb(); }
+  })();
+}
+
+/* ══════════ HINT ══════════ */
+function useHint(){
+  if(st.hintUsed||st.answered) return;
+  st.hintUsed=true;
+  st.aff=Math.min(100,st.aff+10);
+  updateHUD();
+  document.getElementById('btn-hint').disabled=true;
+  const r=ROUNDS[st.round];
+  const fb=document.getElementById('feedback');
+  fb.innerHTML='<div class="fb-head" style="color:var(--amber)">💡 힌트 (+10)</div>'+r.hint;
+  fb.className='feedback show nt';
+  scrollBody();
+}
+
+/* ══════════ SUBMIT ══════════ */
+function submit(){
+  if(st.answered) return;
+  const v=document.getElementById('player-input').value.trim();
+  if(!v) return;
+  const r=ROUNDS[st.round];
+  const res=r.check(v);
+  st.answered=true;
+  document.getElementById('player-input').disabled=true;
+  document.getElementById('btn-send').disabled=true;
+  document.getElementById('btn-hint').disabled=true;
+
+  let resp, fbClass, fbHtml, delta=0;
+  if(res==='correct'){
+    resp=r.correct[Math.floor(Math.random()*r.correct.length)];
+    fbClass='ok'; fbHtml=r.fb_ok; delta=20;
+    document.getElementById('mood').textContent='😊';
+  } else if(res==='wrong'){
+    resp=r.wrong[Math.floor(Math.random()*r.wrong.length)];
+    fbClass='ng'; fbHtml=r.fb_ng; delta=-20;
+    document.getElementById('mood').textContent='😔';
+    st.lives=Math.max(0,st.lives-1);
+  } else if(res==='neutral'){
+    resp=r.neutral||r.wrong[0];
+    fbClass='nt'; fbHtml=r.fb_neutral||r.fb_none;
+    document.getElementById('mood').textContent='😐';
+  } else {
+    resp=r.noneResp;
+    fbClass='nt'; fbHtml=r.fb_none;
+    document.getElementById('mood').textContent='😐';
+  }
+
+  st.aff=Math.max(0,Math.min(100,st.aff+delta));
+  updateHUD();
+  st.log.push({round:r.label, ok:res==='correct', input:v, exp:r.r_exp});
+
+  type(document.getElementById('dialog'), resp, 28, ()=>{
+    const fb=document.getElementById('feedback');
+    fb.innerHTML=fbHtml;
+    fb.className='feedback show '+fbClass;
+    const nb=document.getElementById('btn-next');
+    nb.textContent=st.round<ROUNDS.length-1?'다음 라운드 →':'결과 보기 →';
+    nb.className='next-btn show';
+    scrollBody();
+  });
+}
+
+function scrollBody(){
+  setTimeout(()=>{
+    const b=document.getElementById('game-body');
+    b.scrollTo({top:b.scrollHeight,behavior:'smooth'});
+  },80);
+}
+
+/* ══════════ NEXT ══════════ */
+function nextRound(){
+  st.round++;
+  if(st.round>=ROUNDS.length) showEnding();
+  else renderRound(st.round);
+}
+
+/* ══════════ ENDING ══════════ */
+function showEnding(){
+  showScreen('scr-ending');
+  const a=st.aff;
+  let emoji,type,title,msg,bgStyle;
+
+  if(a>=90){
+    emoji='💛'; type='Best Ending'; title='"나도... 좋아해."';
+    msg='올바른 문법이 마음을 열었습니다. had better와 It\'s time의 뉘앙스를 정확히 이해하고 사용한 결과입니다.';
+    bgStyle='background:linear-gradient(180deg,#7c2d12 0%,#c2410c 40%,#f97316 65%,#fbbf24 85%,#fef3c7 100%)';
+  } else if(a>=70){
+    emoji='🧡'; type='Good Ending'; title='"더 자주 연락하자."';
+    msg='좋은 대화였습니다. 문법 뉘앙스를 조금 더 연습하면 다음엔 더 자연스러워질 것입니다.';
+    bgStyle='background:linear-gradient(180deg,#c2410c 0%,#ea580c 40%,#fb923c 65%,#fed7aa 85%,#fff7ed 100%)';
+  } else if(a>=40){
+    emoji='🤍'; type='Normal Ending'; title='"오늘 고마웠어."';
+    msg='아쉬운 순간들이 있었습니다. had better 부정형과 It\'s time의 과거시제 구조를 복습해보세요.';
+    bgStyle='background:linear-gradient(180deg,#374151 0%,#6b7280 50%,#d1d5db 85%,#f9fafb 100%)';
+  } else {
+    emoji='🖤'; type='Game Over'; title='"우리 그냥 친구하자."';
+    msg='문법 오류가 대화를 방해했습니다. 핵심 형태와 뉘앙스를 처음부터 다시 확인해보세요.';
+    bgStyle='background:linear-gradient(180deg,#111827 0%,#1f2937 50%,#374151 80%,#6b7280 100%)';
+  }
+
+  document.getElementById('end-emoji').textContent=emoji;
+  document.getElementById('end-type').textContent=type;
+  document.getElementById('end-bg').style.cssText=bgStyle;
+  document.getElementById('end-score').textContent=a;
+  document.getElementById('end-title').textContent=title;
+  document.getElementById('end-msg').textContent=msg;
+
+  document.getElementById('review-list').innerHTML=st.log.map((l,i)=>`
+    <div class="r-item">
+      <div class="r-badge ${l.ok?'ok':'ng'}">${l.ok?'✓':'✗'}</div>
+      <div class="r-body">
+        <div class="r-round">${l.round}</div>
+        <div class="r-ans">${l.input}</div>
+        <div class="r-exp">${l.exp}</div>
+      </div>
+    </div>`).join('');
+}
+
+function restart(){
+  showScreen('scr-intro');
+}
+</script>
+</body>
+</html>
